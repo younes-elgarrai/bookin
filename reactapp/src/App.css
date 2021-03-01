@@ -4,7 +4,7 @@
   font-family: 'Fira Sans', sans-serif;
 }
 
-.bookBloc {
+/* .bookBloc {
   width:80%;
   display:flex;
   align-items:'center';
@@ -18,15 +18,6 @@
   background-position: right bottom;
 }
 
-.buyBloc {
-  width:80%;
-  display:flex;
-  justify-content: flex-start;
-  background: #e1e1e1;
-  padding-left:30px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
 
 .textBloc {
   display:flex;
@@ -36,36 +27,5 @@
   padding-left:30px;
   padding-right:30px;
   padding-top: 30px;
-}
+} */
 
-.libraryBloc  {
-  width:80%;
-  background-color: #ffffff;
-  padding-left:30px;
-  padding-right:30px;
-  padding-top: 30px;
-}
-
-.h3 {
-  color:#23396C;
-  font-family: 'Fira Sans', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0px;
-}
-
-p {
-  font-family: 'Fira Sans', sans-serif;
-  color:#333;
-  font-size:14px;
-  font-weight: 300;
-}
-
-.link {
-  text-decoration: none;
-  color:#ffffff;
-}
-
-.bouton {
-  color:red;
-}
