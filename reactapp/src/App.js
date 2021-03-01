@@ -6,14 +6,9 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-<<<<<<< HEAD
-import './';
-
-=======
 
 
->>>>>>> 349d44e11a3edc8e8edb3f8e5ab33bfdbdcb0d17
-import HomeScreen from './screens/BookScreen';
+import HomeScreen from './screens/HomeScreen';
 import LibraryScreen from './screens/LibraryScreen';
 import BookScreen from './screens/BookScreen';
 import ResultScreen from './screens/ResultScreen';
@@ -31,10 +26,10 @@ function App() {
       <Switch>
         <Route exact path="/" component={HomeScreen} />
         <Route path="/library" component={LibraryScreen} />
-        <Route path="/book/:isbn" component={BookScreen} />
+        <Route exact path="/book" component={BookScreen} />
         <Route path="/result" component={ResultScreen} />
         <Route path="/search" component={SearchScreen} />
-        <Route path="/survey" component={SurveyScreen} />
+        <Route exact path="/survey" component={SurveyScreen} />
         <Route path="/create-account" component={CreateAccountScreen} />
         <Route path="/connection" component={ConnectionScreen} />
       </Switch>

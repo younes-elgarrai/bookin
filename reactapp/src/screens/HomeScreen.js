@@ -6,9 +6,6 @@ import Nav from '../components/Navbar';
 function HomeScreen() {
   return (
     <div className="App">
-<<<<<<< HEAD
-      <Nav/>
-=======
 
       <header className="App-header">
         <p>
@@ -23,7 +20,6 @@ function HomeScreen() {
           Learn React
         </a>
       </header>
->>>>>>> BookScreen
     </div>
   );
 }

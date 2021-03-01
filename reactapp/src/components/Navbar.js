@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import {Menu} from 'antd'
 import {ReadOutlined, HomeOutlined, LogoutOutlined} from '@ant-design/icons'
 import {Link} from "react-router-dom";
