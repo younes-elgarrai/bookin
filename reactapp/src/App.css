@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 .font {
   font-family: 'Fira Sans', sans-serif;
@@ -11,8 +11,8 @@
   justify-content:'flex-start';
   background: #23396C;
   border-radius: 10px 10px 0px 0px;
-  padding:30px;
-  background-image: url('./assets/picto.png');
+  padding: 30px;
+  background-image: url("./assets/picto.png");
   background-size: 20%;
   background-repeat: no-repeat;
   background-position: right bottom;
@@ -20,12 +20,12 @@
 
 
 .textBloc {
-  display:flex;
+  display: flex;
   justify-content: flex-start;
-  width:80%;
+  width: 80%;
   background-color: #ffffff;
-  padding-left:30px;
-  padding-right:30px;
+  padding-left: 30px;
+  padding-right: 30px;
   padding-top: 30px;
 } */
 

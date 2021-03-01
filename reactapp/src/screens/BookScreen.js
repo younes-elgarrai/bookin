@@ -3,6 +3,7 @@ import { Avatar, Layout, Row, Col} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import '../components/BookHeader'
 import '../App.css';
+import Nav from '../components/Navbar';
 
 import BookHeader from '../components/BookHeader';
 import BookInfo from '../components/BookInfo'
