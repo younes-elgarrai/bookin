@@ -13,7 +13,16 @@ import ResultScreen from './screens/ResultScreen';
 import SearchScreen from './screens/SearchScreen';
 import SurveyScreen from './screens/SurveyScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
-import ConnectionScreen from './screens/ConnetionScreen';
+import ConnectionScreen from './screens/ConnectionScreen';
+
+import {Provider} from 'react-redux';
+
+import {createStore, combineReducers}  from 'redux';
+
+
+
+
+const store = createStore(combineReducers({article: articleReducer, token: tokenReducer, isLogin: isLoginReducer}));
 
 function App() {
 
