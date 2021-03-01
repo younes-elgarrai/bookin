@@ -8,8 +8,7 @@ import {Link} from "react-router-dom";
 function Navbar() {
 
   return (
-    <nav >
-      <Menu style={{textAlign: 'center'}} mode="horizontal" theme="dark">
+      <Menu mode="horizontal">
 
         <Menu.Item key="mail">
           <HomeOutlined />
@@ -27,7 +26,6 @@ function Navbar() {
         </Menu.Item>
 
       </Menu>
-    </nav>
   );
 }
 
