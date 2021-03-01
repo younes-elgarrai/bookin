@@ -15,9 +15,8 @@ import SurveyScreen from './screens/SurveyScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
 import ConnectionScreen from './screens/ConnectionScreen';
 
-import articleReducer from './reducers/article.reducer';
-import tokenReducer from './reducers/token.reducer';
-import isLoginReducer from './reducers/isLogin.reducer'
+// import tokenReducer from './reducers/token.reducer';
+// import isLoginReducer from './reducers/isLogin.reducer'
 
 import {Provider} from 'react-redux';
 
