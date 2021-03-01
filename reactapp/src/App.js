@@ -22,8 +22,6 @@ import {Provider} from 'react-redux';
 import {createStore, combineReducers}  from 'redux';
 
 
-
-
 const store = createStore(combineReducers({article: articleReducer, token: tokenReducer, isLogin: isLoginReducer}));
 
 function App() {
