@@ -13,26 +13,12 @@ import ResultScreen from './screens/ResultScreen';
 import SearchScreen from './screens/SearchScreen';
 import SurveyScreen from './screens/SurveyScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
-import ConnectionScreen from './screens/ConnectionScreen';
-
-import articleReducer from './reducers/article.reducer';
-import tokenReducer from './reducers/token.reducer';
-import isLoginReducer from './reducers/isLogin.reducer'
-
-import {Provider} from 'react-redux';
-
-import {createStore, combineReducers}  from 'redux';
-
-
-
-
-const store = createStore(combineReducers({article: articleReducer, token: tokenReducer, isLogin: isLoginReducer}));
+import ConnectionScreen from './screens/ConnetionScreen';
 
 function App() {
 
 
   return (
-    <Provider store={store}>
     <Router>
       <Switch>
         <Route exact path="/" component={HomeScreen} />
@@ -45,7 +31,6 @@ function App() {
         <Route path="/connection" component={ConnectionScreen} />
       </Switch>
     </Router>  
-    </Provider>  
   );
 }
 

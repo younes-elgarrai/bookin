@@ -1,5 +1,13 @@
 var express = require('express');
 var router = express.Router();
+
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+
+
 /*
   Add a book in my library
   Body : token et isbn13
@@ -18,7 +26,7 @@ router.post('/library/add/:token/:isbn13/', (req, res) => {
   Body : token et isbn13
   Response : result (true),
 */
-router.delete('/library/delete/:token/:isbn13/', (req, res) => {
+router.delete('/library/delete/:token/:isbn13/', async (req, res) => {
   let isbn13 = req.params.isbn13;
   let token = req.params.token;
 
@@ -36,15 +44,14 @@ router.post('/recos', (req,res)=>{
  })
  
 
- 
- app.get('/library/:token', function (req, res) {
+router.get('/library/:token', function (req, res) {
   //Accéder à une bibliothèque à partir de l'id du User (paramètre associé au composant livre)
   //Entrées : userId
   //mécanique de récupération d'une bibliothèque
   //Sorties : success, failure, [ISBN13]
  })
 
- CELINE //////
+//  CELINE 
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 const UsersModel = require('../models/users');
@@ -104,7 +111,7 @@ router.post('/log-in', async function(req, res, next) {
 }});
 
 // Update profile
-router.post('/update', (req, res) => {
+router.post('/update', async (req, res) => {
   const user = await UsersModel.find({token: req.body.token});
   // mettre à jour les champs souhaités : tout sauf l'email, le token, library, wishlist. 
   // par ex : 
@@ -131,7 +138,7 @@ router.post('/new-review', (req, res) => {
 });
 
 // Get reviews
-router.get('/reviews', (req, res) => {
+router.get('/reviews', async (req, res) => {
   const reviews = await ReviewsModel.find(); // par book ISBN
   res.json({ result: true, reviews });
 });
