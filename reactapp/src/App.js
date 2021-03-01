@@ -9,10 +9,6 @@ import {
   Route,
 } from "react-router-dom";
 
-<<<<<<< HEAD
-=======
-
->>>>>>> survey
 import HomeScreen from './screens/HomeScreen';
 import LibraryScreen from './screens/LibraryScreen';
 import BookScreen from './screens/BookScreen';
@@ -30,13 +26,8 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/" component={HomeScreen} />
-<<<<<<< HEAD
-        <Route path="/library" component={LibraryScreen}/>
-        <Route path="/book/:isbn" component={BookScreen} />
-=======
         <Route path="/library" component={LibraryScreen} />
         <Route exact path="/book" component={BookScreen} />
->>>>>>> survey
         <Route path="/result" component={ResultScreen} />
         <Route path="/search" component={SearchScreen} />
         <Route exact path="/survey" component={SurveyScreen} />
