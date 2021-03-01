@@ -17,7 +17,6 @@ import ConnectionScreen from './screens/ConnetionScreen';
 
 function App() {
 
-
   return (
     <Router>
       <Switch>
