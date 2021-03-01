@@ -7,6 +7,9 @@
   display: flex;
   justify-content: flex-end;
 }
+.menu-nav-icon {
+  font-size: 20px;
+}
 .menu-nav-item {
   color: #000000;
   font-size: 14px;
@@ -28,8 +31,11 @@
   display: flex;
   align-items: center;
   margin-left: 10px;
-  margin-right: 20px;
 }
 .menu-nav-item-xs:hover {
   color: #000000;
+}
+.menu-nav-icon-xs {
+  font-size: 18px;
+  margin-right: 10px;
 }
