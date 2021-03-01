@@ -7,8 +7,7 @@ import {
   Route,
 } from "react-router-dom";
 
-
-import HomeScreen from './screens/BookScreen';
+import HomeScreen from './screens/HomeScreen';
 import LibraryScreen from './screens/LibraryScreen';
 import BookScreen from './screens/BookScreen';
 import ResultScreen from './screens/ResultScreen';
@@ -25,7 +24,7 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/" component={HomeScreen} />
-        <Route path="/library" component={LibraryScreen} />
+        <Route path="/library" component={LibraryScreen}/>
         <Route path="/book/:isbn" component={BookScreen} />
         <Route path="/result" component={ResultScreen} />
         <Route path="/search" component={SearchScreen} />

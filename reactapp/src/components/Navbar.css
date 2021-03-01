@@ -1,0 +1,8 @@
+/* Nav menu */
+.menu-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: #e5e5e5;
+  color: #000000;
+}

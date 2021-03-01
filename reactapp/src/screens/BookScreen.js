@@ -2,19 +2,13 @@ import React from 'react';
 import { Avatar, Button, Comment, Row, Col, Image, Rate} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import '../App.css';
+import Nav from '../components/Navbar';
 
 function BookScreen() {
 
   return (
     <div className="container" >
-    <Row style={{ width:'80%', heigth:'30px', backgroundColor:'#23396C', marginBottom:'20px'}}>
-      <div>
-      <Button type="primary">Primary Button</Button>
-        <Col xs={24}>
-        <h2 style={{color:'white'}}>Nav bar</h2>
-        </Col>
-      </div>
-    </Row>
+      <Nav />
 
       <Row className="bookBloc">
         <Col xs={24} md={8} xl={5} >
