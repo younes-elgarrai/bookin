@@ -1,12 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-.container {
-  display:flex;
-  flex-direction:column;
-  width: 100%;
-  align-items: center;
+.font {
   font-family: 'Fira Sans', sans-serif;
-  background-color: #f3f5f7;
 }
 
 .bookBloc {
@@ -51,37 +46,12 @@
   padding-top: 30px;
 }
 
-.h1 {
-  color:#ffffff;
-  font-family: 'Fira Sans', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0px;
-}
-
-.h2 {
-  color:#ffffff;
-  font-family: 'Fira Sans', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  margin: 0px;
-}
-
 .h3 {
   color:#23396C;
   font-family: 'Fira Sans', sans-serif;
   font-size: 16px;
   font-weight: 500;
   margin: 0px;
-}
-
-
-
-.note {
-  color:#ffffff;
-  font-family: 'Fira Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 200;
 }
 
 p {
