@@ -1,33 +1,24 @@
 import React from 'react';
-import './App.css';
-import {Menu} from 'antd'
-import {ReadOutlined, HomeOutlined, LogoutOutlined} from '@ant-design/icons'
-import {Link} from "react-router-dom";
+import { Menu } from 'antd';
+import '../App.css';
+import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, MenuOutlined } from '@ant-design/icons';
+const { SubMenu } = Menu;
 
-
-function Navbar() {
-
+export default function Navbar() {
   return (
-      <Menu mode="horizontal">
+    <Menu key="menu" mode="horizontal" className="menu-nav">
+    <Menu.Item key="logo">Logo Bookin</Menu.Item>
+    <Menu.Item key="search" icon={<SearchOutlined />}>Rechercher</Menu.Item>
+    <Menu.Item key="suggestions" icon={<BulbOutlined />}>Suggestions</Menu.Item>
+    <Menu.Item key="library" icon={<BookOutlined />}>Bibliothèque</Menu.Item>
+    <Menu.Item key="wishlist" icon={<HeartOutlined />}>A lire</Menu.Item>
+    <Menu.Item key="account">Log in / Sign Up</Menu.Item>
+    <SubMenu key="SubMenu" title="Mon profil">
+        <Menu.Item key="setting:1">Modifier mon compte</Menu.Item>
+        <Menu.Item key="setting:2">Me déconnecter</Menu.Item>
+    </SubMenu>
+  </Menu>
 
-        <Menu.Item key="mail">
-          <HomeOutlined />
-          <Link to="/">Rechercher</Link>
-        </Menu.Item>
-
-        <Menu.Item key="test">
-        <ReadOutlined />
-          <Link to='/'>Ma Bibliothèque</Link>
-        </Menu.Item>
-
-        <Menu.Item key="app">
-        <LogoutOutlined />
-          <Link  to='/'>Ma wishlist</Link>
-        </Menu.Item>
-
-      </Menu>
   );
 }
 
-
-export default Navbar;

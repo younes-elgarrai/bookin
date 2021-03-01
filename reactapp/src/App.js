@@ -6,13 +6,8 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-<<<<<<< HEAD
-import './';
-
-=======
 
 
->>>>>>> 349d44e11a3edc8e8edb3f8e5ab33bfdbdcb0d17
 import HomeScreen from './screens/BookScreen';
 import LibraryScreen from './screens/LibraryScreen';
 import BookScreen from './screens/BookScreen';

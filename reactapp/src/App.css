@@ -1,101 +1,99 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 .container {
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   align-items: center;
-  font-family: 'Fira Sans', sans-serif;
+  font-family: "Fira Sans", sans-serif;
   background-color: #f3f5f7;
 }
 
 .bookBloc {
-  width:80%;
-  display:flex;
-  align-items:'center';
-  justify-content:'flex-start';
-  background: #23396C;
+  width: 80%;
+  display: flex;
+  align-items: "center";
+  justify-content: "flex-start";
+  background: #23396c;
   border-radius: 10px 10px 0px 0px;
-  padding:30px;
-  background-image: url('./assets/picto.png');
+  padding: 30px;
+  background-image: url("./assets/picto.png");
   background-size: 20%;
   background-repeat: no-repeat;
   background-position: right bottom;
 }
 
 .buyBloc {
-  width:80%;
-  display:flex;
+  width: 80%;
+  display: flex;
   justify-content: flex-start;
   background: #e1e1e1;
-  padding-left:30px;
+  padding-left: 30px;
   padding-top: 15px;
   padding-bottom: 15px;
 }
 
 .textBloc {
-  display:flex;
+  display: flex;
   justify-content: flex-start;
-  width:80%;
+  width: 80%;
   background-color: #ffffff;
-  padding-left:30px;
-  padding-right:30px;
+  padding-left: 30px;
+  padding-right: 30px;
   padding-top: 30px;
 }
 
-.libraryBloc  {
-  width:80%;
+.libraryBloc {
+  width: 80%;
   background-color: #ffffff;
-  padding-left:30px;
-  padding-right:30px;
+  padding-left: 30px;
+  padding-right: 30px;
   padding-top: 30px;
 }
 
 .h1 {
-  color:#ffffff;
-  font-family: 'Fira Sans', sans-serif;
+  color: #ffffff;
+  font-family: "Fira Sans", sans-serif;
   font-size: 20px;
   font-weight: 700;
   margin: 0px;
 }
 
 .h2 {
-  color:#ffffff;
-  font-family: 'Fira Sans', sans-serif;
+  color: #ffffff;
+  font-family: "Fira Sans", sans-serif;
   font-size: 16px;
   font-weight: 400;
   margin: 0px;
 }
 
 .h3 {
-  color:#23396C;
-  font-family: 'Fira Sans', sans-serif;
+  color: #23396c;
+  font-family: "Fira Sans", sans-serif;
   font-size: 16px;
   font-weight: 500;
   margin: 0px;
 }
 
-
-
 .note {
-  color:#ffffff;
-  font-family: 'Fira Sans', sans-serif;
+  color: #ffffff;
+  font-family: "Fira Sans", sans-serif;
   font-size: 12px;
   font-weight: 200;
 }
 
 p {
-  font-family: 'Fira Sans', sans-serif;
-  color:#333;
-  font-size:14px;
+  font-family: "Fira Sans", sans-serif;
+  color: #333;
+  font-size: 14px;
   font-weight: 300;
 }
 
 .link {
   text-decoration: none;
-  color:#ffffff;
+  color: #ffffff;
 }
 
 .bouton {
-  color:red;
+  color: red;
 }
