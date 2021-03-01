@@ -1,8 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 /* Nav menu */
 /* Large Menu */
 .menu-nav {
   background-color: #e5e5e5;
   padding: 0 40px;
+  font-family: "Fira Sans", sans-serif;
 }
 .right-menu {
   display: flex;
@@ -32,6 +34,7 @@
   background-color: #e5e5e5;
   width: 40%;
   border-radius: 5px;
+  font-family: "Fira Sans", sans-serif;
 }
 .menu-nav-header-icon-xs {
   display: flex;
