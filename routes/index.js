@@ -1,12 +1,14 @@
-var express = require('express');
-var router = express.Router();
-
+const express = require('express');
+const router = express.Router();
+const UsersModel = require('../models/users');
+const ReviewsModel = require('../models/reviews');
+const uid2 = require('uid2');
+const bcrypt = require('bcrypt');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-
 
 /*
   Add a book in my library
@@ -51,53 +53,21 @@ router.get('/library/:token', function (req, res) {
   //Sorties : success, failure, [ISBN13]
  })
 
-//  CELINE 
-const uid2 = require('uid2');
-const bcrypt = require('bcrypt');
-const UsersModel = require('../models/users');
-const ReviewsModel = require('../models/reviews');
 
-// Check email from user (bouton "continuer")
-router.post('/check-email');
-// vérifier si le mail est déjà dans la DB ou pas.
-// vérifier le format de l'email à cette étape.
-
-// Signup
-router.post('/sign-up', async function(req, res, next) {
+// POST : check email from user (bouton "continuer")
+router.post('/check-email', async function (req, res, next) {
   const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
-  if (!!req.body.userLibraryName && !!req.body.password && checkExistingUserFromEmail) {
-    res.json({result: false, message: "il existe déjà un compte lié à cet email."})
-    // redirect écran login 
-  } else if (!req.body.userLibraryName || !req.body.email || !req.body.password) {
-    res.json({result: false, message: "Veuillez remplir tous les champs pour créer un compte."})
-  }  else {
-    const userSave = await saveNewUser(req);
-    const userToken = userSave.token;
-    res.json({userToken, result:true});
+  console.log('check', checkExistingUserFromEmail); // null > else
+  if (checkExistingUserFromEmail) {
+    res.json({result:true});
+  } else {
+    res.json({result:false})
   }
 });
 
-async function saveNewUser(req) {
-  const cost = 10;
-  const hash = bcrypt.hashSync(req.body.password, cost);
-  const user = new UsersModel({
-    // dans un cookie ou dans du localstorage ?
-    // if (!cookie) message: 'refaire le questionnaire'
-    favoriteBookStyles: req.body.favoriteBookStyles, // récupéré comment en front ?
-    favoriteBookLength: req.body.favoriteBookLength, // récupéré comment en front ?
-    favoriteBookPeriod: req.body.favoriteBookPeriod, // récupéré comment en front ?
-    userLibraryName: req.body.userLibraryName,
-    avatar: req.body.avatar, // url à récupérer... 
-    email: req.body.email,
-    password: hash,
-    token: uid2(32), 
-  });
-  const userSave = await user.save();
-  return userSave;
-}
-
-// Login
+// POST : Login
 router.post('/log-in', async function(req, res, next) {
+  console.log('log in req body infos', req.body.email, req.body.password);
   if (!req.body.email || !req.body.password) {
     res.json({ login: false, message: "Veuillez remplir tous les champs pour accéder à votre compte."})
   } else {
@@ -110,6 +80,34 @@ router.post('/log-in', async function(req, res, next) {
     res.json({login: false, message: "Ce compte n'existe pas, veuillez réessayer ou créer un compte." }); }
 }});
 
+// POST : Signup
+router.post('/sign-up', async function(req, res, next) {
+  if (!req.body.name || !req.body.email || !req.body.password) {
+    res.json({result: false, message: "Veuillez remplir tous les champs pour créer un compte."})
+  }  else {
+    const userSave = await saveNewUser(req);
+    const userToken = userSave.token;
+    res.json({result:true, userToken});
+  }
+});
+async function saveNewUser(req) {
+  const cost = 10;
+  const hash = bcrypt.hashSync(req.body.password, cost);
+  const user = new UsersModel({
+    // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire'
+    // favoriteBookStyles: [], 
+    // favoriteBookLength: [], 
+    // favoriteBookPeriod: [], 
+    userLibraryName: req.body.name,
+    avatar: 'req.body.avatar, // url à récupérer...' ,
+    email: req.body.email,
+    password: hash,
+    token: uid2(32), 
+  });
+  const userSave = await user.save();
+  return userSave;
+}
+
 // Update profile
 router.post('/update', async (req, res) => {
   const user = await UsersModel.find({token: req.body.token});
@@ -121,8 +119,6 @@ router.post('/update', async (req, res) => {
   const userSave = await user.save();
   res.json({ result: true, userSave });
 });
-
-// Logout : géré en frontend.
 
 // Post review
 router.post('/new-review', (req, res) => {

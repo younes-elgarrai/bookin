@@ -1,36 +1,61 @@
-export default  function surveyReducer(survey = {favoriteBookStyles:[], 
-                                                 favoriteBookPeriod:[],
-                                                favoriteBookLength:[]}, action) {
+export default  function surveyReducer(survey = {Styles:{void:[]}, Period:[], Length:[]}, action) {
 
    if(action.type === 'addStyles') {
 
       var surveyCopy = {...survey}
 
-      var surveyStyles = [...survey.favoriteBookStyles, action.element];
+      var surveyStylesCopy = {...survey.Styles}
 
-      surveyCopy.favoriteBookStyles = surveyStyles;
+      if(action.element.category==='main'){
 
-      return surveyCopy;
+        surveyStylesCopy[action.element.subcategory] = [];
+  
+        surveyCopy.Styles = surveyStylesCopy;
+  
+        return surveyCopy;
+
+      }else{
+        var arrayCopy = surveyStylesCopy[action.element.category];
+
+        surveyStylesCopy[action.element.category] = [...arrayCopy, action.element.subcategory]
+  
+        surveyCopy.Styles = surveyStylesCopy;
+  
+        return surveyCopy;
+      }
+
   
     } else if(action.type === 'removeStyles'){
 
-        var surveyCopy2 = {...survey};
 
-        var surveyStyles2 = [...survey.favoriteBookStyles];
+      var surveyCopy2 = {...survey};
 
-        surveyStyles2 = surveyStyles2.filter( e => e!==action.element);
+      var surveyStyles2 = {...survey.Styles};
 
-        surveyCopy2.favoriteBookStyles = surveyStyles2;
+      if(action.element.category==='main'){
+
+        delete surveyStyles2[action.element.subcategory];
+
+        surveyCopy2.Styles = surveyStyles2;
 
         return surveyCopy2;
+
+      }else{
+
+        surveyStyles2[action.element.category] = surveyStyles2[action.element.category].filter( e => e!==action.element.subcategory);
+
+        surveyCopy2.Styles = surveyStyles2;
+
+        return surveyCopy2;
+      }
+      
+
 
     }else if(action.type === 'addLength') {
 
       var surveyCopy3 = {...survey}
 
-      var surveyLength3 = [...survey.favoriteBookLength, action.element];
-
-      surveyCopy3.favoriteBookLength = surveyLength3;
+      surveyCopy3.Length = [action.element.subcategory];
 
       return surveyCopy3;
 
@@ -38,11 +63,11 @@ export default  function surveyReducer(survey = {favoriteBookStyles:[],
 
         var surveyCopy4 = {...survey};
 
-        var surveyLength4 = [...survey.favoriteBookLength];
+        var surveyLength4 = [...survey.Length];
 
-        surveyLength4 = surveyLength4.filter( e => e!==action.element);
+        surveyLength4 = surveyLength4.filter( e => e!==action.element.subcategory);
 
-        surveyCopy4.favoriteBookLength = surveyLength4;
+        surveyCopy4.Length = surveyLength4;
 
         return surveyCopy4;
     
@@ -50,10 +75,8 @@ export default  function surveyReducer(survey = {favoriteBookStyles:[],
     }else if(action.type === 'addPeriod'){
 
         var surveyCopy5 = {...survey}
-
-        var surveyPeriod5 = [...survey.favoriteBookPeriod, action.element];
   
-        surveyCopy5.favoriteBookPeriod = surveyPeriod5;
+        surveyCopy5.Period = [action.element.subcategory];
   
         return surveyCopy5;
 
@@ -61,11 +84,11 @@ export default  function surveyReducer(survey = {favoriteBookStyles:[],
 
         var surveyCopy6 = {...survey};
 
-        var surveyPeriod6 = [...survey.favoriteBookPeriod];
+        var surveyPeriod6 = [...survey.Period];
 
-        surveyPeriod6 = surveyPeriod6.filter( e => e!==action.element);
+        surveyPeriod6 = surveyPeriod6.filter( e => e!==action.element.subcategory);
 
-        surveyCopy6.favoriteBookPeriod = surveyPeriod6;
+        surveyCopy6.Period = surveyPeriod6;
 
         return surveyCopy6;
 

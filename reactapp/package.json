@@ -15,10 +15,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "reactstrap": "^8.9.0",
-<<<<<<< HEAD
-=======
     "redux": "^4.0.5",
->>>>>>> fd364d64dea25ce7a831db0d5cc145ad93d213b3
     "web-vitals": "^1.1.0"
   },
   "scripts": {

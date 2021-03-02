@@ -1,29 +1,62 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Card} from 'antd';
 
 import {connect} from 'react-redux';
 
-function SurveyContainer(props){
+var width = '';
 
-    const [active, setActive] = useState(false);
+function Response(props){
 
-    var toggle = (e,typ)=>{
+    var background = props.isSelected?'red':null;
 
-        setActive(!active);
 
-        var func = active?props.remove:props.add;
+    const dynamicStyle = {
+        width: width,
+        textAlign: 'center',
+        backgroundColor: background
+      };
 
-        func(e,typ);
+
+    var handleClick = ()=>{
+
+    !props.isSelected&&props.handleClickAddParent();
+     props.isSelected&&props.handleClickRemoveParent();
 
     }
 
-    const background = active?'red':null;
+    return <Card.Grid style={dynamicStyle} onClick={()=>handleClick()} >{props.txt}</Card.Grid>;
+
+}
+
+function SurveyContainer(props){
+
+
+    width = props.type!=='Length'?'33%':'100%';
+
+    var handleClickAdd = (e,typ)=>{
+        
+        props.add(e,typ)
+        props.category==='main'&&props.setCategory(e.subcategory);
+    }
+
+    var handleClickRemove = (e,typ)=>{
+
+        props.remove(e,typ)
+    }
+
+    const cardStyle = {
+        justifyContent: 'center',
+    }
 
     return(
         <div className='survey'>
-            <Card title={props.question}>
+            <Card  title={props.question} style={cardStyle} >
                 {props.array.map((elem, index)=>{
-                    return <Card.Grid key={index} style={{...gridStyle, backgroundColor: background}} onClick={()=>toggle(elem, props.type)}>{elem}</Card.Grid>
+                    return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd({category: props.category, subcategory: elem},props.type)}
+                                                            handleClickRemoveParent={()=>handleClickRemove({category: props.category, subcategory: elem},props.type)}                
+                                                            isSelected={props.category==='main'?Object.keys(props.survey[props.type]).some(e => e === elem)
+                                                                                             :props.category==='array'?props.survey[props.type].some(e => e === elem)
+                                                                                             :props.survey[props.type][props.category].some(e => e === elem)} />
                     })}
             </Card>
         </div>
@@ -31,12 +64,6 @@ function SurveyContainer(props){
 
     );
 }
-
-const gridStyle = {
-    width: '35%',
-    textAlign: 'center',
-  };
-
 
 
   function mapDispatchToProps(dispatch) {
@@ -47,10 +74,18 @@ const gridStyle = {
         },
         remove: function (e, typ) {
             dispatch({type: 'remove'+typ, element: e })
+        },
+        setCategory: function(e) {
+            dispatch({type: 'setCategory', element: e})
         }
 
     }
 }
 
+    function mapStateToProps(state) {
 
-export default connect(null, mapDispatchToProps)(SurveyContainer);
+        return {survey: state.survey};
+    }
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SurveyContainer);
