@@ -19,15 +19,29 @@ function BookScreen() {
     const [dataImg, setDataImg] = useState ();
     let {isbn} = useParams();
 
+    const regex = new RegExp('^(?:ISBN(?:-13)?:?\ )?(?=[0-9]{13}$|(?=(?:[0-9]+[-\ ]){4})[-\ 0-9]{17}$)97[89][-\ ]?[0-9]{1,5}[-\ ]?[0-9]+[-\ ]?[0-9]+[-\ ]?[0-9]$');
+    
+
     useEffect(() => {
-        const findBook = async() => {
-          const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${isbn}&maxResults=40&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`)
-          const datajson = await data.json()
-          console.log(datajson.items[0].volumeInfo);
-          setDataBook(datajson.items[0].volumeInfo)
-          setDataImg(datajson.items[0].volumeInfo.imageLinks.thumbnail)
+        if (regex.test(isbn)) {
+            const findBook = async() => {
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${isbn}&maxResults=40&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`)
+                const datajson = await data.json()
+                setDataBook(datajson.items[0].volumeInfo)
+                setDataImg(datajson.items[0].volumeInfo.imageLinks.thumbnail)
+              }
+              findBook()    
+        } else {
+            const findBook2 = async() => {
+                alert('Livre inconnu, nous vous recommandons cette lecture')
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=9782203214095&maxResults=40&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`)
+                const datajson = await data.json()
+                setDataBook(datajson.items[0].volumeInfo)
+                setDataImg(datajson.items[0].volumeInfo.imageLinks.thumbnail)
+              }
+              findBook2()    
         }
-        findBook()    
+
       },[])
 
   return (
@@ -40,25 +54,37 @@ function BookScreen() {
             <Row>
             <Col xs={24}>
                 <h3 style={styles.h3}>Ils ont ajouté ce livre à leur bibliothèque </h3>
-                {/* <p>Titre : {dataBook.title}</p>
-                <p>Editeur: {dataBook.publisher}</p>
-                <p>Categories: {dataBook.categories}</p>
-                <p>isbn: {dataBook.industryIdentifiers[0].identifier}</p>
-                <p>image:{dataBook.imageLinks.thumbnail}</p> */}
-
-
             </Col>
             </Row>
             <Row>
-            <Col style={{marginBottom:'5px'}}xs={8} md={2}><Avatar size={64} icon={<UserOutlined />} /></Col>
-            <Col style={{marginBottom:'5px'}}xs={8} md={2}><Avatar size={64} icon={<UserOutlined />} /></Col>
-            <Col style={{marginBottom:'5px'}}xs={8} md={2}><Avatar size={64} icon={<UserOutlined />} /></Col>
-            <Col style={{marginBottom:'5px'}}xs={8} md={2}><Avatar size={64} icon={<UserOutlined />} /></Col>
+            <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+            <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+            <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+            <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
             </Row>
         </div>
 
+        <div style={styles.libraryBloc}  className='font'>
+            <Row>
+                <Col xs={24}>
+                    <h3 style={styles.h3}>Nos recommandations</h3>
+                </Col>
+            </Row>
+
+            <Row>
+                <BookCard/>
+                <BookCard/>
+                <BookCard/>
+                <BookCard/>
+                <BookCard/>
+                <BookCard/>
+                <BookCard/>
+            </Row>
+
+        </div>
+
        
-        <BookCard/>
+
         <Review/>
 </Content>
 );
@@ -75,10 +101,8 @@ let styles = {
 
     libraryBloc: {
         width:'80%',
-        backgroundColor: 'white',
-        paddingLeft:'30px',
-        paddingTight:'30px',
-        paddingTop: '30px',
+        backgroundColor: 'red',
+        padding:'30px',
     },
 
     h3: {
@@ -87,7 +111,15 @@ let styles = {
         fontWeight: "500",
         margin: "0px",
         paddingBottom:"10px"
-      }
+      },
+
+    libraryBloc: {
+        width:'80%',
+        backgroundColor: 'white',
+        paddingTop:'30px',
+        paddingLeft:'30px',
+        paddingRight:'30px',
+    },
 }
 
 export default BookScreen;

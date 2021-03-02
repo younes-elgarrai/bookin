@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Row, Col, Image} from 'antd';
+import { Button, Row, Col} from 'antd';
 import { StarFilled} from '@ant-design/icons';
 import '../App.css'
 import Background from '../assets/picto.png'
+import Cover from '../assets/cover.jpg'
 
 
 function BookHeader(props) {
@@ -11,8 +12,8 @@ function BookHeader(props) {
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} >
-        <Image width={150}
-        src={props.bookCover}
+        <img width={150}
+        src={!props.bookCover ? `${Cover}`:props.bookCover}
         alt={props.bookTitle}
       />
   
@@ -21,7 +22,7 @@ function BookHeader(props) {
 
         <Col xs={24} md={12} xl={12} >
         <h1 style={styles.h1}>{props.bookTitle}</h1>
-        <h2 style={styles.h2}><a href='https://livre.fnac.com/a15106090/Leila-Slimani-Le-parfum-des-fleurs-la-nuit' target="_blank" rel="noreferrer" style={styles.link}>Leila Slimani</a></h2>
+        <h2 style={styles.h2}><a href='https://livre.fnac.com/a15106090/Leila-Slimani-Le-parfum-des-fleurs-la-nuit' target="_blank" rel="noreferrer" style={styles.link}>{props.bookAuthor}</a></h2>
         
         <div>
 

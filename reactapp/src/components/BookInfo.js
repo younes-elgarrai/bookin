@@ -1,23 +1,20 @@
 import React from 'react';
 import { Row, Col} from 'antd';
 import '../App.css'
-import BookHeader from './BookHeader';
 
 function BookInfo(props) {
+  
 
 return (
 <div>
     <div style={styles.container}  className='font'>
         <Row style={styles.textBloc}>
-            <Col xs={24}>
+            <Col xs={24} md={16} xl={18}>
                 <h3 style={styles.h3}>Résumé du livre : {props.bookTitle}</h3>
-                <p style={{color:"#333", fontSize:"14px", fontWeight:"300"}}>{props.bookDesc}</p>
+                <p style={{color:"#333", fontSize:"14px", fontWeight:"300", marginRight:"30px"}}>{props.bookDesc}</p>
             </Col>
-        </Row>
 
-
-        <Row style={styles.textBloc}>
-            <Col xs={24} >
+            <Col xs={24} md={8} xl={6} >
                 <h3 style={styles.h3}>Plus d'informations</h3>
                 <p style={{color:"#333", fontSize:"14px", fontWeight:"300"}}>
                 Date de parution : {props.publishedDate}<br />
