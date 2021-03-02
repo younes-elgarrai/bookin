@@ -72,7 +72,7 @@ let styles = {
         borderTopRightRadius:"10px",
         borderTopLeftRadius:"10px",
         padding:'30px',
-        // background-image: url('./assets/picto.png'),
+        // backgroundImage: `url('./assets/picto.png')`,
         backgroundSize: '20%',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'right bottom',

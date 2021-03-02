@@ -7,12 +7,7 @@ import {
   Route,
 } from "react-router-dom";
 
-<<<<<<< HEAD
-
-import HomeScreen from './screens/BookScreen';
-=======
 import HomeScreen from './screens/HomeScreen';
->>>>>>> e19c541433f7d1469c9dbee9757c1a1469b19be1
 import LibraryScreen from './screens/LibraryScreen';
 import BookScreen from './screens/BookScreen';
 import ResultScreen from './screens/ResultScreen';
@@ -36,7 +31,6 @@ function App() {
 
 
   return (
-<<<<<<< HEAD
     <Provider store={store}>
       <Router>
         <Switch>
@@ -52,20 +46,6 @@ function App() {
       </Router>  
     </Provider>
 
-=======
-    <Router>
-      <Switch>
-        <Route exact path="/" component={HomeScreen} />
-        <Route path="/library" component={LibraryScreen} />
-        <Route exact path="/book" component={BookScreen} />
-        <Route path="/result" component={ResultScreen} />
-        <Route path="/search" component={SearchScreen} />
-        <Route exact path="/survey" component={SurveyScreen} />
-        <Route path="/create-account" component={CreateAccountScreen} />
-        <Route path="/connection" component={ConnectionScreen} />
-      </Switch>
-    </Router>  
->>>>>>> e19c541433f7d1469c9dbee9757c1a1469b19be1
   );
 }
 
