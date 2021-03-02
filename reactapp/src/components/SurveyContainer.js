@@ -3,9 +3,6 @@ import {Card} from 'antd';
 
 import {connect} from 'react-redux';
 
-
-
-
 function SurveyContainer(props){
 
     const [active, setActive] = useState(false);
