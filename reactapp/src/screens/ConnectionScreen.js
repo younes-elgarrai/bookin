@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import '../App.css';
-import { Input, Radio, Button} from 'antd';
-import { RightOutlined } from '@ant-design/icons';
+import { Input, Radio, Button, Space} from 'antd';
+import { RightOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Nav from '../components/Navbar';
 
 export default function ConnectionScreen() {
@@ -11,6 +11,7 @@ export default function ConnectionScreen() {
     const [ password, setPassword ] = useState();
 
     const checkAccountEmail = async () => {
+        // Ajouter message dans cas ou email enregistré et cliqué "non" : "en fait si t'as un compte"
         if (!checkEmailFormat(email)) {
             console.log('veuillez saisir un email valide.'); // afficher message et pas de redirection
         } else {
@@ -67,8 +68,8 @@ export default function ConnectionScreen() {
             {emailCheckedFromBack && 
             <div>
                 <p style={styles.label}>Saisissez votre mot de passe : </p>
-                <Input placeholder="mot de passe" onChange={(e)=> setPassword(e.target.value)}></Input>
-                <p style={styles.smallLabel}>mot de passe oublié ?</p>
+                <Input.Password placeholder="mot de passe" onChange={(e)=> setPassword(e.target.value)} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}></Input.Password>
+                <Button type='link' style={styles.smallBtn} onClick={()=> console.log("click")}>mot de passe oublié ?</Button>
                 <Button style={styles.btn} onClick={()=> checkPasswordToLogin()}>Continuer <RightOutlined/></Button>
                 <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
@@ -115,5 +116,12 @@ const styles = {
         borderColor:'#fca311', 
         borderRadius:'5px',
 
+    },
+    smallBtn:{
+        color:'#23396c',
+        fontSize:'10px',
+        fontWeight:'bold',
+        marginTop:'5px',
+        marginBottom:'10px'
     }    
 }

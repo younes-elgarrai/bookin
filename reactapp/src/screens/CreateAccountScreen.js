@@ -51,7 +51,6 @@ export default function CreateAccountScreen() {
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Choisissez le nom de votre bibliothèque">
                   <Input placeholder="Bibliothèque de Victor" onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} />
                 </Form.Item>
-        
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre adresse email :">
                     <Input placeholder="victor@hugo.com" onChange={(e)=> setUserEmail(e.target.value)} value={userEmail}/>
                 </Form.Item>

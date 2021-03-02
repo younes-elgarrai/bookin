@@ -80,33 +80,26 @@ router.post('/log-in', async function(req, res, next) {
     res.json({login: false, message: "Ce compte n'existe pas, veuillez réessayer ou créer un compte." }); }
 }});
 
-// Signup
+// POST : Signup
 router.post('/sign-up', async function(req, res, next) {
-  const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
-  // le check est fait à l'étape d'avant.
-  if (!!req.body.userLibraryName && !!req.body.password && checkExistingUserFromEmail) {
-    res.json({result: false, message: "il existe déjà un compte lié à cet email."})
-    // redirect écran login 
-  } else if (!req.body.userLibraryName || !req.body.email || !req.body.password) {
+  if (!req.body.name || !req.body.email || !req.body.password) {
     res.json({result: false, message: "Veuillez remplir tous les champs pour créer un compte."})
   }  else {
     const userSave = await saveNewUser(req);
     const userToken = userSave.token;
-    res.json({userToken, result:true});
+    res.json({result:true, userToken});
   }
 });
-
 async function saveNewUser(req) {
   const cost = 10;
   const hash = bcrypt.hashSync(req.body.password, cost);
   const user = new UsersModel({
-    // dans un cookie ou dans du localstorage ?
-    // if (!cookie) message: 'refaire le questionnaire'
-    favoriteBookStyles: req.body.favoriteBookStyles, // récupéré comment en front ?
-    favoriteBookLength: req.body.favoriteBookLength, // récupéré comment en front ?
-    favoriteBookPeriod: req.body.favoriteBookPeriod, // récupéré comment en front ?
-    userLibraryName: req.body.userLibraryName,
-    avatar: req.body.avatar, // url à récupérer... 
+    // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire'
+    // favoriteBookStyles: [], 
+    // favoriteBookLength: [], 
+    // favoriteBookPeriod: [], 
+    userLibraryName: req.body.name,
+    avatar: 'req.body.avatar, // url à récupérer...' ,
     email: req.body.email,
     password: hash,
     token: uid2(32), 
@@ -114,8 +107,6 @@ async function saveNewUser(req) {
   const userSave = await user.save();
   return userSave;
 }
-
-
 
 // Update profile
 router.post('/update', async (req, res) => {
