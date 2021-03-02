@@ -16,13 +16,17 @@ import SurveyScreen from './screens/SurveyScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
 import ConnectionScreen from './screens/ConnectionScreen';
 
+import surveyReducer from './reducers/survey.reducer';
+import tokenReducer from './reducers/token.reducer';
+
+
 import {Provider} from 'react-redux';
-import {createStore, combineReducers} from 'redux';
 
-import token from './reducers/token.reducer'
-import survey from './reducers/survey.reducer'
+import {createStore, combineReducers}  from 'redux';
 
-const store = createStore(combineReducers({survey, token}))
+const store = createStore(combineReducers({survey: surveyReducer, token: tokenReducer}));
+
+
 
 function App() {
 
