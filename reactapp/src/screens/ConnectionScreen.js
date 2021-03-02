@@ -46,32 +46,32 @@ export default function ConnectionScreen() {
     }
 
     return (
-        <div>
+        <div className='font'>
         <Nav/>
-        <div className="container">
-              <h3>Connexion</h3>
-              <p>Connectez-vous pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
+        <div style={styles.container}>
+              <h3 style={styles.title}>Connexion</h3>
+              <p style={styles.label}>Connectez-vous pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
             
             <div className="form">
-              <p>Saisissez votre adresse email : </p>
+              <p style={styles.label}>Saisissez votre adresse email : </p>
               <Input placeholder="victor@hugo.com" onChange={(e)=>setEmail(e.target.value)} value={email}></Input>
 
-              <p>Avez-vous déjà un compte ?</p>
-              <Radio.Group onChange={(e)=> setHasAccount(e.target.value)} value={hasAccount}>
-                <Radio style={{display:'block', height:'30px', lineHeight:'30px'}} value={false}>Non, je n'ai pas encore de compte.</Radio>
-                <Radio style={{display:'block', height:'30px', lineHeight:'30px'}} value={true}>Oui, j'ai déjà un compte.</Radio>
+              <p style={styles.label}>Avez-vous déjà un compte ?</p>
+              <Radio.Group style={{display:'block', marginBottom:'20px'}} onChange={(e)=> setHasAccount(e.target.value)} value={hasAccount}>
+                <Radio style={{display:'block', height:'30px', lineHeight:'30px', fontSize:'12px'}} value={false}>Non, je n'ai pas encore de compte.</Radio>
+                <Radio style={{display:'block', height:'30px', lineHeight:'30px',fontSize:'12px'}} value={true}>Oui, j'ai déjà un compte.</Radio>
              </Radio.Group>
              {(emailCheckedFromBack===false) &&
-                <Button onClick={()=> checkAccountEmail()}>Continuer <RightOutlined/></Button>
+                <Button style={styles.btn} onClick={()=> checkAccountEmail()}>Continuer <RightOutlined/></Button>
             }
            
             {emailCheckedFromBack && 
             <div>
-                <p>Saisissez votre mot de passe : </p>
+                <p style={styles.label}>Saisissez votre mot de passe : </p>
                 <Input placeholder="mot de passe" onChange={(e)=> setPassword(e.target.value)}></Input>
-                <p>mot de passe oublié ?</p>
+                <p style={styles.smallLabel}>mot de passe oublié ?</p>
                 <Button onClick={()=> checkPasswordToLogin()}>Continuer <RightOutlined/></Button>
-                <p>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
+                <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
             }
             </div>
@@ -79,3 +79,42 @@ export default function ConnectionScreen() {
         </div>
       );
     }
+
+const styles = {
+    container: {
+        display:'flex',
+        flexDirection:'column',
+        alignItems:'center',
+        width:'100%',
+        backgroundColor:'#f3f5f7',
+        padding:'20px'
+        },
+    title: {
+        color:"#23396C",
+        fontSize: "24px",
+        fontWeight: "500",
+        marginTop: "20px",
+        paddingBottom:"10px"
+    },
+    label: {
+        color:'#000000',
+        fontSize:'14px',
+        marginTop:'20px',
+        marginBottom:'10px'
+    },
+    smallLabel:{
+        color:'#000000',
+        fontSize:'10px',
+        marginTop:'5px',
+        marginBottom:'10px'
+      },
+    btn: {
+        marginRight:'10px',
+        backgroundColor:'#fca311', 
+        fontWeight:'500', 
+        color:'#23396c', 
+        borderColor:'#fca311', 
+        borderRadius:'5px',
+
+    }    
+}

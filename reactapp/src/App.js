@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import 'antd/dist/antd.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
   Switch,

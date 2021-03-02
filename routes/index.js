@@ -65,6 +65,21 @@ router.post('/check-email', async function (req, res, next) {
   }
 });
 
+// POST : Login
+router.post('/log-in', async function(req, res, next) {
+  console.log('log in req body infos', req.body.email, req.body.password);
+  if (!req.body.email || !req.body.password) {
+    res.json({ login: false, message: "Veuillez remplir tous les champs pour accéder à votre compte."})
+  } else {
+  const user = await UsersModel.findOne({email: req.body.email});
+  const password = req.body.password;
+  const userToken = user.token;
+  if (bcrypt.compareSync(password, user.password)) {
+    res.json({ login: true, userToken });
+  } else { 
+    res.json({login: false, message: "Ce compte n'existe pas, veuillez réessayer ou créer un compte." }); }
+}});
+
 // Signup
 router.post('/sign-up', async function(req, res, next) {
   const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
@@ -100,20 +115,7 @@ async function saveNewUser(req) {
   return userSave;
 }
 
-// Login
-router.post('/log-in', async function(req, res, next) {
-  console.log('log in req body infos', req.body.email, req.body.password);
-  if (!req.body.email || !req.body.password) {
-    res.json({ login: false, message: "Veuillez remplir tous les champs pour accéder à votre compte."})
-  } else {
-  const user = await UsersModel.findOne({email: req.body.email});
-  const password = req.body.password;
-  const userToken = user.token;
-  if (bcrypt.compareSync(password, user.password)) {
-    res.json({ login: true, userToken });
-  } else { 
-    res.json({login: false, message: "Ce compte n'existe pas, veuillez réessayer ou créer un compte." }); }
-}});
+
 
 // Update profile
 router.post('/update', async (req, res) => {
