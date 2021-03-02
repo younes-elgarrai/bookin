@@ -61,9 +61,9 @@ export default function ConnectionScreen() {
                 <Radio style={{display:'block', height:'30px', lineHeight:'30px'}} value={false}>Non, je n'ai pas encore de compte.</Radio>
                 <Radio style={{display:'block', height:'30px', lineHeight:'30px'}} value={true}>Oui, j'ai déjà un compte.</Radio>
              </Radio.Group>
-             {(emailCheckedFromBack===false &&
+             {(emailCheckedFromBack===false) &&
                 <Button onClick={()=> checkAccountEmail()}>Continuer <RightOutlined/></Button>
-              )}
+            }
            
             {emailCheckedFromBack && 
             <div>
