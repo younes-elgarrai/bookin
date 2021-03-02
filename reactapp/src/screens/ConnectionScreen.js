@@ -7,10 +7,50 @@ import Nav from '../components/Navbar';
 export default function ConnectionScreen() {
     const [hasAccount, setHasAccount]=useState(false);
     console.log(hasAccount);
+    const [email, setEmail] = useState();
+    console.log(email);
 
-    const checkAccountEmail = () => {
-        console.log("click");
+    const checkAccountEmail = async () => {
+        if (!checkEmailFormat(email)) {
+            console.log('veuillez saisir un email valide.');
+            // pas de redirection
+        } else if (!hasAccount && checkEmailFormat(email)) {
+            console.log('pas de compte associé à cet email');
+            // rediriger vers sign up.
+        } else if (hasAccount && checkEmailFormat(email)) {
+            console.log('checkemailformat in button', checkEmailFormat(email));
+            const response = await fetch('/check-email', {
+                method: 'POST',
+                headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                body: `email=${email}`
+            });
+            const dataResponse = await response.json();
+            console.log('dataResponse',dataResponse);
+        } 
     }
+
+    // let handleSubmitSignUp = async (name, email, password) => {
+    //     const response = await fetch('/sign-up', {
+    //       method: 'POST',
+    //       headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    //       body: `usernameFromFront=${name}&emailFromFront=${email}&passwordFromFront=${password}`
+    //     }); 
+    //     const dataResponse = await response.json();
+    //     const userToken = dataResponse.userToken;
+    //     if (userToken) {
+    //       props.addTokenOnSignUpClick(userToken);
+    //     }
+    //     if (dataResponse.result) {    
+    //       setIsLogin(true);
+    //     } else if (dataResponse.message) {
+    //       setMessage(dataResponse.message);
+    //     }
+    //   }
+    const checkEmailFormat = (email) => {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return email ? re.test(String(email).toLowerCase()) : false;
+    }
+
     const checkLogin = () => {
         console.log("click");
     }
@@ -24,7 +64,7 @@ export default function ConnectionScreen() {
               <p>Connectez-vous pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
 
               <p>Saisissez votre adresse email : </p>
-              <Input placeholder="victor@hugo.com"></Input>
+              <Input placeholder="victor@hugo.com" onChange={(e)=>setEmail(e.target.value)} value={email}></Input>
 
               <p>Avez-vous déjà un compte ?</p>
               <Radio.Group onChange={(e)=> setHasAccount(e.target.value)} value={hasAccount}>
