@@ -19,13 +19,14 @@ import ConnectionScreen from './screens/ConnectionScreen';
 
 import surveyReducer from './reducers/survey.reducer';
 import tokenReducer from './reducers/token.reducer';
+import categoryReducer from './reducers/category.reducer';
 
 
 import {Provider} from 'react-redux';
 
 import {createStore, combineReducers}  from 'redux';
 
-const store = createStore(combineReducers({survey: surveyReducer, token: tokenReducer}));
+const store = createStore(combineReducers({survey: surveyReducer, token: tokenReducer, category: categoryReducer}));
 
 
 

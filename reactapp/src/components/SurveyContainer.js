@@ -34,8 +34,9 @@ function SurveyContainer(props){
     width = props.type!=='Length'?'33%':'100%';
 
     var handleClickAdd = (e,typ)=>{
-
+        
         props.add(e,typ)
+        props.category==='main'&&props.setCategory(e.subcategory);
     }
 
     var handleClickRemove = (e,typ)=>{
@@ -55,7 +56,7 @@ function SurveyContainer(props){
                                                             handleClickRemoveParent={()=>handleClickRemove({category: props.category, subcategory: elem},props.type)}                
                                                             isSelected={props.category==='main'?Object.keys(props.survey[props.type]).some(e => e === elem)
                                                                                              :props.category==='array'?props.survey[props.type].some(e => e === elem)
-                                                                                             :props.survey[props.type][props.category].some(e => e === props.subjects[props.category][elem])} />
+                                                                                             :props.survey[props.type][props.category].some(e => e === elem)} />
                     })}
             </Card>
         </div>
@@ -73,6 +74,9 @@ function SurveyContainer(props){
         },
         remove: function (e, typ) {
             dispatch({type: 'remove'+typ, element: e })
+        },
+        setCategory: function(e) {
+            dispatch({type: 'setCategory', element: e})
         }
 
     }

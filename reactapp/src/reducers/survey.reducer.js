@@ -21,8 +21,6 @@ export default  function surveyReducer(survey = {Styles:{void:[]}, Period:[], Le
   
         surveyCopy.Styles = surveyStylesCopy;
   
-        console.log(surveyStylesCopy);
-  
         return surveyCopy;
       }
 
