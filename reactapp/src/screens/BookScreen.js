@@ -14,40 +14,37 @@ import BookCard from '../components/BookCard'
 
 const { Content } = Layout;
 
-function BookScreen(props) {
+function BookScreen() {
     const [dataBook, setDataBook] = useState ([]);
+    const [dataImg, setDataImg] = useState ();
     let {isbn} = useParams();
 
     useEffect(() => {
         const findBook = async() => {
           const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${isbn}&maxResults=40&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`)
           const datajson = await data.json()
+          console.log(datajson.items[0].volumeInfo);
           setDataBook(datajson.items[0].volumeInfo)
+          setDataImg(datajson.items[0].volumeInfo.imageLinks.thumbnail)
         }
         findBook()    
       },[])
 
-      console.log(dataBook);
-
-
   return (
     <Content style={styles.container}  className='font'>
-            <BookHeader/>
-            <BookInfo/>
+            <BookHeader bookTitle={dataBook.title} bookAuthor={dataBook.authors} bookCover={dataImg}/>
+            <BookInfo bookTitle={dataBook.title} bookDesc={dataBook.description} publishedDate={dataBook.publishedDate}
+            bookPublisher={dataBook.publisher} bookPageCount={dataBook.pageCount} bookIsbn={isbn}/>
             {/* Bloc librairies avec le même livre */}
         <div style={styles.libraryBloc}>
             <Row>
             <Col xs={24}>
                 <h3 style={styles.h3}>Ils ont ajouté ce livre à leur bibliothèque </h3>
-                <p>Titre : {dataBook.title}</p>
-                <p>Auteur : {dataBook.authors}</p>
-                <p>Date de publication : {dataBook.publishedDate}</p>
+                {/* <p>Titre : {dataBook.title}</p>
                 <p>Editeur: {dataBook.publisher}</p>
                 <p>Categories: {dataBook.categories}</p>
-                <p>Description: {dataBook.description}</p>
-                <p>Nb de pages: {dataBook.pageCount}</p>
                 <p>isbn: {dataBook.industryIdentifiers[0].identifier}</p>
-                <p>image:{dataBook.imageLinks.thumbnail}</p>
+                <p>image:{dataBook.imageLinks.thumbnail}</p> */}
 
 
             </Col>
@@ -72,7 +69,7 @@ let styles = {
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
-        width:'100%',
+        width:'100vw',
         backgroundColor:'#f3f5f7',
     },
 

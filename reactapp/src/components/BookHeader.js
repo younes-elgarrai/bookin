@@ -5,22 +5,22 @@ import '../App.css'
 import Background from '../assets/picto.png'
 
 
-function BookHeader() {
+function BookHeader(props) {
 
   return (
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} >
         <Image width={150}
-        src='https://static.fnac-static.com/multimedia/Images/FR/NR/43/61/c1/12673347/1507-1/tsp20210202071101/Le-parfum-des-fleurs-la-nuit.jpg'
-        alt='Le parfum des fleurs la nuit'
+        src={props.bookCover}
+        alt={props.bookTitle}
       />
   
               
         </Col>
 
         <Col xs={24} md={12} xl={12} >
-        <h1 style={styles.h1}>Le parfum des fleurs la nuit</h1>
+        <h1 style={styles.h1}>{props.bookTitle}</h1>
         <h2 style={styles.h2}><a href='https://livre.fnac.com/a15106090/Leila-Slimani-Le-parfum-des-fleurs-la-nuit' target="_blank" rel="noreferrer" style={styles.link}>Leila Slimani</a></h2>
         
         <div>
@@ -63,7 +63,7 @@ let styles = {
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
-        width:'100%',
+        width:'100vw',
       },
 
     bookBloc: {
@@ -94,9 +94,10 @@ let styles = {
 
     h1: {
         color:'white',
-        fontSize: '20px',
+        fontSize: '22px',
         fontWeight: '700',
         margin: '0px',
+        paddingBottom:'10px',
     },
 
     h2: {
@@ -104,6 +105,7 @@ let styles = {
         fontSize: '16px',
         fontWeight: '400',
         margin: '0px',
+        paddingBottom:'10px',
     },
 
     note: {
