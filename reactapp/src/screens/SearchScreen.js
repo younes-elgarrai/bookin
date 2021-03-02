@@ -1,20 +1,24 @@
 import React, {useState, useEffect} from 'react';
-import { Card, Menu, Dropdown, Input, Row, Col, Button, Pagination} from 'antd';
-import { DownOutlined, CheckOutlined } from '@ant-design/icons';
+import { Card, Menu, Dropdown, Input, Row, Col, Button, Pagination, Spin} from 'antd';
+import { DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import '../App.css';
 import Background from '../assets/picto.png';
 import Unavailable from '../assets/cover_nondispo.jpg'
 
-// composant vignette
+// composant vignette avec lien vers page livre
+// insérer module dernièers nouveautés lorsque pas de recherche encore faite
 
 // mettre en loader sur le chargement de l'API
 // fallback si API ne fonctionne pas => try again
-// insérer module nouveautés lorsque pas de recherche
+// conserver précédentes recherches
+// autosuggest
+
 
 
 const { Search } = Input;
 const { Meta } = Card;
+
 
 export default function SearchScreen() {
 
@@ -26,8 +30,13 @@ export default function SearchScreen() {
     const [pagesCount, setPagesCount] = useState(1);
     const [totalElementsCount, setTotalElementsCount] = useState([]);
     const [selectedMenu, setSelectedMenu] = useState("1");
+    const [isFetching, setIsFetching] = useState(false);
  
-
+    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+    
+    const spin = (
+    <Spin style={{ position: "fixed", top: "50%", left:"0", zIndex:"999", backgroundColor:"#F3F5F3", opacity:"0.8", width:"100%", height:"100%" }} indicator={antIcon} tip="Recherche en cours" size="large" />
+    );
 
     const menu = (
         <Menu onClick={handleMenuClick} selectedKeys={selectedMenu} defaultSelectedKeys="1" >
@@ -38,8 +47,10 @@ export default function SearchScreen() {
 
     var handleSearch = (q) => {
         var bookSearchApi = async() => {
+            setIsFetching(true);
             const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
             const body = await data.json();
+            setIsFetching(false);
             setResult(body.items);
             console.log(body.items);
             var limitControl;
@@ -54,8 +65,10 @@ export default function SearchScreen() {
     function handleMenuClick(e) {
         if (e.key === "2") {
             var bookSearchApi2 = async() => {
+                setIsFetching(true);
                 const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=newest&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
+                setIsFetching(false);
                 setResult(body.items);
                 setSelectedMenu("2");
                 console.log(body.items);
@@ -63,8 +76,10 @@ export default function SearchScreen() {
             bookSearchApi2();
         } else { 
             var bookSearchApi3 = async() => {
+                setIsFetching(true);
                 const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
+                setIsFetching(false);
                 setResult(body.items);
                 setSelectedMenu("1");
                 console.log(body.items);
@@ -78,8 +93,10 @@ export default function SearchScreen() {
         const currentPage = pageNumber - 1;
         offset = currentPage * elementsPerPage;
         var bookSearchApi4 = async() => {
+            setIsFetching(true);
             const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&startIndex=${offset}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
             const body = await data.json();
+            setIsFetching(false);
             setResult(body.items);
             console.log(body.items);
         };
@@ -90,7 +107,8 @@ export default function SearchScreen() {
 return (
 <div className="font">
     <Nav/>
-    <div style={styles.container} className="bisous" >
+    {isFetching ? spin : null }
+    <div style={styles.container} >
       <Row style={styles.bookBloc} >
         <Col xs={24} md={12} >
             <h1 style={styles.h1}>Recherche de livres</h1>
@@ -99,6 +117,7 @@ return (
     </Row>
 
     <div style={{ width:"80%", margin:"auto", border:1}}>
+    
         {count === 0 ? null : 
         <div>
         
