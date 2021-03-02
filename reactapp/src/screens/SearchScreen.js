@@ -8,11 +8,12 @@ import Unavailable from '../assets/cover_nondispo.jpg'
 
 // composant vignette avec lien vers page livre
 // insérer module dernièers nouveautés lorsque pas de recherche encore faite
+// placement loader
+// fallback si API ne fonctionne pas => try again a faire sur tous les calls
 
-// mettre en loader sur le chargement de l'API
-// fallback si API ne fonctionne pas => try again
-// conserver précédentes recherches
+// conserver précédentes recherches en cookies
 // autosuggest
+// réponses partial
 
 
 
@@ -31,6 +32,8 @@ export default function SearchScreen() {
     const [totalElementsCount, setTotalElementsCount] = useState([]);
     const [selectedMenu, setSelectedMenu] = useState("1");
     const [isFetching, setIsFetching] = useState(false);
+    const [error, setError] = useState(false);    
+
  
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     
@@ -48,6 +51,8 @@ export default function SearchScreen() {
     var handleSearch = (q) => {
         var bookSearchApi = async() => {
             setIsFetching(true);
+            setError(false);
+        try {
             const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
             const body = await data.json();
             setIsFetching(false);
@@ -57,7 +62,10 @@ export default function SearchScreen() {
             if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/3)}
             setTotalElementsCount(limitControl);
             setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
-        };
+        }
+        catch(error) {
+            setError(true);
+          }};
         bookSearchApi();
     };
 
@@ -117,7 +125,9 @@ return (
     </Row>
 
     <div style={{ width:"80%", margin:"auto", border:1}}>
-    
+    {
+        error && <div style={{textAlign:"center", marginTop:30}}>Problème de recherche, essayer à nouveau</div>
+      }
         {count === 0 ? null : 
         <div>
         
