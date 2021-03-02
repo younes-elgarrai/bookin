@@ -2,16 +2,40 @@
 
 import React, {useState} from 'react';
 import '../App.css';
-import { Input, Button, Avatar, Form } from 'antd';
-import { RightOutlined } from '@ant-design/icons';
+import { Input, Button, Form } from 'antd';
 import Nav from '../components/Navbar';
 import AvatarUpload from '../components/AvatarUpload';
 
 export default function CreateAccountScreen() {
     const [userLibraryName, setUserLibraryName]= useState('');
+    console.log(userLibraryName);
     const [userEmail, setUserEmail]= useState('');
+    console.log(userEmail);
     const [userPassword, setUserPassword]= useState('');
+    console.log(userPassword);
     const [token, setToken] = useState(false);
+
+    const checkEmailFormat = (email) => {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return email ? re.test(String(email).toLowerCase()) : false;
+    }
+
+    const createUserAccount = async () => {
+      if (!checkEmailFormat(userEmail)) {
+        console.log('veuillez saisir un email valide.');
+        // gérer ici aussi les autres cas d'erreurs ou en backend ?
+    } else {
+      const response = await fetch('/sign-up', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: `name=${userLibraryName}&email=${userEmail}&password=${userPassword}`
+    });
+    const dataResponse = await response.json();
+    console.log('dataResponse',dataResponse); // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
+    }
+    }
+
+
     return (
         <div className='font'>
         <Nav/>
@@ -25,17 +49,17 @@ export default function CreateAccountScreen() {
               <p style={styles.smallLabel}>Choisissez votre avatar (png / jpg)</p>
             <Form layout="vertical">
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Choisissez le nom de votre bibliothèque">
-                  <Input placeholder="Bibliothèque de Victor" />
+                  <Input placeholder="Bibliothèque de Victor" onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} />
                 </Form.Item>
         
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre adresse email :">
-                    <Input placeholder="victor@hugo.com" />
+                    <Input placeholder="victor@hugo.com" onChange={(e)=> setUserEmail(e.target.value)} value={userEmail}/>
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre mot de passe :">
-                    <Input placeholder="Fantine123" />
+                    <Input placeholder="Fantine123" onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} />
                 </Form.Item>
                 <Form.Item>
-                    <Button style={styles.btn} type="primary">Créer compte</Button>
+                    <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer compte</Button>
                 </Form.Item>
             </Form>
 
@@ -80,6 +104,5 @@ const styles = {
           color:'#23396c', 
           borderColor:'#fca311', 
           borderRadius:'5px',
-  
-      }    
+      }   
   }   

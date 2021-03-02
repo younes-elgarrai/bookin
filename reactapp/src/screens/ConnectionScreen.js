@@ -12,12 +12,8 @@ export default function ConnectionScreen() {
 
     const checkAccountEmail = async () => {
         if (!checkEmailFormat(email)) {
-            console.log('veuillez saisir un email valide.');
-            // afficher message et pas de redirection
-        } else if (!hasAccount && checkEmailFormat(email)) {
-            console.log('pas de compte associé à cet email');
-            // afficher message et rediriger vers sign up.
-        } else if (hasAccount && checkEmailFormat(email)) {
+            console.log('veuillez saisir un email valide.'); // afficher message et pas de redirection
+        } else {
             const response = await fetch('/check-email', {
                 method: 'POST',
                 headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -27,6 +23,9 @@ export default function ConnectionScreen() {
             console.log('dataResponse',dataResponse); // {result:false} ou {result:true}
             if (dataResponse.result) {
                 setEmailCheckedFromBack(true);
+                setHasAccount(true);
+            } else {
+                setHasAccount(false);
             }
         } 
     }
@@ -42,7 +41,7 @@ export default function ConnectionScreen() {
             body: `email=${email}&password=${password}`
         });
         const dataResponse = await response.json();
-        console.log('dataResponse',dataResponse);
+        console.log('dataResponse password to login',dataResponse); // {login: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
     }
 
     return (
@@ -70,7 +69,7 @@ export default function ConnectionScreen() {
                 <p style={styles.label}>Saisissez votre mot de passe : </p>
                 <Input placeholder="mot de passe" onChange={(e)=> setPassword(e.target.value)}></Input>
                 <p style={styles.smallLabel}>mot de passe oublié ?</p>
-                <Button onClick={()=> checkPasswordToLogin()}>Continuer <RightOutlined/></Button>
+                <Button style={styles.btn} onClick={()=> checkPasswordToLogin()}>Continuer <RightOutlined/></Button>
                 <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
             }
