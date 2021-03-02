@@ -19,6 +19,7 @@ import ConnectionScreen from './screens/ConnectionScreen';
 import surveyReducer from './reducers/survey.reducer';
 import tokenReducer from './reducers/token.reducer';
 
+
 import {Provider} from 'react-redux';
 
 import {createStore, combineReducers}  from 'redux';
@@ -48,8 +49,6 @@ function App() {
 
   );
 }
-
-
 
 export default App;
 

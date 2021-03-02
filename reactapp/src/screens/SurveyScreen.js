@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import { Progress, Avatar, Button, Comment, Row, Col, Image, Rate, Layout} from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Progress, Button} from 'antd';
 import '../App.css';
 
 import {connect} from 'react-redux';
@@ -34,9 +33,6 @@ var handleNextClick = ()=>{
 var handleBackClick = ()=>{
     setStep(step-1);
 }
-
-console.log(props.survey);
-
 
   return (
         <div className='container'>

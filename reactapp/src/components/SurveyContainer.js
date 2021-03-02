@@ -1,32 +1,50 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Card} from 'antd';
 
 import {connect} from 'react-redux';
 
 
+function Response(props){
+
+    var background = props.isSelected?'red':null;
+
+    const dynamicStyle = {
+        width: '35%',
+        textAlign: 'center',
+        backgroundColor: background
+      };
 
 
-function SurveyContainer(props){
+    var handleClick = ()=>{
 
-    const [active, setActive] = useState(false);
-
-    var toggle = (e,typ)=>{
-
-        setActive(!active);
-
-        var func = active?props.remove:props.add;
-
-        func(e,typ);
+    !props.isSelected&&props.handleClickAddParent();
+     props.isSelected&&props.handleClickRemoveParent();
 
     }
 
-    const background = active?'red':null;
+    return <Card.Grid style={dynamicStyle} onClick={()=>handleClick()} >{props.txt}</Card.Grid>;
+
+}
+
+function SurveyContainer(props){
+
+    var handleClickAdd = (e,typ)=>{
+
+        props.add(e,typ)
+    }
+
+    var handleClickRemove = (e,typ)=>{
+
+        props.remove(e,typ)
+    }
 
     return(
         <div className='survey'>
             <Card title={props.question}>
                 {props.array.map((elem, index)=>{
-                    return <Card.Grid key={index} style={{...gridStyle, backgroundColor: background}} onClick={()=>toggle(elem, props.type)}>{elem}</Card.Grid>
+                    return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd(elem,props.type)}
+                                                            handleClickRemoveParent={()=>handleClickRemove(elem,props.type)}                
+                                                            isSelected={props.survey[props.type].some(e => e === elem)} />
                     })}
             </Card>
         </div>
@@ -34,12 +52,6 @@ function SurveyContainer(props){
 
     );
 }
-
-const gridStyle = {
-    width: '35%',
-    textAlign: 'center',
-  };
-
 
 
   function mapDispatchToProps(dispatch) {
@@ -55,5 +67,10 @@ const gridStyle = {
     }
 }
 
+    function mapStateToProps(state) {
 
-export default connect(null, mapDispatchToProps)(SurveyContainer);
+        return {survey: state.survey};
+    }
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SurveyContainer);
