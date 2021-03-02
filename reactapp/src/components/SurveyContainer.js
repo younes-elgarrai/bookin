@@ -3,13 +3,15 @@ import {Card} from 'antd';
 
 import {connect} from 'react-redux';
 
+var width = '';
 
 function Response(props){
 
     var background = props.isSelected?'red':null;
 
+
     const dynamicStyle = {
-        width: '35%',
+        width: width,
         textAlign: 'center',
         backgroundColor: background
       };
@@ -28,6 +30,9 @@ function Response(props){
 
 function SurveyContainer(props){
 
+
+    width = props.type!=='Length'?'33%':'100%';
+
     var handleClickAdd = (e,typ)=>{
 
         props.add(e,typ)
@@ -38,9 +43,13 @@ function SurveyContainer(props){
         props.remove(e,typ)
     }
 
+    const cardStyle = {
+        justifyContent: 'center',
+    }
+
     return(
         <div className='survey'>
-            <Card title={props.question}>
+            <Card  title={props.question} style={cardStyle} >
                 {props.array.map((elem, index)=>{
                     return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd(elem,props.type)}
                                                             handleClickRemoveParent={()=>handleClickRemove(elem,props.type)}                

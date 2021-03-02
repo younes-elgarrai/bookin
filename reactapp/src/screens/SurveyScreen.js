@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Progress, Button} from 'antd';
+import { Progress, Button, Row, Col} from 'antd';
 import '../App.css';
 
 import {connect} from 'react-redux';
@@ -34,14 +34,50 @@ var handleBackClick = ()=>{
     setStep(step-1);
 }
 
+const containerStyle = {
+  alignItems:'center',
+  width:'100%',
+  height: '100vh',
+  backgroundColor:'#f3f5f7',
+  
+}
+
+const surveyStyle = {
+  display:'flex',
+  flexDirection:'column',
+  alignItems:'center',
+  width:'100%',
+  backgroundColor:'#f3f5f7',
+}
+
   return (
-        <div className='container'>
-            <Progress style={{width: '33%'}} percent={(step-1)*50} status="active" />
-            <h1>Recevez des suggestions de lecture ({step}/3)</h1>
-            <SurveyContainer type={type} question={questions[step-1]} array={data} />
+        <div className='container' style={containerStyle}>
+          <Row justify='center'>
+            <Col span={8} >
+              <Progress percent={(step-1)*50} status="active" trailColor="#eeeeee"/>
+            </Col>
+          </Row>
+          <Row justify='center'>
+            <Col span={10}>
+              <h1>Recevez des suggestions de lecture ({step}/3)</h1>
+            </Col>
+          </Row>
+          <Row justify='center'>
+            <Col span={10}>
+              <SurveyContainer style={surveyStyle} type={type} question={questions[step-1]} array={data} />
+            </Col>
+          </Row>
+          <Row justify='center'>
+            <Col span={10} flex={1}>
             {step!==1?<Button onClick={()=>handleBackClick()} type="primary">Précédent</Button>:null}
             {step!==3?<Button onClick={()=>handleNextClick()} type="primary">Suivant</Button>
                      :<Button type="primary" danger>Terminer</Button>}
+            </Col>
+
+          </Row>
+
+            
+            
         </div> 
 );
 }
