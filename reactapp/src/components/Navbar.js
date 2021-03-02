@@ -7,6 +7,7 @@
 import React, { useState } from 'react';
 import logo from '../assets/bookin.png';
 import './Navbar.css';
+
 // ReactStrap
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
   NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';

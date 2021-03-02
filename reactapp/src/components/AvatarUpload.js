@@ -51,6 +51,7 @@ export default function AvatarUpload() {
       </div>
     );
     return (
+        <div style={{display:'flex'}}>
       <Upload
         name="avatar"
         listType="picture-card"
@@ -62,5 +63,6 @@ export default function AvatarUpload() {
       >
         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>
+      </div>
     );
 }
