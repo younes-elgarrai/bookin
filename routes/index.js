@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const UsersModel = require('../models/users');
 const ReviewsModel = require('../models/reviews');
+const uid2 = require('uid2');
+const bcrypt = require('bcrypt');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-
 
 /*
   Add a book in my library
@@ -52,19 +53,22 @@ router.get('/library/:token', function (req, res) {
   //Sorties : success, failure, [ISBN13]
  })
 
-//  CELINE 
-const uid2 = require('uid2');
-const bcrypt = require('bcrypt');
 
-
-// Check email from user (bouton "continuer")
-router.post('/check-email');
-// vérifier si le mail est déjà dans la DB ou pas.
-// vérifier le format de l'email à cette étape.
+// POST : check email from user (bouton "continuer")
+router.post('/check-email', async function (req, res, next) {
+  const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
+  console.log('check', checkExistingUserFromEmail); // null > else
+  if (checkExistingUserFromEmail) {
+    res.json({result:true});
+  } else {
+    res.json({result:false})
+  }
+});
 
 // Signup
 router.post('/sign-up', async function(req, res, next) {
   const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
+  // le check est fait à l'étape d'avant.
   if (!!req.body.userLibraryName && !!req.body.password && checkExistingUserFromEmail) {
     res.json({result: false, message: "il existe déjà un compte lié à cet email."})
     // redirect écran login 
@@ -98,6 +102,7 @@ async function saveNewUser(req) {
 
 // Login
 router.post('/log-in', async function(req, res, next) {
+  console.log('log in req body infos', req.body.email, req.body.password);
   if (!req.body.email || !req.body.password) {
     res.json({ login: false, message: "Veuillez remplir tous les champs pour accéder à votre compte."})
   } else {
