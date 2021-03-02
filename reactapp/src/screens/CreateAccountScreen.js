@@ -5,6 +5,7 @@ import '../App.css';
 import { Input, Button, Avatar, Form } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
+import AvatarUpload from '../components/AvatarUpload';
 
 export default function CreateAccountScreen() {
     const [userLibraryName, setUserLibraryName]= useState('');
@@ -20,18 +21,18 @@ export default function CreateAccountScreen() {
             :
             <h3>Créez votre compte bookin</h3>
             }
-              <Avatar/>
-              {/* Passer pas un form antdesign ?  */}
+              <AvatarUpload />
+              <p>Choisissez votre avatar (png / jpg)</p>
             <Form layout="vertical">
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Choisissez le nom de votre bibliothèque">
-                  <Input placeholder="Bibliothèque de Céline" />
+                  <Input placeholder="Bibliothèque de Victor" />
                 </Form.Item>
         
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre adresse email :">
                     <Input placeholder="victor@hugo.com" />
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre mot de passe :">
-                    <Input placeholder="mot de passe" />
+                    <Input placeholder="Fantine123" />
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary">Créer compte</Button>
