@@ -5,7 +5,7 @@ import '../App.css'
 function BookCard() {
 
 return (
-    <div style={styles.libraryBloc}>
+    <div style={styles.libraryBloc}  className='font'>
         <Row>
             <Col xs={24}>
                 <h3 style={styles.h3}>Nos recommandations</h3>

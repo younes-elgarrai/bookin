@@ -6,7 +6,7 @@ function BookInfo() {
 
 return (
 <div>
-    <div style={styles.container}>
+    <div style={styles.container}  className='font'>
         <Row style={styles.textBloc}>
             <Col xs={24}>
                 <h3 style={styles.h3}>Résumé du livre : Le parfum des fleurs la nuit</h3>
