@@ -51,9 +51,11 @@ function SurveyContainer(props){
         <div className='survey'>
             <Card  title={props.question} style={cardStyle} >
                 {props.array.map((elem, index)=>{
-                    return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd(elem,props.type)}
-                                                            handleClickRemoveParent={()=>handleClickRemove(elem,props.type)}                
-                                                            isSelected={props.survey[props.type].some(e => e === elem)} />
+                    return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd({category: props.category, subcategory: elem},props.type)}
+                                                            handleClickRemoveParent={()=>handleClickRemove({category: props.category, subcategory: elem},props.type)}                
+                                                            isSelected={props.category==='main'?Object.keys(props.survey[props.type]).some(e => e === elem)
+                                                                                             :props.category==='array'?props.survey[props.type].some(e => e === elem)
+                                                                                             :props.survey[props.type][props.category].some(e => e === props.subjects[props.category][elem])} />
                     })}
             </Card>
         </div>
