@@ -31,6 +31,7 @@ export default function AvatarUpload() {
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
+      // Erreur dans upload d'un fichier de mon ordi : cannot read file of undefined
       getBase64(info.file.originFileObj, imageUrl => {
         setLoading(false);
         setImageUrl(imageUrl);
@@ -41,7 +42,7 @@ export default function AvatarUpload() {
     const uploadButton = (
       <div>
         {loading ? <LoadingOutlined /> : <PlusOutlined />}
-        <div style={{ marginTop: 8 }}>Upload</div>
+        <div style={{ marginTop: 8}}>Upload</div>
       </div>
     );
     return (
@@ -53,14 +54,8 @@ export default function AvatarUpload() {
         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         beforeUpload={beforeUpload}
         onChange={()=> handleChange()}
-        style={{margin:'auto', borderRadius:'50%'}}
       >
         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>
     );
 }
-
-// .avatar-uploader > .ant-upload {
-//   width: 128px;
-//   height: 128px;
-// }
