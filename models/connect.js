@@ -5,11 +5,10 @@ var options = {
     useNewUrlParser: true,
         useUnifiedTopology : true
    }
-mongoose.connect('mongodb+srv://admin:bookin@cluster0.jbm7k.mongodb.net/book_in?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://bookin:bookin@cluster0.jbm7k.mongodb.net/book_in?retryWrites=true&w=majority',
     options,    
     function(err) {
      console.log(err);
     }
    );
 module.exports = mongoose;  
-   

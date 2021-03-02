@@ -7,5 +7,5 @@ var reviewsSchema = mongoose.Schema({
     comment: String,
     isbn13: String
 });
-var ReviewsModel = mongoose.Model('reviews', reviewsSchema);
+var ReviewsModel = mongoose.model('reviews', reviewsSchema);
 module.exports = ReviewsModel;

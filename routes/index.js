@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UsersModel = require('../models/users');
+const ReviewsModel = require('../models/reviews');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -54,8 +55,7 @@ router.get('/library/:token', function (req, res) {
 //  CELINE 
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
-const UsersModel = require('../models/users');
-const ReviewsModel = require('../models/reviews');
+
 
 // Check email from user (bouton "continuer")
 router.post('/check-email');
@@ -121,8 +121,6 @@ router.post('/update', async (req, res) => {
   const userSave = await user.save();
   res.json({ result: true, userSave });
 });
-
-// Logout : géré en frontend.
 
 // Post review
 router.post('/new-review', (req, res) => {
