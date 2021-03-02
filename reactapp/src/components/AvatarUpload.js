@@ -10,6 +10,10 @@ export default function AvatarUpload() {
       }
       
       function beforeUpload(file) {
+        console.log("before upload file", file);
+        // si pas d'erreur, setFile(file); car direct le bon format pour envoyer au back puis à cloudinary
+        // File {uid: "rc-upload-1614680539892-5", name: "Planning_batch_capsule.png", lastModified: 1609751206824, lastModifiedDate: Mon Jan 04 2021 10:06:46 GMT+0100 (heure normale d’Europe centrale), webkitRelativePath: "", …}
+        // useEffect sur file = dés qu'il change, fetch pour envoyer file au back puis a cloudinary
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
           message.error('You can only upload JPG/PNG file.');
@@ -25,23 +29,25 @@ export default function AvatarUpload() {
     const [imageUrl, setImageUrl] = useState();
 
   const handleChange = info => {
-    if (info.file.status === 'uploading') {
-        setLoading(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => {
-        setLoading(false);
-        setImageUrl(imageUrl);
-      }
-      );
-    }
+      console.log("info",info);
+    // if (info.file.status === 'uploading') {
+    //     setLoading(true);
+    //   return;
+    // }
+    // if (info.file.status === 'done') {
+    //   // Get this url from response in real world.
+    //   // Erreur dans upload d'un fichier de mon ordi : cannot read file of undefined
+    //   getBase64(info.file.originFileObj, imageUrl => {
+    //     setLoading(false);
+    //     setImageUrl(imageUrl);
+    //   }
+    //   );
+    // }
   };
     const uploadButton = (
       <div>
         {loading ? <LoadingOutlined /> : <PlusOutlined />}
-        <div style={{ marginTop: 8 }}>Upload</div>
+        <div style={{ marginTop: 8}}>Sélectionnez</div>
       </div>
     );
     return (
@@ -53,14 +59,8 @@ export default function AvatarUpload() {
         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         beforeUpload={beforeUpload}
         onChange={()=> handleChange()}
-        style={{margin:'auto', borderRadius:'50%'}}
       >
         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>
     );
 }
-
-// .avatar-uploader > .ant-upload {
-//   width: 128px;
-//   height: 128px;
-// }
