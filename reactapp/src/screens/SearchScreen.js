@@ -1,16 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import { Card, Menu, Dropdown, Input, Row, Col, Button, Pagination} from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, CheckOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
-import '../App.css'
-import Background from '../assets/picto.png'
+import '../App.css';
+import Background from '../assets/picto.png';
+import Unavailable from '../assets/cover_nondispo.jpg'
 
-// image pas dispo
 // composant vignette
 
-// tri couleur icone clic
 // mettre en loader sur le chargement de l'API
 // fallback si API ne fonctionne pas => try again
+// insérer module nouveautés lorsque pas de recherche
 
 
 const { Search } = Input;
@@ -25,12 +25,14 @@ export default function SearchScreen() {
     const elementsPerPage  = 40;
     const [pagesCount, setPagesCount] = useState(1);
     const [totalElementsCount, setTotalElementsCount] = useState([]);
+    const [selectedMenu, setSelectedMenu] = useState("1");
+ 
 
 
     const menu = (
-        <Menu onClick={handleMenuClick}>
+        <Menu onClick={handleMenuClick} selectedKeys={selectedMenu} defaultSelectedKeys="1" >
           <Menu.Item key="1">Pertinence</Menu.Item>
-          <Menu.Item key="2">Date de publication</Menu.Item>
+          <Menu.Item key="2" >Date de publication</Menu.Item>
         </Menu>
       );
 
@@ -55,6 +57,7 @@ export default function SearchScreen() {
                 const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=newest&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setResult(body.items);
+                setSelectedMenu("2");
                 console.log(body.items);
             };
             bookSearchApi2();
@@ -63,6 +66,7 @@ export default function SearchScreen() {
                 const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setResult(body.items);
+                setSelectedMenu("1");
                 console.log(body.items);
             };
             bookSearchApi3();
@@ -128,10 +132,11 @@ return (
                                 cover={
                                     <img
                                         alt={book.volumeInfo.title}
-                                        src={!book.volumeInfo.imageLinks ? "../logo192.png" : book.volumeInfo.imageLinks.thumbnail} 
+                                        src={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail} 
                                     />
                                     }
                                 // actions={}
+                            
                             >
                                 <Meta
                                     title={book.volumeInfo.title}
