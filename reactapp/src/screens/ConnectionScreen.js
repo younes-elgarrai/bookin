@@ -4,8 +4,10 @@ import { Input, Radio, Button, Image} from 'antd';
 import { RightOutlined, EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import reading from '../assets/reading.png';
+import {connect} from 'react-redux';
 
-export default function ConnectionScreen() {
+function ConnectionScreen(props) {
+    console.log('ConnectionScreen > props.token', props.token);
     const [ hasAccount, setHasAccount ]=useState(false);
     const [ email, setEmail ] = useState();
     const [ emailCheckedFromBack, setEmailCheckedFromBack ] = useState(false);
@@ -13,7 +15,6 @@ export default function ConnectionScreen() {
     const [ userMessage, setUserMessage ] = useState('');
 
     const checkAccountEmail = async () => {
-        // Ajouter message dans cas ou email enregistré et cliqué "non" : "en fait si t'as un compte"
         if (!checkEmailFormat(email)) {
             setUserMessage('veuillez saisir un email valide.'); 
         } else {
@@ -46,8 +47,8 @@ export default function ConnectionScreen() {
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: `email=${email}&password=${password}`
         });
-        const dataResponse = await response.json();
-        console.log('dataResponse password to login',dataResponse); // {login: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
+        const dataResponse = await response.json(); // {login: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
+        props.onCheckAccountClick(dataResponse.userToken);
     }
 
     return (
@@ -141,3 +142,14 @@ const styles = {
         marginBottom:'10px'
     }    
 }
+function mapDispatchToProps(dispatch) {
+    return {
+      onCheckAccountClick: function(token) {
+          dispatch( {type: 'saveToken', token} )
+      } 
+    }
+  }
+  function mapStateToProps(state) {
+    return { token: state.token }
+  }
+  export default connect(mapStateToProps, mapDispatchToProps)(ConnectionScreen);
