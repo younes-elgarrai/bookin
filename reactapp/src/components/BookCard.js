@@ -1,14 +1,27 @@
 import React from 'react';
-import { Col} from 'antd';
+import {Col, Card} from 'antd';
 import '../App.css'
+import {Link} from 'react-router-dom';
 
-function BookCard() {
+function BookCard(props) {
+    const { Meta } = Card;
+
+    function titleCut (desc) {
+        if (desc.length > 27){
+            return desc.substring(0,24)+"..."
+          } else {
+              return desc
+          };
+    };
 
 return (
-        <Col xs={12} md={6} xl={4} >
-            <img style={{textAlign:'center'}} width={150} src='https://static.fnac-static.com/multimedia/Images/FR/NR/43/61/c1/12673347/1507-1/tsp20210202071101/Le-parfum-des-fleurs-la-nuit.jpg'alt='Le parfum des fleurs la nuit'/>
-            <p style={{color:"#333", fontSize:"12px", fontWeight:"400", paddingRight:"10px", marginBottom:'10px'}}> {"Le parfum des fleurs la nuit dedezded dezdze dzaedzaed".substr(0,25)+"..."} </p> 
-        </Col>
+ 
+        <Col xs={12} md={6} xl={4} style={{display:'flex', flexDirection:'column', justifyContent: "flex-end", alignItems:'center'}} >
+            <Link to={{pathname:"/book/"+props.isbn}}><img width={150} src={props.bookCover} alt={props.bookTitle}/></Link>
+            <p style={{color:"#333", fontSize:"12px", fontWeight:"400", paddingRight:"10px", marginBottom:'10px'}}> {titleCut(props.bookTitle)} </p>   
+         </Col>
+
+
 
 
 );

@@ -13,7 +13,7 @@ function BookHeader(props) {
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} >
         <img width={150}
-        src={!props.bookCover ? `${Cover}`:props.bookCover}
+        src={!props.bookCover ? `${Cover}` : props.bookCover}
         alt={props.bookTitle}
       />
   
@@ -48,7 +48,8 @@ function BookHeader(props) {
         <Col xs={24}>
         <Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
         <Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
-        <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button>
+        {/* <Button onClick={()=> window.open(${annonceInfo?.websiteLink}, "_blank")} style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button> */}
+
         </Col>
       </div>
     </Row>

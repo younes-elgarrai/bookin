@@ -7,7 +7,7 @@ function BookInfo(props) {
 
 return (
 <div>
-    <div style={styles.container}  className='font'>
+    <div style={styles.container}  >
         <Row style={styles.textBloc}>
             <Col xs={24} md={16} xl={18}>
                 <h3 style={styles.h3}>Résumé du livre : {props.bookTitle}</h3>
