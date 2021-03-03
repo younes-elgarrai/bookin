@@ -4,22 +4,23 @@ import React, {useState} from 'react';
 import { useCookies } from 'react-cookie';
 import '../App.css';
 import { Input, Button, Form, Image } from 'antd';
+import { RightOutlined, EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import account from '../assets/account.png';
 import AvatarUpload from '../components/AvatarUpload';
 
-export default function CreateAccountScreen() {
+export default function CreateAccountScreen(props) {
 
     const [cookies, setCookie] = useCookies(['survey']);
-
-    console.log(cookies.survey);
+    console.log('cookies survey', cookies.survey);
+    // {Length: ["J'aime les lectures courtes et rapides"], Period: ["Nouveautés"], Styles: {void: Array(0), BD & Jeunesse: Array(1)}
+    // console.log('length', cookies.survey.Length);
+    // console.log('period', cookies.survey.Period);
+    // console.log('style', cookies.survey.Styles);
 
     const [userLibraryName, setUserLibraryName]= useState('');
-    console.log(userLibraryName);
     const [userEmail, setUserEmail]= useState('');
-    console.log(userEmail);
     const [userPassword, setUserPassword]= useState('');
-    console.log(userPassword);
     const [token, setToken] = useState(false);
     const [ userMessage, setUserMessage ] = useState('');
 
@@ -29,13 +30,17 @@ export default function CreateAccountScreen() {
     }
 
     const createUserAccount = async () => {
+    // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire' + redirect ?
       if (!checkEmailFormat(userEmail)) {
         setUserMessage('veuillez saisir un email valide.');
     } else {
+      const style = JSON.stringify(cookies.survey.Styles);
+      const length = cookies.survey.Length;
+      const period = cookies.survey.Period;
       const response = await fetch('/sign-up', {
         method: 'POST',
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: `name=${userLibraryName}&email=${userEmail}&password=${userPassword}`
+        body: `name=${userLibraryName}&email=${userEmail}&password=${userPassword}&styles=${style}&length=${length}&period=${period}`
       });
       const dataResponse = await response.json();
       console.log('dataResponse',dataResponse);  // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
@@ -58,19 +63,19 @@ export default function CreateAccountScreen() {
             :
             <h3 style={styles.title}>Créez votre compte bookin</h3>
             }
-            <div styles={styles.signUp} className="row d-flex justify-content-center align-items-center">
-            <div style={styles.signUpForm} className="col-6">
+            <div className="row">
+            <div className="col-6">
               <AvatarUpload />
               <p style={styles.smallLabel}>Choisissez votre avatar (png / jpg)</p>
             <Form layout="vertical">
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Choisissez le nom de votre bibliothèque :">
-                  <Input placeholder="Bibliothèque de Victor" onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} />
+                  <Input placeholder="Bibliothèque de Victor" prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} />
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre adresse email :">
-                    <Input placeholder="victor@hugo.com" onChange={(e)=> setUserEmail(e.target.value)} value={userEmail}/>
+                    <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} onChange={(e)=> setUserEmail(e.target.value)} value={userEmail}/>
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre mot de passe :">
-                    <Input placeholder="Fantine123" onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} />
+                    <Input.Password placeholder="Fantine123" prefix={<LockOutlined className="site-form-item-icon" />} onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
                 </Form.Item>
                 <Form.Item>
                     <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer compte</Button>
@@ -80,7 +85,7 @@ export default function CreateAccountScreen() {
             <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
             <div className="col-6">
-            <Image src={account} alt='Illustration by Olha Khomich from Icons8' height={400} width={400}></Image>
+            <Image src={account} alt='Illustration by Olha Khomich from Icons8'></Image>
             </div>
         </div>
         </div>
@@ -95,7 +100,8 @@ const styles = {
           alignItems:'center',
           width:'100%',
           backgroundColor:'#f3f5f7',
-          padding:'20px'
+          padding:'20px',
+          margin:'auto'
           },
       title: {
           color:"#23396C",
