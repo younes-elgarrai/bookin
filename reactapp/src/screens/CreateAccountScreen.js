@@ -1,27 +1,23 @@
 // To do : voir si ce même écran peut servir à modifier son compte en figeant le mail.
-
 import React, {useState} from 'react';
 import { useCookies } from 'react-cookie';
 import '../App.css';
 import { Input, Button, Form, Image } from 'antd';
-import { RightOutlined, EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import account from '../assets/account.png';
 import AvatarUpload from '../components/AvatarUpload';
+import {connect} from 'react-redux';
 
-export default function CreateAccountScreen(props) {
+function CreateAccountScreen(props) {
+  console.log('CreateAccountScreen > props.token', props.token);
 
     const [cookies, setCookie] = useCookies(['survey']);
     console.log('cookies survey', cookies.survey);
-    // {Length: ["J'aime les lectures courtes et rapides"], Period: ["Nouveautés"], Styles: {void: Array(0), BD & Jeunesse: Array(1)}
-    // console.log('length', cookies.survey.Length);
-    // console.log('period', cookies.survey.Period);
-    // console.log('style', cookies.survey.Styles);
 
     const [userLibraryName, setUserLibraryName]= useState('');
     const [userEmail, setUserEmail]= useState('');
     const [userPassword, setUserPassword]= useState('');
-    const [token, setToken] = useState(false);
     const [ userMessage, setUserMessage ] = useState('');
 
     const checkEmailFormat = (email) => {
@@ -45,26 +41,25 @@ export default function CreateAccountScreen(props) {
       const dataResponse = await response.json();
       console.log('dataResponse',dataResponse);  // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
       if (dataResponse.userToken) {
-        setToken(true);
+        props.onCreateAccountClick(dataResponse.userToken);
       }
       if (dataResponse.result === false) {
-        setUserMessage("Il y a eu une erreur, veuillez réessayer.")
+        setUserMessage(dataResponse.message);
       }
       }
     }
-
 
     return (
         <div className='font'>
         <Nav/>
         <div style={styles.container}>
-            {token ?
+            {props.token ?
             <h3 style={styles.title}>Modifiez votre compte</h3>
             :
-            <h3 style={styles.title}>Créez votre compte bookin</h3>
+            <h3 style={styles.title}>Créez votre compte</h3>
             }
             <div className="row">
-            <div className="col-6">
+            <div className="order-2 order-md-1 col-12 col-md-6">
               <AvatarUpload />
               <p style={styles.smallLabel}>Choisissez votre avatar (png / jpg)</p>
             <Form layout="vertical">
@@ -84,7 +79,8 @@ export default function CreateAccountScreen(props) {
             </Form>
             <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
-            <div className="col-6">
+            <div className="order-1 order-md-2 col-6 col-md-6">
+              {/* Tester offset pour centrer voir doc bootstrap */}
             <Image src={account} alt='Illustration by Olha Khomich from Icons8'></Image>
             </div>
         </div>
@@ -136,3 +132,15 @@ const styles = {
           borderRadius:'5px',
       }   
   }   
+
+  function mapDispatchToProps(dispatch) {
+    return {
+      onCreateAccountClick: function(token) {
+          dispatch( {type: 'saveToken', token} )
+      } 
+    }
+  }
+  function mapStateToProps(state) {
+    return { token: state.token }
+  }
+  export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountScreen);
