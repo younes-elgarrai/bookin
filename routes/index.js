@@ -54,7 +54,7 @@ router.get('/library/:token', function (req, res) {
  })
 
 
-// POST : check email from user (bouton "continuer")
+// POST : Login/Signup step 0 : check email from user ("continuer")
 router.post('/check-email', async function (req, res, next) {
   const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
   console.log('check', checkExistingUserFromEmail); // null > else
