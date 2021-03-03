@@ -13,7 +13,7 @@ function BookHeader(props) {
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} >
         <img width={150}
-        src={!props.bookCover ? `${Cover}` : props.bookCover}
+        src={!props.bookCover ? `${Cover}`:props.bookCover}
         alt={props.bookTitle}
       />
   
@@ -48,8 +48,10 @@ function BookHeader(props) {
         <Col xs={24}>
         <Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
         <Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
-        {/* <Button onClick={()=> window.open(${annonceInfo?.websiteLink}, "_blank")} style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button> */}
-
+        <a href="https://www.amazon.fr/gp/search?ie=UTF8&tag=bookin0c-21&linkCode=ur2&linkId=ed069e44484efe7e5139cd6a95321518&camp=1642&creative=6746&index=books&keywords="+ bookIsbn target="_blank">
+          <a href="`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=${sortingMethod}&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuP>
+        <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button>
+        </a>
         </Col>
       </div>
     </Row>
