@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import 'antd/dist/antd.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,13 +19,15 @@ import ConnectionScreen from './screens/ConnectionScreen';
 
 import surveyReducer from './reducers/survey.reducer';
 import tokenReducer from './reducers/token.reducer';
+import categoryReducer from './reducers/category.reducer';
 
+import { CookiesProvider } from 'react-cookie';
 
 import {Provider} from 'react-redux';
 
 import {createStore, combineReducers}  from 'redux';
 
-const store = createStore(combineReducers({survey: surveyReducer, token: tokenReducer}));
+const store = createStore(combineReducers({survey: surveyReducer, token: tokenReducer, category: categoryReducer}));
 
 
 
@@ -32,6 +35,7 @@ function App() {
 
 
   return (
+    <CookiesProvider>
     <Provider store={store}>
       <Router>
         <Switch>
@@ -46,6 +50,7 @@ function App() {
         </Switch>
       </Router>  
     </Provider>
+    </CookiesProvider>
 
   );
 }
