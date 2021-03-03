@@ -2,8 +2,9 @@
 
 import React, {useState} from 'react';
 import '../App.css';
-import { Input, Button, Form } from 'antd';
+import { Input, Button, Form, Image } from 'antd';
 import Nav from '../components/Navbar';
+import account from '../assets/account.png';
 import AvatarUpload from '../components/AvatarUpload';
 
 export default function CreateAccountScreen() {
@@ -31,6 +32,7 @@ export default function CreateAccountScreen() {
         body: `name=${userLibraryName}&email=${userEmail}&password=${userPassword}`
     });
     const dataResponse = await response.json();
+    if (dataResponse.userToken) {setToken(true);}
     console.log('dataResponse',dataResponse); // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
     }
     }
@@ -45,10 +47,12 @@ export default function CreateAccountScreen() {
             :
             <h3 style={styles.title}>Créez votre compte bookin</h3>
             }
+            <div styles={styles.signUp} className="row d-flex justify-content-center align-items-center">
+            <div style={styles.signUpForm} className="col-6">
               <AvatarUpload />
               <p style={styles.smallLabel}>Choisissez votre avatar (png / jpg)</p>
             <Form layout="vertical">
-                <Form.Item required tooltip="Ce champ est obligatoire" label="Choisissez le nom de votre bibliothèque">
+                <Form.Item required tooltip="Ce champ est obligatoire" label="Choisissez le nom de votre bibliothèque :">
                   <Input placeholder="Bibliothèque de Victor" onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} />
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre adresse email :">
@@ -61,8 +65,12 @@ export default function CreateAccountScreen() {
                     <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer compte</Button>
                 </Form.Item>
             </Form>
-
             <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
+            </div>
+            <div className="col-6">
+            <Image src={account} alt='Illustration by Olha Khomich from Icons8' height={400} width={400}></Image>
+            </div>
+        </div>
         </div>
         </div>
       );
