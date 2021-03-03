@@ -57,7 +57,7 @@ router.get('/library/:token', function (req, res) {
 // POST : Login/Signup step 0 : check email from user ("continuer")
 router.post('/check-email', async function (req, res, next) {
   const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
-  console.log('check', checkExistingUserFromEmail); // null > else
+  console.log('check', checkExistingUserFromEmail); // null 
   if (checkExistingUserFromEmail) {
     res.json({result:true});
   } else {
@@ -82,10 +82,17 @@ router.post('/log-in', async function(req, res, next) {
 
 // POST : Signup
 router.post('/sign-up', async function(req, res, next) {
+  console.log('req body', req.body);
+  console.log('styles', req.body.styles);
+  console.log('styles parse', JSON.parse(req.body.styles));
+  console.log('length', req.body.length);
+  console.log('period',req.body.period);
+
   if (!req.body.name || !req.body.email || !req.body.password) {
     res.json({result: false, message: "Veuillez remplir tous les champs pour créer un compte."})
-  }  else {
+  } else {
     const userSave = await saveNewUser(req);
+    console.log('usersave', userSave);
     const userToken = userSave.token;
     res.json({result:true, userToken});
   }
@@ -94,10 +101,9 @@ async function saveNewUser(req) {
   const cost = 10;
   const hash = bcrypt.hashSync(req.body.password, cost);
   const user = new UsersModel({
-    // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire'
-    // favoriteBookStyles: [], 
-    // favoriteBookLength: [], 
-    // favoriteBookPeriod: [], 
+    favoriteBookStyles: JSON.parse(req.body.styles), 
+    favoriteBookLength: [req.body.length], 
+    favoriteBookPeriod: [req.body.period], 
     userLibraryName: req.body.name,
     avatar: 'req.body.avatar, // url à récupérer...' ,
     email: req.body.email,
