@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useCookies } from 'react-cookie';
 import { Progress, Button, Row, Col} from 'antd';
 import '../App.css';
 
@@ -7,6 +8,8 @@ import {connect} from 'react-redux';
 import SurveyContainer from '../components/SurveyContainer';
 
 function SurveyScreen(props) {
+
+const [cookies, setCookie] = useCookies(['survey']);
 
 const [step, setStep] = useState(1);
 
@@ -70,7 +73,6 @@ var type = step===1?'Styles':step===2?'Length':'Period'
 var handleNextClick = ()=>{
     setStep(step+1);
     props.setCategory('array');
-    console.log(props.survey);
 }
 
 var handleBackClick = ()=>{
@@ -80,6 +82,11 @@ var handleBackClick = ()=>{
 
 var handleConfirmClick = ()=>{
   props.setCategory('main');
+}
+
+var handleFinishClick = ()=>{
+  setCookie('survey', JSON.stringify(props.survey), {path: '/'})
+  console.log(cookies.survey);
 }
 
 
@@ -119,7 +126,7 @@ const surveyStyle = {
           <Row justify='center'>
             <Col span={10} flex={1}>
             {step!==1?<Button onClick={()=>handleBackClick()} type="primary">Précédent</Button>:null}
-            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary">Suivant</Button>:<Button type="primary" danger>Terminer</Button>)
+            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary">Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" danger>Terminer</Button>)
                                                           :<Button onClick={()=>handleConfirmClick()} type="primary">Confirmer</Button>}
             </Col>
 

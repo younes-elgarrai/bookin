@@ -1,12 +1,18 @@
 // To do : voir si ce même écran peut servir à modifier son compte en figeant le mail.
 
 import React, {useState} from 'react';
+import { useCookies } from 'react-cookie';
 import '../App.css';
 import { Input, Button, Form } from 'antd';
 import Nav from '../components/Navbar';
 import AvatarUpload from '../components/AvatarUpload';
 
 export default function CreateAccountScreen() {
+
+    const [cookies, setCookie] = useCookies(['survey']);
+
+    console.log(cookies.survey);
+
     const [userLibraryName, setUserLibraryName]= useState('');
     console.log(userLibraryName);
     const [userEmail, setUserEmail]= useState('');

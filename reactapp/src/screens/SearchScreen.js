@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { Card, Menu, Dropdown, Input, Row, Col, Button} from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { useCookies } from 'react-cookie';
 // import Navbar from '../components/Navbar.js'
 // cas 0
 // image pas dispo
@@ -12,6 +13,7 @@ const { Search } = Input;
 const { Meta } = Card;
 
 export default function SearchScreen() {
+
 
     const [result, setResult] = useState([]);
     const [sortingMethod, setSortingMethod] = useState("relevance");

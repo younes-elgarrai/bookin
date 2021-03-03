@@ -21,6 +21,7 @@ import surveyReducer from './reducers/survey.reducer';
 import tokenReducer from './reducers/token.reducer';
 import categoryReducer from './reducers/category.reducer';
 
+import { CookiesProvider } from 'react-cookie';
 
 import {Provider} from 'react-redux';
 
@@ -34,6 +35,7 @@ function App() {
 
 
   return (
+    <CookiesProvider>
     <Provider store={store}>
       <Router>
         <Switch>
@@ -48,6 +50,7 @@ function App() {
         </Switch>
       </Router>  
     </Provider>
+    </CookiesProvider>
 
   );
 }
