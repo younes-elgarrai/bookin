@@ -15,6 +15,7 @@ export default function CreateAccountScreen() {
     const [userPassword, setUserPassword]= useState('');
     console.log(userPassword);
     const [token, setToken] = useState(false);
+    const [ userMessage, setUserMessage ] = useState('');
 
     const checkEmailFormat = (email) => {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -23,18 +24,22 @@ export default function CreateAccountScreen() {
 
     const createUserAccount = async () => {
       if (!checkEmailFormat(userEmail)) {
-        console.log('veuillez saisir un email valide.');
-        // gérer ici aussi les autres cas d'erreurs ou en backend ?
+        setUserMessage('veuillez saisir un email valide.');
     } else {
       const response = await fetch('/sign-up', {
         method: 'POST',
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
         body: `name=${userLibraryName}&email=${userEmail}&password=${userPassword}`
-    });
-    const dataResponse = await response.json();
-    if (dataResponse.userToken) {setToken(true);}
-    console.log('dataResponse',dataResponse); // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
-    }
+      });
+      const dataResponse = await response.json();
+      console.log('dataResponse',dataResponse);  // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
+      if (dataResponse.userToken) {
+        setToken(true);
+      }
+      if (dataResponse.result === false) {
+        setUserMessage("Il y a eu une erreur, veuillez réessayer.")
+      }
+      }
     }
 
 
@@ -63,6 +68,7 @@ export default function CreateAccountScreen() {
                 </Form.Item>
                 <Form.Item>
                     <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer compte</Button>
+                    <span style={styles.userMsg}>{userMessage}</span>
                 </Form.Item>
             </Form>
             <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
@@ -103,6 +109,11 @@ const styles = {
         fontSize:'10px',
         marginTop:'5px',
         marginBottom:'10px'
+      },
+      userMsg: {
+        color:"#23396C",
+        fontSize:'12px',
+        fontWeight:'bold',
       },
       btn: {
           marginRight:'10px',

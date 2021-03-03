@@ -1,19 +1,21 @@
 import React, {useState} from 'react';
 import '../App.css';
-import { Input, Radio, Button, Space} from 'antd';
+import { Input, Radio, Button, Image} from 'antd';
 import { RightOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Nav from '../components/Navbar';
+import reading from '../assets/reading.png';
 
 export default function ConnectionScreen() {
     const [ hasAccount, setHasAccount ]=useState(false);
     const [ email, setEmail ] = useState();
     const [ emailCheckedFromBack, setEmailCheckedFromBack ] = useState(false);
     const [ password, setPassword ] = useState();
+    const [ userMessage, setUserMessage ] = useState('');
 
     const checkAccountEmail = async () => {
         // Ajouter message dans cas ou email enregistré et cliqué "non" : "en fait si t'as un compte"
         if (!checkEmailFormat(email)) {
-            console.log('veuillez saisir un email valide.'); // afficher message et pas de redirection
+            setUserMessage('veuillez saisir un email valide.'); // afficher message et pas de redirection
         } else {
             const response = await fetch('/check-email', {
                 method: 'POST',
@@ -51,8 +53,8 @@ export default function ConnectionScreen() {
         <div style={styles.container}>
               <h3 style={styles.title}>Connexion</h3>
               <p style={styles.label}>Connectez-vous pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
-            
-            <div className="form">
+            <div className="row">
+            <div className="form col-6">
               <p style={styles.label}>Saisissez votre adresse email : </p>
               <Input placeholder="victor@hugo.com" onChange={(e)=>setEmail(e.target.value)} value={email}></Input>
 
@@ -61,6 +63,7 @@ export default function ConnectionScreen() {
                 <Radio style={{display:'block', height:'30px', lineHeight:'30px', fontSize:'12px'}} value={false}>Non, je n'ai pas encore de compte.</Radio>
                 <Radio style={{display:'block', height:'30px', lineHeight:'30px',fontSize:'12px'}} value={true}>Oui, j'ai déjà un compte.</Radio>
              </Radio.Group>
+             <span style={styles.userMsg}>{userMessage}</span>
              {(emailCheckedFromBack===false) &&
                 <Button style={styles.btn} onClick={()=> checkAccountEmail()}>Continuer <RightOutlined/></Button>
             }
@@ -75,6 +78,10 @@ export default function ConnectionScreen() {
             </div>
             }
             </div>
+            <div className="col-6">
+            <Image src={reading} alt='Illustration by Olha Khomich from Icons8' height={400} width={400}></Image>
+            </div>
+            </div>
         </div>
         </div>
       );
@@ -87,7 +94,8 @@ const styles = {
         alignItems:'center',
         width:'100%',
         backgroundColor:'#f3f5f7',
-        padding:'20px'
+        padding:'20px',
+        margin: 'auto',
         },
     title: {
         color:"#23396C",
@@ -108,6 +116,11 @@ const styles = {
         marginTop:'5px',
         marginBottom:'10px'
       },
+      userMsg: {
+        color:"#23396C",
+        fontSize:'12px',
+        fontWeight:'bold',
+      },
     btn: {
         marginRight:'10px',
         backgroundColor:'#fca311', 
@@ -119,7 +132,7 @@ const styles = {
     },
     smallBtn:{
         color:'#23396c',
-        fontSize:'10px',
+        fontSize:'12px',
         fontWeight:'bold',
         marginTop:'5px',
         marginBottom:'10px'
