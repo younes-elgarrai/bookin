@@ -14,13 +14,9 @@ import BookInfo from '../components/BookInfo'
 import Review from '../components/Review'
 import BookList from '../components/BookList'
 
-// - Gestion de plusieurs catégories
-// - Gestion de plusieurs auteurs
-
-// - Créer le composant titre avec Carrousel 
 // - ToolTips ?
 // - Gérer la date format FR
-// - Bouton j’achète
+
 
 
 const { Content } = Layout;
@@ -65,6 +61,10 @@ function BookScreen() {
       },[isbn])
 
 
+      var authors = dataBook.authors;
+      console.log('databook', dataBook)
+
+
       var coverImg;
         if (dataBook.imageLinks===undefined) {
             var coverImg = Cover
@@ -72,16 +72,6 @@ function BookScreen() {
             coverImg=dataBook.imageLinks.thumbnail
         }
       
-        console.log(isbn);
-
-    //   console.log('categories',categories)
-
-
-    //   var categoriesBook = categories.map((item, i) => {
-    //     return (<BookHeader categoriesBook={item.category} />)
-    //   })
-
-    //   console.log('CB', categoriesBook);
 
   return (
 
@@ -89,7 +79,7 @@ function BookScreen() {
         <Nav/>
         <Content style={styles.container}  >
                 <BookHeader bookTitle={dataBook.title} bookAuthor={dataBook.authors} 
-                bookCover={coverImg}
+                bookCover={coverImg} bookIsbn={isbn} bookCat={dataBook.categories} 
                 
                 
                 bookIsbn={isbn}/>
@@ -99,7 +89,7 @@ function BookScreen() {
             <div style={styles.libraryBloc}>
                 <Row>
                 <Col xs={24}>
-                    <h3 style={styles.h3}>Ils ont ajouté {dataBook.title} de {dataBook.authors} à leur bibliothèque </h3>
+                    <h3 style={styles.h3}>Ils ont ajouté "{dataBook.title}" à leur bibliothèque </h3>
                 </Col>
                 </Row>
                 <Row>
