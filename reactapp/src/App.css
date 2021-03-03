@@ -3,29 +3,3 @@
 .font {
   font-family: 'Fira Sans', sans-serif;
 }
-
-/* .bookBloc {
-  width:80%;
-  display:flex;
-  align-items:'center';
-  justify-content:'flex-start';
-  background: #23396C;
-  border-radius: 10px 10px 0px 0px;
-  padding: 30px;
-  background-image: url("./assets/picto.png");
-  background-size: 20%;
-  background-repeat: no-repeat;
-  background-position: right bottom;
-}
-
-
-.textBloc {
-  display: flex;
-  justify-content: flex-start;
-  width: 80%;
-  background-color: #ffffff;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 30px;
-} */
-
