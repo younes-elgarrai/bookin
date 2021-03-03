@@ -1,4 +1,5 @@
 // To do : 
+// Gérer l'affichage du burger : fait descendre tout le site en s'ouvrant
 // mettre à jour les liens de navigation une fois tous les écrans créés
 // Importer le user token, son nom, sa photo pour l'avatar
 // Gérer le log out
@@ -6,6 +7,7 @@
 import React, { useState } from 'react';
 import logo from '../assets/bookin.png';
 import './Navbar.css';
+
 // ReactStrap
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
   NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';

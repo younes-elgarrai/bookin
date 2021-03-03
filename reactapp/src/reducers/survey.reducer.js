@@ -1,32 +1,61 @@
-export default  function surveyReducer(survey = {Styles:[], Period:[], Length:[]}, action) {
+export default  function surveyReducer(survey = {Styles:{void:[]}, Period:[], Length:[]}, action) {
 
    if(action.type === 'addStyles') {
 
       var surveyCopy = {...survey}
 
-      var surveyStyles = [...survey.Styles, action.element];
+      var surveyStylesCopy = {...survey.Styles}
 
-      surveyCopy.Styles = surveyStyles;
+      if(action.element.category==='main'){
 
-      return surveyCopy;
+        surveyStylesCopy[action.element.subcategory] = [];
+  
+        surveyCopy.Styles = surveyStylesCopy;
+  
+        return surveyCopy;
+
+      }else{
+        var arrayCopy = surveyStylesCopy[action.element.category];
+
+        surveyStylesCopy[action.element.category] = [...arrayCopy, action.element.subcategory]
+  
+        surveyCopy.Styles = surveyStylesCopy;
+  
+        return surveyCopy;
+      }
+
   
     } else if(action.type === 'removeStyles'){
 
-        var surveyCopy2 = {...survey};
 
-        var surveyStyles2 = [...survey.Styles];
+      var surveyCopy2 = {...survey};
 
-        surveyStyles2 = surveyStyles2.filter( e => e!==action.element);
+      var surveyStyles2 = {...survey.Styles};
+
+      if(action.element.category==='main'){
+
+        delete surveyStyles2[action.element.subcategory];
 
         surveyCopy2.Styles = surveyStyles2;
 
         return surveyCopy2;
 
+      }else{
+
+        surveyStyles2[action.element.category] = surveyStyles2[action.element.category].filter( e => e!==action.element.subcategory);
+
+        surveyCopy2.Styles = surveyStyles2;
+
+        return surveyCopy2;
+      }
+      
+
+
     }else if(action.type === 'addLength') {
 
       var surveyCopy3 = {...survey}
 
-      surveyCopy3.Length = [action.element];
+      surveyCopy3.Length = [action.element.subcategory];
 
       return surveyCopy3;
 
@@ -36,7 +65,7 @@ export default  function surveyReducer(survey = {Styles:[], Period:[], Length:[]
 
         var surveyLength4 = [...survey.Length];
 
-        surveyLength4 = surveyLength4.filter( e => e!==action.element);
+        surveyLength4 = surveyLength4.filter( e => e!==action.element.subcategory);
 
         surveyCopy4.Length = surveyLength4;
 
@@ -47,7 +76,7 @@ export default  function surveyReducer(survey = {Styles:[], Period:[], Length:[]
 
         var surveyCopy5 = {...survey}
   
-        surveyCopy5.Period = [action.element];
+        surveyCopy5.Period = [action.element.subcategory];
   
         return surveyCopy5;
 
@@ -57,7 +86,7 @@ export default  function surveyReducer(survey = {Styles:[], Period:[], Length:[]
 
         var surveyPeriod6 = [...survey.Period];
 
-        surveyPeriod6 = surveyPeriod6.filter( e => e!==action.element);
+        surveyPeriod6 = surveyPeriod6.filter( e => e!==action.element.subcategory);
 
         surveyCopy6.Period = surveyPeriod6;
 

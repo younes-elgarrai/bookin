@@ -3,13 +3,15 @@ import {Card} from 'antd';
 
 import {connect} from 'react-redux';
 
+var width = '';
 
 function Response(props){
 
     var background = props.isSelected?'red':null;
 
+
     const dynamicStyle = {
-        width: '35%',
+        width: width,
         textAlign: 'center',
         backgroundColor: background
       };
@@ -28,9 +30,13 @@ function Response(props){
 
 function SurveyContainer(props){
 
-    var handleClickAdd = (e,typ)=>{
 
+    width = props.type!=='Length'?'33%':'100%';
+
+    var handleClickAdd = (e,typ)=>{
+        
         props.add(e,typ)
+        props.category==='main'&&props.setCategory(e.subcategory);
     }
 
     var handleClickRemove = (e,typ)=>{
@@ -38,13 +44,19 @@ function SurveyContainer(props){
         props.remove(e,typ)
     }
 
+    const cardStyle = {
+        justifyContent: 'center',
+    }
+
     return(
         <div className='survey'>
-            <Card title={props.question}>
+            <Card  title={props.question} style={cardStyle} >
                 {props.array.map((elem, index)=>{
-                    return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd(elem,props.type)}
-                                                            handleClickRemoveParent={()=>handleClickRemove(elem,props.type)}                
-                                                            isSelected={props.survey[props.type].some(e => e === elem)} />
+                    return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd({category: props.category, subcategory: elem},props.type)}
+                                                            handleClickRemoveParent={()=>handleClickRemove({category: props.category, subcategory: elem},props.type)}                
+                                                            isSelected={props.category==='main'?Object.keys(props.survey[props.type]).some(e => e === elem)
+                                                                                             :props.category==='array'?props.survey[props.type].some(e => e === elem)
+                                                                                             :props.survey[props.type][props.category].some(e => e === elem)} />
                     })}
             </Card>
         </div>
@@ -62,6 +74,9 @@ function SurveyContainer(props){
         },
         remove: function (e, typ) {
             dispatch({type: 'remove'+typ, element: e })
+        },
+        setCategory: function(e) {
+            dispatch({type: 'setCategory', element: e})
         }
 
     }
