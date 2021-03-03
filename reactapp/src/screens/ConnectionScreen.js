@@ -58,7 +58,7 @@ function ConnectionScreen(props) {
               <h3 style={styles.title}>Connexion</h3>
               <p style={styles.label}>Connectez-vous pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
             <div className="row">
-            <div className="col-6">
+            <div className="order-2 order-md-1 col-12 col-md-6">
               <p style={styles.label}>Saisissez votre adresse email : </p>
               <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} onChange={(e)=>setEmail(e.target.value)} value={email}></Input>
 
@@ -82,7 +82,7 @@ function ConnectionScreen(props) {
             </div>
             }
             </div>
-            <div className="col-6">
+            <div className="order-1 order-md-2 col-12 col-md-6">
             <Image src={reading} alt='Illustration by Olha Khomich from Icons8'></Image>
             </div>
             </div>

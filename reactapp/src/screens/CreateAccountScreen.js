@@ -56,10 +56,10 @@ function CreateAccountScreen(props) {
             {props.token ?
             <h3 style={styles.title}>Modifiez votre compte</h3>
             :
-            <h3 style={styles.title}>Créez votre compte bookin</h3>
+            <h3 style={styles.title}>Créez votre compte</h3>
             }
             <div className="row">
-            <div className="col-6">
+            <div className="order-2 order-md-1 col-12 col-md-6">
               <AvatarUpload />
               <p style={styles.smallLabel}>Choisissez votre avatar (png / jpg)</p>
             <Form layout="vertical">
@@ -79,7 +79,8 @@ function CreateAccountScreen(props) {
             </Form>
             <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
-            <div className="col-6">
+            <div className="order-1 order-md-2 col-6 col-md-6">
+              {/* Tester offset pour centrer voir doc bootstrap */}
             <Image src={account} alt='Illustration by Olha Khomich from Icons8'></Image>
             </div>
         </div>

@@ -67,7 +67,6 @@ router.post('/check-email', async function (req, res, next) {
 
 // POST : Login
 router.post('/log-in', async function(req, res, next) {
-  console.log('log in req body infos', req.body.email, req.body.password);
   if (!req.body.email || !req.body.password) {
     res.json({ login: false, message: "Veuillez remplir tous les champs pour accéder à votre compte."})
   } else {

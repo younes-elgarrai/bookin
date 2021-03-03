@@ -58,6 +58,7 @@ function NavigationBar(props) {
       <NavbarBrand href="/search"><SearchOutlined className="mr-auto menu-nav-header-icon-xs"/></NavbarBrand>
       <NavbarBrand href="/connection"><UserOutlined className="mr-auto menu-nav-header-icon-xs"/></NavbarBrand>
       </Navbar>
+      {/* A remplacer par un dropdown pour ne pas pousser vers le bas */}
       <Collapse isOpen={!collapsed} navbar>
           <Nav navbar className="left-menu-xs">
             <NavItem><NavLink href="/result" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</NavLink></NavItem>
