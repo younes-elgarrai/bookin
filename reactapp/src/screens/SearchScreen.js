@@ -7,19 +7,11 @@ import Background from '../assets/picto.png';
 import Unavailable from '../assets/cover_nondispo.jpg'
 
 // composant vignette avec lien vers page livre
-// insérer module dernièers nouveautés lorsque pas de recherche encore faite
-// placement loader
-// fallback si API ne fonctionne pas => try again a faire sur tous les calls
-
-// conserver précédentes recherches en cookies
-// autosuggest
-// réponses partial
-
+// insérer module dernières nouveautés lorsque pas de recherche encore faite
 
 
 const { Search } = Input;
 const { Meta } = Card;
-
 
 export default function SearchScreen() {
 
@@ -32,13 +24,15 @@ export default function SearchScreen() {
     const [totalElementsCount, setTotalElementsCount] = useState([]);
     const [selectedMenu, setSelectedMenu] = useState("1");
     const [isFetching, setIsFetching] = useState(false);
-    const [error, setError] = useState(false);    
+    const [error, setError] = useState(false); 
+    const [totalItems, setTotalItems] = useState(0);   
 
- 
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     
     const spin = (
-    <Spin style={{ position: "fixed", top: "50%", left:"0", zIndex:"999", backgroundColor:"#F3F5F3", opacity:"0.8", width:"100%", height:"100%" }} indicator={antIcon} tip="Recherche en cours" size="large" />
+    <div style={{ position: "fixed", top: "9%", left:"0", zIndex:"998", backgroundColor:"#F3F5F3", opacity:"0.8", width:"100%", height:"100%" }}>
+    <Spin style={{ position: "fixed", top: "50%", zIndex:"999", width:"100%", height:"100%" }} indicator={antIcon} tip="Recherche en cours" size="large" />
+    </div>
     );
 
     const menu = (
@@ -53,17 +47,25 @@ export default function SearchScreen() {
             setIsFetching(true);
             setError(false);
         try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
             const body = await data.json();
             setIsFetching(false);
+            setQuery(q)
+            setCount(count+1)
+            if (body.totalItems !== 0) {
             setResult(body.items);
-            console.log(body.items);
-            var limitControl;
+            } else {
+            setResult([])
+            };
+            setTotalItems(body.totalItems);
+            console.log(body);
+            var limitControl = body.totalItems;
             if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/3)}
             setTotalElementsCount(limitControl);
             setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
         }
         catch(error) {
+            setIsFetching(false);
             setError(true);
           }};
         bookSearchApi();
@@ -74,42 +76,67 @@ export default function SearchScreen() {
         if (e.key === "2") {
             var bookSearchApi2 = async() => {
                 setIsFetching(true);
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=newest&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            try {
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
-                setResult(body.items);
+                if (body.totalItems !== 0) {
+                    setResult(body.items);
+                    } else {
+                    setResult([])
+                    };
                 setSelectedMenu("2");
-                console.log(body.items);
+                console.log(body);
+            }
+            catch(error) {
+                setError(true);
+              };
             };
             bookSearchApi2();
         } else { 
             var bookSearchApi3 = async() => {
                 setIsFetching(true);
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            try {
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
-                setResult(body.items);
+                if (body.totalItems !== 0) {
+                    setResult(body.items);
+                    } else {
+                    setResult([])
+                    };
                 setSelectedMenu("1");
-                console.log(body.items);
+                console.log(body);
+            }
+            catch(error) {
+                setError(true);
+                };
             };
             bookSearchApi3();
         }
     };
-
 
     var handlePageClick = (pageNumber) => {
         const currentPage = pageNumber - 1;
         offset = currentPage * elementsPerPage;
         var bookSearchApi4 = async() => {
             setIsFetching(true);
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&startIndex=${offset}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+        try {
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&startIndex=${offset}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
             const body = await data.json();
             setIsFetching(false);
-            setResult(body.items);
-            console.log(body.items);
+            if (body.totalItems !== 0) {
+                setResult(body.items);
+                } else {
+                setResult([])
+                };
+            console.log(body);
+        }
+        catch(error) {
+            setError(true);
+            };
         };
         bookSearchApi4();
-
     }
 
 return (
@@ -117,85 +144,83 @@ return (
     <Nav/>
     {isFetching ? spin : null }
     <div style={styles.container} >
-      <Row style={styles.bookBloc} >
-        <Col xs={24} md={12} >
-            <h1 style={styles.h1}>Recherche de livres</h1>
-            <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onSearch={(q) => {handleSearch(q); setQuery(q); setCount(+1)}} />
-        </Col>
-    </Row>
+        <Row style={styles.bookBloc} >
+            <Col xs={24} md={12} >
+                <h1 style={styles.h1}>Rechercher votre prochain livre</h1>
+                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onSearch={(q) => {handleSearch(q)}} />
+            </Col>
+        </Row>
 
-    <div style={{ width:"80%", margin:"auto", border:1}}>
-    {
-        error && <div style={{textAlign:"center", marginTop:30}}>Problème de recherche, essayer à nouveau</div>
-      }
-        {count === 0 ? null : 
-        <div>
-        
-        {query === ""  ? <div style={{textAlign:"center", marginTop:30}}> Aucun résultat :( essayer de formuler votre recherche </div> : 
-        <div> 
-        
-        {result.length === 0 ? null : <div> 
-            <Row align="middle" justify="space-between" style={{marginTop:30}}>
-                <div>{totalElementsCount} Livres trouvés</div>
-                <Dropdown overlay={menu}>
-                    <Button style={{ marginLeft: 8 }}>
-                        Trier par <DownOutlined  />
-                    </Button>
-                </Dropdown>
-            </Row>
-            </div>}
-            <div style={{display:'flex', flexWrap:"wrap" ,justifyContent: "center"}}>
-                    
-                {result.map((book,i) => (
-                
-                    <div key={i} style={{display:'flex',justifyContent:'center'}}>
-                            <Card 
-                                style={{ 
-                                    width: 100,
-                                    margin:'15px', 
-                                    display:'flex',
-                                    flexDirection: 'column',
-                                    justifyContent:'space-between'    
-                                }} 
-                                bodyStyle={{ padding: 0 }}
-                                cover={
-                                    <img
-                                        alt={book.volumeInfo.title}
-                                        src={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail} 
-                                    />
+        <div style={{ width:"80%", margin:"auto", border:1}}>
+
+            {error && <div style={{textAlign:"center", marginTop:30}}>Problème de recherche, essayer à nouveau</div>}
+
+            {count !== 0 && 
+
+                <div>
+
+                    {(query === "" || totalItems === 0)  
+                        ? <div style={{textAlign:"center", marginTop:30}}> Aucun livre ne correspond à votre recherche :( essayer de reformuler votre recherche </div> 
+                        : <div> 
+                                <Row align="middle" justify="space-between" style={{marginTop:10}}>
+                                    <div>{totalElementsCount} Livres trouvés</div>
+                                    <Dropdown overlay={menu}>
+                                        <Button style={{ marginLeft: 8 }}>
+                                            Trier par <DownOutlined  />
+                                        </Button>
+                                    </Dropdown>
+                                </Row>
+
+                                <div style={{display:'flex', flexWrap:"wrap" ,justifyContent: "center"}}>
+                                        
+                                    {
+                                        result.map((book,i) => (
+                                            <div key={i} style={{display:'flex',justifyContent:'center'}}>
+                                                    <Card 
+                                                        style={{ 
+                                                            width: 150,
+                                                            margin:'10px', 
+                                                            display:'flex',
+                                                            flexDirection: 'column',
+                                                            justifyContent:'space-between'    
+                                                        }} 
+                                                        bodyStyle={{ padding: 0 }}
+                                                        cover={
+                                                            <img
+                                                                alt={book.volumeInfo.title}
+                                                                src={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail} 
+                                                            />
+                                                            }
+                                                        // actions={}
+                                                    
+                                                    >
+                                                        <Meta
+                                                            title={book.volumeInfo.title}
+                                                            style={{fontSize:12}}
+                                                        />
+                                                    </Card>                                        
+                                            </div>
+                                        ))
                                     }
-                                // actions={}
-                            
-                            >
-                                <Meta
-                                    title={book.volumeInfo.title}
-                                    style={{fontSize:12}}
-                                />
-                            </Card>
-                    
-                        <div>
-
-                    </div>
-                    
-                    </div>
-                ))}
-            </div>
-            {
-                    pagesCount > 1 &&
-                            <div style={{display:"flex", justifyContent:"center"}}>
-                            <Pagination
-                                defaultCurrent={1}
-                                onChange={(e) => handlePageClick(e)}
-                                size="large"
-                                total={totalElementsCount}
-                                pageSize={elementsPerPage}
-                                showSizeChanger={false}
-                            />
-                            </div>
+                                </div>
+                            {
+                                pagesCount > 1 &&
+                                    <div style={{display:"flex", justifyContent:"center"}}>
+                                        <Pagination
+                                            defaultCurrent={1}
+                                            onChange={(e) => handlePageClick(e)}
+                                            size="large"
+                                            total={totalElementsCount}
+                                            pageSize={elementsPerPage}
+                                            showSizeChanger={false}
+                                        />
+                                    </div>
+                            }
+                        </div>
+                    }
+                </div> 
             }
-        </div>}
-        </div> }
-    </div>
+        </div>
     </div>
 </div>
 )}
@@ -225,8 +250,8 @@ let styles = {
         backgroundColor: '#23396C',
         borderTopRightRadius:"10px",
         borderTopLeftRadius:"10px",
-        marginTop:"20px",
-        padding:'40px',
+        marginTop:"10px",
+        padding:'50px',
         backgroundImage: `url(${Background})`,
         backgroundSize: '15%',
         backgroundRepeat: 'no-repeat',
