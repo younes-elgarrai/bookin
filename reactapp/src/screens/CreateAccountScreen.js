@@ -30,9 +30,9 @@ function CreateAccountScreen(props) {
       if (!checkEmailFormat(userEmail)) {
         setUserMessage('veuillez saisir un email valide.');
     } else {
-      const style = JSON.stringify(cookies.survey.Styles);
-      const length = cookies.survey.Length;
-      const period = cookies.survey.Period;
+      const style = encodeURIComponent(JSON.stringify(cookies.survey.Styles));
+      const length = encodeURIComponent(cookies.survey.Length);
+      const period = encodeURIComponent(cookies.survey.Period);
       const response = await fetch('/sign-up', {
         method: 'POST',
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
