@@ -18,7 +18,7 @@ function BookCard(props) {
 return (
  
         <Col xs={12} md={6} xl={4} style={{display:'flex', flexDirection:'column', justifyContent: "flex-end", alignItems:'center'}} >
-            <Link to={{pathname:"/book/"+props.isbn}}><img width={150} src={!props.bookCover ? Unavailable : props.bookCover} alt={props.bookTitle}/></Link>
+            <Link to={{pathname:"/book/"+props.bookId}}><img width={150} src={!props.bookCover ? Unavailable : props.bookCover} alt={props.bookTitle}/></Link>
             <p style={{color:"#333", fontSize:"12px", fontWeight:"400", paddingRight:"10px", marginBottom:'10px'}}> {titleCut(props.bookTitle)} </p>   
          </Col>
 

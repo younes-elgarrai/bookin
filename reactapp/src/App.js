@@ -44,7 +44,8 @@ function App() {
           <Route exact path="/" component={HomeScreen} />
           <Route path="/library" component={LibraryScreen} />
           <Route path="/main" component={MainScreen} />
-          <Route path="/book/:isbn" component={BookScreen} />
+          <Route path="/book/:bookid" component={BookScreen} />
+          <Route exact path="/book/" component={BookScreen} />
           <Route path="/result" component={ResultScreen} />
           <Route path="/search" component={SearchScreen} />
           <Route path="/survey" component={SurveyScreen} />
