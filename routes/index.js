@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const UsersModel = require('../models/users');
 const ReviewsModel = require('../models/reviews');
+const BooksModel = require('../models/books');
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 
