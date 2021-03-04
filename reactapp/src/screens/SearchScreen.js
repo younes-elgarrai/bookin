@@ -66,7 +66,7 @@ export default function SearchScreen() {
             };
             bookSearchApi5();
           };
-      }, [cookies.searchQuery])
+      }, [])
 
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     
@@ -92,6 +92,7 @@ export default function SearchScreen() {
             const body = await data.json();
             setIsFetching(false);
             setQuery(q);
+            console.log(q);
             setCookie('searchQuery', q, {path: '/'});
             setCount(count+1);
             if (body.totalItems !== 0) {

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const UsersModel = require('../models/users');
 const ReviewsModel = require('../models/reviews');
+const BooksModel = require('../models/books');
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 
@@ -207,30 +208,62 @@ router.delete('/wishlist/delete/:token/:Isbn13', (req, res) => {
   }
 });
 
-/*
-  Ajout d'un livre dans la wishlist d'un user dans la BDD
-  Body : token (123456), Isbn13(1234567890123)
-  */
+/* Ajout d'un livre dans la wishlist d'un user dans la BDD  */
+  //check si book existant en BDD
+      // si pas déjà existant => l'ajouter en BDD
+      // si déjà existant => test si déjà dans wishlist
+           // si déjà en wishlist => ne fait rien
+           // si pas déjà en wislist => ajouter en wishlist 
 
- router.post('/wishlist/add/:token/:Isbn13', (req, res) => {
+ router.post('/wishlist/add/:token/:bookid', async (req, res) => {
   let token = req.params.token;
-  let Isbn13 = req.params.Isbn13
+  let bookid = req.params.bookid;
+  const regex = new RegExp("[0-9A-Za-z_\-]{12}")
 
-  //check si book existant en BDD sinon ajouter en BDD
-  // ajouter dans la wishlist de l'utilisateurs si pas déjà dans la wishlist
-
-  if (!token) {
+  if (!token || !regex.test(bookid) ) {
     res.json({ result: false });
+  
   } else {
 
-res.json({ result: true, books: [{
-  title: 'Tintin au Congo',
-  cover: 'http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
+  try {
 
-},] });
+    var bookToCheck = await BooksModel.findOne({bookid: bookid});
+    console.log("bookToCheck",bookToCheck);
+
+    if (bookToCheck === null) { 
+      const newBookInWishlist =  new BooksModel({
+        title: req.body.title, 
+        cover: req.body.cover, 
+        bookid: bookid, 
+      });
+      savedBookInWishlist = await newBookInWishlist.save();
+      console.log("newBookInWishlist",newBookInWishlist);
+      
+      var userCheck = await UsersModel.findOne({token: token},{wishlist: newBookInWishlist._id});
+      console.log("userCheck",userCheck);
+
+      if (userCheck === null) { 
+        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: savedBookInWishlist.id}});
+        console.log("user",user);
+      };
+
+    } else {
+      var userCheck2 = await UsersModel.findOne({token: token},{wishlist: bookToCheck._id});
+      console.log("userCheck2",userCheck2);
+
+      if (userCheck === null) { 
+        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: bookToCheck.id}});
+      }; 
+
+    }
+
+    var result = true;
   }
-});
- 
+  catch (error) {
+    var result = false
+  }
 
+  res.json({result})
+ }})
 
 module.exports = router;
