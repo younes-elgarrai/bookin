@@ -20,25 +20,31 @@ function BookHeader(props) {
     }
   }
 
-
   // Création de l'url pour l'achat vers Amazon
   var urlAmazon = `https://www.amazon.fr/gp/search?ie=UTF8&tag=bookin0c-21&linkCode=ur2&linkId=ed069e44484efe7e5139cd6a95321518&camp=1642&creative=6746&index=books&keywords=${props.bookIsbn}`
   console.log(urlAmazon);
 
   // Const pour la modal du bouton ajout à ma wishlit
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible2, setIsModalVisible2] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  const showModal2 = () => {
+    setIsModalVisible2(true);
+  };
+
+  const handleCancel2 = () => {
+    setIsModalVisible2(false);
+  };
+
+console.log (props.bookIsbn);
 
   return (
     <div style={styles.container} className='font'>
@@ -62,10 +68,11 @@ function BookHeader(props) {
           <p style={styles.note} >Note 3,5/5 | 12 avis</p>
           </div>
         
-        
+        {/* Tag avec les styles */}
         {/* <div>
-        <Button style={{marginRight:'10px',  backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{props.bookCat}</Button>
-      </div> */}
+          <Button style={{marginRight:'10px',  backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{props.bookCat}</Button>
+        </div> */}
+
         </Col>
     </Row>
 
@@ -73,9 +80,8 @@ function BookHeader(props) {
       <div>
         <Col xs={24}>
         <Button onClick={showModal} style={{margin:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
-
-        <Modal centered title="Félicitations" visible={isModalVisible} footer={null} onCancel={handleCancel} >
-          <img style={{float:'left'}} width={100} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle} /> 
+        <Modal centered title="Félicitations" visible={isModalVisible} footer={null} onCancel={handleCancel} style={{textAlign: "center"}}>
+          <img style={{margin:'10px'}} width={70} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle} /> 
 
           <div style={{textAlign: "center"}}>
             <CheckCircleFilled style={{ color:'#37a000', fontSize:'16px', textAlign:'right'}}/>
@@ -83,12 +89,23 @@ function BookHeader(props) {
             <Link to='/library'><Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma bibliothèque</Button></Link>   
           </div>
         </Modal>
-
-        <Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
         
+        <Button onClick={showModal2} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
+          <Modal centered title="Félicitations" visible={isModalVisible2} footer={null} onCancel={handleCancel2} style={{textAlign: "center"}}>
+            <img style={{margin:'10px'}} width={70} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle} /> 
+
+            <div>
+              <CheckCircleFilled style={{ color:'#37a000', fontSize:'16px', textAlign:'right'}}/>
+              <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre wishlist<br /><br /></p>
+              <Link to='/library'><Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma wishlist</Button></Link>   
+            </div>
+          </Modal>
+
+        {props.bookIsbn === 'nc' ? null : 
         <a href={urlAmazon} target="_blank">
         <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button>
-        </a>
+        </a>}
+
         </Col>
       </div>
     </Row>

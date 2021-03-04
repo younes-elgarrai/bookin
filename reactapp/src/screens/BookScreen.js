@@ -17,7 +17,7 @@ import BookList from '../components/BookList'
 const { Content } = Layout;
 
 var bookArray = [{
-        "id":"RgiMzQEACAAJ",
+        "id":"4fX_DwAAQBAJ",
         "title": "Batman La Légende - Neal Adams - Tome 3",
         "authors": [
           "Denis O'Neil",
@@ -102,9 +102,11 @@ function BookScreen() {
                             setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
                           }
                           findBook2();
+                          window.scrollTo(0, 0)
                     }
               }
               findBook()    
+              window.scrollTo(0, 0)
         } else {
             const findBook2 = async() => {
                 alert('Livre inconnu, nous vous recommandons cette lecture');
@@ -114,7 +116,10 @@ function BookScreen() {
                 setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
               }
               findBook2();
+              window.scrollTo(0, 0)
         }
+
+
 
       },[bookid])
 
