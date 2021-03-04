@@ -239,21 +239,38 @@ router.delete('/wishlist/delete/:token/:Isbn13', (req, res) => {
       savedBookInWishlist = await newBookInWishlist.save();
       console.log("newBookInWishlist",newBookInWishlist);
       
-      var userCheck = await UsersModel.findOne({token: token},{wishlist: newBookInWishlist._id});
+      var userCheck = await UsersModel.findOne({token: token});
+      var userCheckTab = [];
+      for (let i = 0; i < userCheck.wishlist.length; i++) {
+        console.log("userCheck.wishlist[i]",userCheck.wishlist[i])
+        if (userCheck.wishlist[i] === savedBookInWishlist._id) {
+          userCheckTab.push(userCheck)
+        }
+      }
       console.log("userCheck",userCheck);
+      console.log("userCheckTab",userCheckTab);
 
-      if (userCheck === null) { 
-        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: savedBookInWishlist.id}});
+      if (userCheckTab.length === 0) { 
+        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: savedBookInWishlist._id}});
         console.log("user",user);
       };
 
     } else {
-      var userCheck2 = await UsersModel.findOne({token: token},{wishlist: bookToCheck._id});
+      var userCheck2 = await UsersModel.findOne({token: token});
       console.log("userCheck2",userCheck2);
+      var userCheckTab2 = [];
+      for (let i = 0; i < userCheck2.wishlist.length; i++) {
+        console.log("userCheck2.wishlist[i]",userCheck2.wishlist[i])
+        if (userCheck2.wishlist[i] === bookToCheck._id) {
+          userCheckTab2.push(userCheck2)
+        }
+      }
+      console.log("userCheckTab2",userCheckTab2);
 
-      if (userCheck === null) { 
-        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: bookToCheck.id}});
-      }; 
+      if (userCheckTab2.length === 0) {
+        var user2 = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: bookToCheck._id}});
+        console.log("user2",user2)
+      };
 
     }
 
