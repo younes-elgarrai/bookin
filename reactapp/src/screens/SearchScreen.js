@@ -31,7 +31,8 @@ export default function SearchScreen() {
     const [totalItems, setTotalItems] = useState(0);
     const [cookies, setCookie] = useCookies(['searchQuery']);
 
-    
+    console.log(history);
+    console.log(cookies.searchQuery)
     useEffect(() => {
           if (history.action === "POP") {
             var bookSearchApi5 = async() => {
@@ -73,7 +74,7 @@ export default function SearchScreen() {
             };
             bookSearchApi5();
           };
-      }, [history])
+      }, [cookies.searchQuery])
 
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     
@@ -246,10 +247,10 @@ return (
 
         <div style={{ width:"80%", margin:"auto", border:1}}>
 
-            {error && <div style={{textAlign:"center", marginTop:30}}>Problème de recherche, essayer à nouveau</div>}
 
             {count !== 0  && 
                 <div>
+            {error && <div style={{textAlign:"center", marginTop:30}}>Problème de recherche, essayer à nouveau</div>}
 
                     {(query === "" || totalItems === 0)  
                         ? <div style={{textAlign:"center", marginTop:30}}> Aucun livre ne correspond à votre recherche :( essayer de reformuler votre recherche </div> 
