@@ -16,6 +16,7 @@ import ResultScreen from './screens/ResultScreen';
 import SearchScreen from './screens/SearchScreen';
 import SurveyScreen from './screens/SurveyScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
+import UpdateAccountScreen from './screens/UpdateAccountScreen';
 import ConnectionScreen from './screens/ConnectionScreen';
 import MainScreen from './screens/MainScreen'
 
@@ -49,6 +50,7 @@ function App() {
           <Route path="/search" component={SearchScreen} />
           <Route path="/survey" component={SurveyScreen} />
           <Route path="/create-account" component={CreateAccountScreen} />
+          <Route path="/update-account" component={UpdateAccountScreen} />
           <Route path="/connection" component={ConnectionScreen} />
         </Switch>
       </Router>  

@@ -2,14 +2,14 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import '../App.css';
 import Nav from '../components/Navbar';
+import {connect} from 'react-redux';
 
 
-function HomeScreen() {
+function HomeScreen(props) {
 
-
+  console.log('HomeScreen > props.token', props.token);
   const [cookies, setCookie] = useCookies(['survey']);
-
-  console.log(cookies.survey);
+  console.log('cookie survey', cookies.survey);
   
 
   return (
@@ -19,4 +19,7 @@ function HomeScreen() {
   );
 }
 
-export default HomeScreen;
+function mapStateToProps(state) {
+  return { token: state.token }
+}
+export default connect(mapStateToProps, null)(HomeScreen);

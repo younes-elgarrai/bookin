@@ -8,8 +8,9 @@ import account from '../assets/account.png';
 import AvatarUpload from '../components/AvatarUpload';
 import {connect} from 'react-redux';
 
-function CreateAccountScreen(props) {
-  console.log('CreateAccountScreen > props.token', props.token);
+function UpdateAccountScreen(props) {
+    // récupérer l'email de l'utilisateur pour le figer (+ autres infos préremplies).
+  console.log('UpdateAccountScreen > props.token', props.token);
 
     const [cookies, setCookie] = useCookies(['survey']);
     console.log('cookies survey', cookies.survey);
@@ -24,6 +25,7 @@ function CreateAccountScreen(props) {
       return email ? re.test(String(email).toLowerCase()) : false;
     }
 
+    // MODIFIER POUR UPDATE
     const createUserAccount = async () => {
     // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire' + redirect ?
       if (!checkEmailFormat(userEmail)) {
@@ -52,7 +54,8 @@ function CreateAccountScreen(props) {
         <div className='font'>
         <Nav/>
         <div style={styles.container}>
-            <h3 style={styles.title}>Créez votre compte</h3>
+            <h3 style={styles.title}>Modifiez votre compte</h3>
+
             <div className="row">
             <div className="order-2 order-md-1 col-12 col-md-6">
               <AvatarUpload />
@@ -62,7 +65,7 @@ function CreateAccountScreen(props) {
                   <Input placeholder="Bibliothèque de Victor" prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} />
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre adresse email :">
-                    <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} onChange={(e)=> setUserEmail(e.target.value)} value={userEmail}/>
+                    <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} value={userEmail}/>
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre mot de passe :">
                     <Input.Password placeholder="Fantine123" prefix={<LockOutlined className="site-form-item-icon" />} onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
@@ -128,14 +131,8 @@ const styles = {
       }   
   }   
 
-  function mapDispatchToProps(dispatch) {
-    return {
-      onCreateAccountClick: function(token) {
-          dispatch( {type: 'saveToken', token} )
-      } 
-    }
-  }
+
   function mapStateToProps(state) {
     return { token: state.token }
   }
-  export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountScreen);
+  export default connect(mapStateToProps, null)(UpdateAccountScreen);
