@@ -52,49 +52,20 @@ function NavigationBar(props) {
         </Collapse>
       </Navbar>
       </div>
-    {/* Small Menu */}  
-    {/* <div className="d-md-none ">
-      <Navbar light>
-      <NavbarToggler onClick={toggleNavbar} className="mr-2" />
-      <NavbarBrand href="/" className="mr-auto"><Image src={logo} alt="logo Bookin" width={90}/></NavbarBrand>
-      <Navbar light className="menu-nav-header-xs">
-      <NavbarBrand href="/search"><SearchOutlined className="mr-auto menu-nav-header-icon-xs"/></NavbarBrand>
-      <NavbarBrand href="/connection"><UserOutlined className="mr-auto menu-nav-header-icon-xs"/></NavbarBrand>
-      </Navbar>
-      <Collapse isOpen={!collapsed} navbar>
-          <Nav navbar className="left-menu-xs">
-            <NavItem><Link to="/result" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></NavItem>
-            <NavItem><Link to="/library" className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></NavItem>
-            <NavItem><Link to="/library" className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></NavItem>
-            {props.token ? 
-            <div>
-             <NavItem><Link to="/update-account" className="menu-nav-item-xs"><SettingOutlined className="menu-nav-icon-xs" /> Modifier compte</Link></NavItem>
-             <NavItem><Link to="/" className="menu-nav-item-xs" onClick={()=>props.onLogoutClick(props.token)}><LogoutOutlined className="menu-nav-icon-xs" /> Déconnexion</Link></NavItem>
-            </div>
-            :
-            <NavItem><Link to="/connection" className="menu-nav-item-xs"><LoginOutlined className="menu-nav-icon-xs"/> Connexion</Link></NavItem>
-            }
-           
-          </Nav>
-      </Collapse>
-      </Navbar>
-    </div> */}
-
-    {/* Small Menu avec dropdown */} 
+    {/* Small Menu */} 
         <div className="d-md-none ">
         <Navbar expand="md" className="menu-nav">
-              <Nav className="ms-auto" navbar>
+              <Nav navbar className="menu-nav-header">
               <UncontrolledDropdown setActiveFromChild>
               <Navbar light className="menu-nav-header-xs">
-                  <DropdownToggle tag="a" className="nav-link"><MenuOutlined/></DropdownToggle> 
-                  <NavbarBrand href="/" className="mr-auto"><Image src={logo} alt="logo Bookin" width={90}/></NavbarBrand>
-                  <NavbarBrand href="/search"><SearchOutlined /></NavbarBrand>
-                  <NavbarBrand href="/connection"><UserOutlined /></NavbarBrand>
+                  <DropdownToggle tag="a" className="menu-header-xs-item"><MenuOutlined/><Image src={logo} alt="logo Bookin" width={90}/></DropdownToggle> 
+                  <NavbarBrand href="/search" className="menu-header-xs-item"><SearchOutlined /></NavbarBrand>
+                  <NavbarBrand href="/connection" className="menu-header-xs-item"><UserOutlined /></NavbarBrand>
               </Navbar>
           <DropdownMenu>
             <DropdownItem><Link to="/result" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></DropdownItem>
-            <DropdownItem href="/library" className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</DropdownItem>
-            <DropdownItem href="/library" className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</DropdownItem>
+            <DropdownItem><Link to="/library" className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
+            <DropdownItem><Link to="/library" className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></DropdownItem>
             {props.token ? 
             <div>
              <DropdownItem href="/update-account" className="menu-nav-item-xs"><SettingOutlined className="menu-nav-icon-xs" /> Modifier compte</DropdownItem>

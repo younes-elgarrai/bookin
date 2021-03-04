@@ -40,15 +40,24 @@
 }
 
 /* Small Menu */
-.menu-nav-header-xs {
+.menu-nav-header {
+  width: 100%;
+}
+.menu-header-xs-item {
+  color: #000000;
+  padding: 5px;
+  margin: 0;
+  line-height: 100%;
+  font-size: 18px;
   display: flex;
-  flex-direction: row;
   align-items: center;
 }
 .menu-nav-item-xs {
   color: #000000;
   font-size: 12px;
-  margin-left: 10px;
+}
+.menu-nav-item-xs:hover {
+  text-decoration: none;
 }
 .menu-nav-icon-xs {
   font-size: 18px;

@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {Redirect} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import '../App.css';
 import { Input, Button, Form, Image } from 'antd';
@@ -18,6 +19,8 @@ function CreateAccountScreen(props) {
     const [userEmail, setUserEmail]= useState('');
     const [userPassword, setUserPassword]= useState('');
     const [ userMessage, setUserMessage ] = useState('');
+    const [ isSignedUp, setIsSignedUp ] = useState(false);
+    const [ alreadyHasAccount, setAlreadyHasAccount ] = useState(false);
 
     const checkEmailFormat = (email) => {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -41,13 +44,27 @@ function CreateAccountScreen(props) {
       console.log('dataResponse',dataResponse);  // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
       if (dataResponse.userToken) {
         props.onCreateAccountClick(dataResponse.userToken);
+        setIsSignedUp(true);
       }
       if (dataResponse.result === false) {
         setUserMessage(dataResponse.message);
+        if (dataResponse.message === "Il existe déjà un compte associé à cet email.") {
+          setAlreadyHasAccount(true);
+        }
       }
       }
     }
 
+    if (isSignedUp) {
+      return(
+        <Redirect to='/library'/>
+      )
+    } else if (alreadyHasAccount) {
+      // fonctionne mais pas le temps de voir le message contextuel donc un peu abrupt...
+      return(
+        <Redirect to='/connection'/>
+      )
+    } else {
     return (
         <div className='font'>
         <Nav/>
@@ -74,15 +91,15 @@ function CreateAccountScreen(props) {
             </Form>
             <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
-            <div className="order-1 order-md-2 col-6 col-md-6">
-              {/* Tester offset pour centrer voir doc bootstrap */}
+            <div className="order-1 order-md-2 col-4 col-md-6">
             <Image src={account} alt='Illustration by Olha Khomich from Icons8'></Image>
             </div>
         </div>
         </div>
         </div>
       );
-    }
+    }    
+  }
 
 const styles = {
       container: {

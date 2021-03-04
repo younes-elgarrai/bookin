@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {Redirect} from 'react-router-dom';
 import '../App.css';
 import { Input, Radio, Button, Image} from 'antd';
 import { RightOutlined, EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined } from '@ant-design/icons';
@@ -13,6 +14,8 @@ function ConnectionScreen(props) {
     const [ emailCheckedFromBack, setEmailCheckedFromBack ] = useState(false);
     const [ password, setPassword ] = useState();
     const [ userMessage, setUserMessage ] = useState('');
+    const [ needToSignUp, setNeedToSignUp ] = useState(false);
+    const [ isLoggedIn, setIsLoggedIn ] = useState(false);
 
     const checkAccountEmail = async () => {
         if (!checkEmailFormat(email)) {
@@ -33,9 +36,12 @@ function ConnectionScreen(props) {
                 setHasAccount(true);
             } else {
                 setHasAccount(false);
+                setNeedToSignUp(true);
             }
         } 
     }
+
+
     const checkEmailFormat = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return email ? re.test(String(email).toLowerCase()) : false;
@@ -49,16 +55,27 @@ function ConnectionScreen(props) {
         });
         const dataResponse = await response.json(); // {login: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
         props.onCheckAccountClick(dataResponse.userToken);
+        if (dataResponse.login) {
+            setIsLoggedIn(true);
+        } else {
+            setUserMessage(dataResponse.message);
+        }
     }
 
+    if (needToSignUp) {
+        return(<Redirect to='/create-account'/>)
+    } else if (isLoggedIn) {
+        return(<Redirect to='/library'/>)
+    } else {
     return (
         <div className='font'>
         <Nav/>
         <div style={styles.container}>
               <h3 style={styles.title}>Connexion</h3>
               <p style={styles.label}>Connectez-vous pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
-            <div className="row">
+            <div className="row justify-content-center">
             <div className="order-2 order-md-1 col-12 col-md-6">
+                <div>
               <p style={styles.label}>Saisissez votre adresse email : </p>
               <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} onChange={(e)=>setEmail(e.target.value)} value={email}></Input>
 
@@ -71,7 +88,7 @@ function ConnectionScreen(props) {
              {(emailCheckedFromBack===false) &&
                 <Button style={styles.btn} onClick={()=> checkAccountEmail()}>Continuer <RightOutlined/></Button>
             }
-           
+           </div>
             {emailCheckedFromBack && 
             <div>
                 <p style={styles.label}>Saisissez votre mot de passe : </p>
@@ -82,14 +99,14 @@ function ConnectionScreen(props) {
             </div>
             }
             </div>
-            <div className="order-1 order-md-2 col-12 col-md-6">
+            <div className="order-1 order-md-2 col-4 col-md-6">
             <Image src={reading} alt='Illustration by Olha Khomich from Icons8'></Image>
             </div>
             </div>
         </div>
         </div>
       );
-    }
+    }}
 
 const styles = {
     container: {
@@ -132,7 +149,6 @@ const styles = {
         color:'#23396c', 
         borderColor:'#fca311', 
         borderRadius:'5px',
-
     },
     smallBtn:{
         color:'#23396c',

@@ -77,8 +77,7 @@ function UpdateAccountScreen(props) {
             </Form>
             <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
-            <div className="order-1 order-md-2 col-6 col-md-6">
-              {/* Tester offset pour centrer voir doc bootstrap */}
+            <div className="order-1 order-md-2 col-4 col-md-6">
             <Image src={account} alt='Illustration by Olha Khomich from Icons8'></Image>
             </div>
         </div>

@@ -84,7 +84,6 @@ router.post('/sign-up', async function(req, res, next) {
   const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
   if (checkExistingUserFromEmail) {
     res.json({result: false, message: "Il existe déjà un compte associé à cet email."})
-    // Diriger vers page login avec email déjà rempli
   }
   if (!req.body.name || !req.body.email || !req.body.password) {
     res.json({result: false, message: "Veuillez remplir tous les champs pour créer un compte."})
@@ -93,7 +92,6 @@ router.post('/sign-up', async function(req, res, next) {
     console.log('usersave', userSave);
     const userToken = userSave.token;
     res.json({result:true, userToken});
-    // Diriger vers page "Profil"
   }
 });
 async function saveNewUser(req) {

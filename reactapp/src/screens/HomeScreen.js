@@ -3,6 +3,7 @@ import { useCookies } from 'react-cookie';
 import '../App.css';
 import Nav from '../components/Navbar';
 import {connect} from 'react-redux';
+import {Button} from 'antd';
 
 
 function HomeScreen(props) {
@@ -15,6 +16,14 @@ function HomeScreen(props) {
   return (
     <div className="App">
       <Nav/>
+      <div>
+        <h3>Bookin vous trouve vos prochains livres à lire et vous permet de gérer votre bibliothèque</h3>
+        <Button>Commencer</Button>
+        <p>Vous avez déjà un compte ? </p> <Button>Connectez-vous</Button>
+        <h3>Découvrez toutes les fonctionnalités</h3>
+        <p>Ajoutez des livres à votre bibliothèque virtuelle</p>
+        <p>Notez vos pro</p>
+      </div>
     </div>
   );
 }
