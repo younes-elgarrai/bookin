@@ -9,7 +9,7 @@ import BookCard from '../components/BookCard';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
-// Utiliser Isbn ou IdGoogle ?
+// Utiliser IdGoogle ?
 // insérer module dernières nouveautés lorsque pas de recherche encore faite
 
 
@@ -30,6 +30,8 @@ export default function SearchScreen() {
     const [error, setError] = useState(false); 
     const [totalItems, setTotalItems] = useState(0);
     const [cookies, setCookie] = useCookies(['searchQuery']);
+    const [value, setValue] = useState("");
+
 
     useEffect(() => {
           if (history.action === "POP") {
@@ -41,22 +43,13 @@ export default function SearchScreen() {
                 setIsFetching(false);
                 console.log(body);
                 if (body.totalItems !== 0) {
-                    var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
-                    var filtered2 = [];
-                    for (let i = 0; i < filtered.length; i++) {
-                        for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
-                          var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
-                            if (sorted[j].type === "ISBN_13") {
-        
-                                filtered2.push(filtered[i])
-                            }
-                        }
-                    };
-                    setResult(filtered2);
+                    setResult(body.items);
                     setTotalItems(body.totalItems);
+                    if (cookies.searchQuery !== undefined) {
                     setCount(count+1);
                     setQuery(cookies.searchQuery);
-                    // vérifier undefined
+                    setValue(cookies.searchQuery)
+                    };
                     setTotalItems(body.totalItems);
                     console.log(body);
                     var limitControl = body.totalItems;
@@ -113,7 +106,7 @@ export default function SearchScreen() {
                     }
                 }
             };
-            setResult(filtered2);
+            setResult(body.items);
             } else {
             setResult([])
             };
@@ -153,7 +146,7 @@ export default function SearchScreen() {
                             }
                         }
                     };
-                    setResult(filtered2);
+                    setResult(body.items);
                     } else {
                     setResult([])
                     };
@@ -184,7 +177,7 @@ export default function SearchScreen() {
                             }
                         }
                     };
-                    setResult(filtered2);
+                    setResult(body.items);
                     } else {
                     setResult([])
                     };
@@ -220,7 +213,7 @@ export default function SearchScreen() {
                         }
                     }
                 };
-                setResult(filtered2);
+                setResult(body.items);
                 } else {
                 setResult([])
                 };
@@ -233,26 +226,26 @@ export default function SearchScreen() {
         bookSearchApi4();
     }
 
+
 return (
 <div className="font">
     <Nav/>
-    {isFetching ? spin : null }
+    
     <div style={styles.container} >
         <Row style={styles.bookBloc} >
             <Col xs={24} md={12} >
                 <h1 style={styles.h1}>Rechercher votre prochain livre</h1>
-                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onSearch={(q) => {handleSearch(q)}}/>
+                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onChange={(e) => setValue(e.target.value)} onSearch={(q) => {handleSearch(q)}} value={value} />
             </Col>
         </Row>
 
         <div style={{ width:"80%", margin:"auto", border:1}}>
-
+        {isFetching ? spin : null }
 
             {count !== 0  && 
                 <div>
-            {error && <div style={{textAlign:"center", marginTop:30}}>Problème de recherche, essayer à nouveau</div>}
 
-                    {(query === "" || totalItems === 0)  
+                    {(query === "" || totalItems === 0 || error)  
                         ? <div style={{textAlign:"center", marginTop:30}}> Aucun livre ne correspond à votre recherche :( essayer de reformuler votre recherche </div> 
                         : <div> 
                                 <Row align="middle" justify="space-between" style={{marginTop:10}}>
@@ -268,7 +261,8 @@ return (
                                         
                                     {
                                         result.map((book,i) => (
-                                            <BookCard isbn={book.volumeInfo.industryIdentifiers[0].identifier} bookTitle={book.volumeInfo.title} bookCover={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail}/>
+
+                                            <BookCard isbn={book.id} bookTitle={book.volumeInfo.title} bookCover={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail}/>
 
                                             // <div key={i} style={{display:'flex',justifyContent:'center'}}>
                                             //         <Card 
