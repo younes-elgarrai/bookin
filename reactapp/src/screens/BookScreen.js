@@ -83,18 +83,23 @@ function BookScreen() {
         if (bookid)
             {
             const findBook = async() => {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${bookid}&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}`)
                 const datajson = await data.json();
                     if (datajson.totalItems!==0){
-                        setDataBook(datajson.items[0].volumeInfo);
-                        setIsbn(datajson.items[0].volumeInfo.industryIdentifiers[0].identifier);
+                        setDataBook(datajson.volumeInfo);
+                        if (datajson.volumeInfo.industryIdentifiers) {
+                            setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
+                        } else {
+                            setIsbn('nc')
+                        }
+
                     } else {
                         const findBook2 = async() => {
                             alert('Livre inconnu, nous vous recommandons cette lecture');
-                            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=9782203214095&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`);
+                            const data = await fetch(`https://books.googleapis.com/books/v1/volumes/GlrPDwAAQBAJ`);
                             const datajson = await data.json();
-                            setDataBook(datajson.items[0].volumeInfo);
-                            setIsbn(datajson.items[0].volumeInfo.industryIdentifiers[0].identifier);
+                            setDataBook(datajson.volumeInfo);
+                            setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
                           }
                           findBook2();
                     }
@@ -103,10 +108,10 @@ function BookScreen() {
         } else {
             const findBook2 = async() => {
                 alert('Livre inconnu, nous vous recommandons cette lecture');
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=9782203214095&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`);
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes/GlrPDwAAQBAJ`);
                 const datajson = await data.json();
-                setDataBook(datajson.items[0].volumeInfo);
-                setIsbn(datajson.items[0].volumeInfo.industryIdentifiers[0].identifier);
+                setDataBook(datajson.volumeInfo);
+                setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
               }
               findBook2();
         }
@@ -142,10 +147,11 @@ function BookScreen() {
                 </Col>
                 </Row>
                 <Row>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                {/* xs={24} sm={12} md={8} lg={6} xl={4} */}
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
                 </Row>
             </div>
             <BookList bookListTitle="Nos recommandations" data={bookArray}/>
@@ -163,7 +169,7 @@ let styles = {
         alignItems:'center',
         width:'100vw',
         backgroundColor:'#f3f5f7',
-        marginTop:'10px',
+        paddingTop:'10px',
     },
 
     libraryBloc: {
