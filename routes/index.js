@@ -169,52 +169,37 @@ API_key: "AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE"
   }
 });
 
-/*
-  Recherche de wishlist à la BDD
-  Query : token (123456)
-  Response : result (true), books [{title ("Tintin au Congo"), cover ("http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api")}, ...]
-  */
+/* Recherche de wishlist à la BDD  */
 
-router.post('/wishlist', (req, res) => {
+router.post('/wishlist', async (req, res) => {
   let token = req.body.token;
-
   if (!token) {
     res.json({ result: false });
   } else {
-    // Appel à la BDD
-    res.json({ result: true, books: [{
-      title: 'Tintin au Congo',
-      cover: 'http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-
-},] });
-  }
+  const user = await UsersModel.findOne({token: req.body.token}).populate('wishlist').exec()
+  var userWishlist = user.wishlist
+  res.json({result: true, wishlist: userWishlist})
+}
 });
 
-/*
-  Suppression d'un livre dans la wishlist d'un user dans la BDD
-  Body : token (123456), book_Id,
-  Response : result (true)
-  */
 
-router.delete('/wishlist/delete/:token/:Isbn13', (req, res) => {
+/* Suppression d'un livre dans la wishlist d'un user dans la BDD */
+
+router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
   let token = req.params.token;
-  let book_Id = req.params.isbn13
+  let bookid = req.params.bookid;
+  const regex = new RegExp("[0-9A-Za-z_\-]{12}")
 
-  if (!token) {
+  if (!token || !regex.test(bookid) ) {
     res.json({ result: false });
   } else {
-    // deleteOne sur la BDD
+    var bookToDelete = await BooksModel.findOne({bookid: bookid});
+    var user = await UsersModel.findOneAndUpdate({token: token},{ $pull: {wishlist: bookToDelete._id}});
     res.json({ result: true});
   }
 });
 
 /* Ajout d'un livre dans la wishlist d'un user dans la BDD  */
-  //check si book existant en BDD
-      // si pas déjà existant => l'ajouter en BDD
-      // si déjà existant => test si déjà dans wishlist
-           // si déjà en wishlist => ne fait rien
-           // si pas déjà en wislist => ajouter en wishlist 
-
  router.post('/wishlist/add/:token/:bookid', async (req, res) => {
   let token = req.params.token;
   let bookid = req.params.bookid;
@@ -243,7 +228,7 @@ router.delete('/wishlist/delete/:token/:Isbn13', (req, res) => {
       var userCheckTab = [];
       for (let i = 0; i < userCheck.wishlist.length; i++) {
         console.log("userCheck.wishlist[i]",userCheck.wishlist[i])
-        if (userCheck.wishlist[i] === savedBookInWishlist._id) {
+        if (JSON.stringify(userCheck.wishlist[i]) === JSON.stringify(savedBookInWishlist._id)) {
           userCheckTab.push(userCheck)
         }
       }
@@ -260,8 +245,7 @@ router.delete('/wishlist/delete/:token/:Isbn13', (req, res) => {
       console.log("userCheck2",userCheck2);
       var userCheckTab2 = [];
       for (let i = 0; i < userCheck2.wishlist.length; i++) {
-        console.log("userCheck2.wishlist[i]",userCheck2.wishlist[i])
-        if (userCheck2.wishlist[i] === bookToCheck._id) {
+        if (JSON.stringify(userCheck2.wishlist[i]) === JSON.stringify(bookToCheck._id)) {
           userCheckTab2.push(userCheck2)
         }
       }
