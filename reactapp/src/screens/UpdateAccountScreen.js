@@ -4,6 +4,7 @@ import '../App.css';
 import { Input, Button, Form, Image } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
 import Nav from '../components/Navbar';
+import Footer from '../components/Footer';
 import account from '../assets/account.png';
 import AvatarUpload from '../components/AvatarUpload';
 import {connect} from 'react-redux';
@@ -82,6 +83,7 @@ function UpdateAccountScreen(props) {
             </div>
         </div>
         </div>
+        <Footer/>
         </div>
       );
     }

@@ -78,10 +78,7 @@ function NavigationBar(props) {
         </UncontrolledDropdown>
       </Nav>
     </Navbar>
-
-
-
-            </div>
+      </div>
     </div>
 );
 }

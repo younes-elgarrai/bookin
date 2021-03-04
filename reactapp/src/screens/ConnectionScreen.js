@@ -4,6 +4,7 @@ import '../App.css';
 import { Input, Radio, Button, Image} from 'antd';
 import { RightOutlined, EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
+import Footer from '../components/Footer';
 import reading from '../assets/reading.png';
 import {connect} from 'react-redux';
 
@@ -104,6 +105,7 @@ function ConnectionScreen(props) {
             </div>
             </div>
         </div>
+        <Footer/>
         </div>
       );
     }}
