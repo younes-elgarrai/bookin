@@ -1,5 +1,5 @@
 import React , {useState, useEffect}  from 'react';
-import { Button, Row, Col} from 'antd';
+import { Tooltip, Button, Row, Col} from 'antd';
 import { StarFilled} from '@ant-design/icons';
 import '../App.css'
 import Background from '../assets/picto.png'
@@ -8,6 +8,7 @@ import Cover from '../assets/cover.jpg'
 
 function BookHeader(props) {
 
+  // Récupération du tableau d'auteurs et les séparer par une virgule
   var authors;
   if (props.bookAuthor){
     if (props.bookAuthor.length>1){
@@ -17,6 +18,7 @@ function BookHeader(props) {
     }
   }
 
+  // Création de l'url pour l'achat vers Amazon
   var urlAmazon = `https://www.amazon.fr/gp/search?ie=UTF8&tag=bookin0c-21&linkCode=ur2&linkId=ed069e44484efe7e5139cd6a95321518&camp=1642&creative=6746&index=books&keywords=${props.bookIsbn}`
   console.log(urlAmazon);
 
@@ -28,6 +30,7 @@ function BookHeader(props) {
         src={!props.bookCover ? `${Cover}`:props.bookCover}
         alt={props.bookTitle}
       />
+
   
               
         </Col>
