@@ -75,6 +75,7 @@ function BookScreen() {
 
   return (
 
+<<<<<<< HEAD
     <div className='font'>
         <Nav/>
         <Content style={styles.container}  >
@@ -104,6 +105,34 @@ function BookScreen() {
             <Review/>
     </Content>
     </div>
+=======
+    <Content style={styles.container}  className='font'>
+            <BookHeader bookTitle={dataBook.title} bookAuthor={dataBook.authors} 
+            bookCover={coverImg}
+            
+            
+            bookIsbn={isbn}/>
+            <BookInfo bookTitle={dataBook.title} bookDesc={dataBook.description} publishedDate={dataBook.publishedDate}
+            bookPublisher={dataBook.publisher} bookPageCount={dataBook.pageCount} bookIsbn={isbn}/>
+            {/* Bloc librairies avec le même livre */}
+        <div style={styles.libraryBloc}>
+            <Row>
+            <Col xs={24}>
+                <h3 style={styles.h3}>Ils ont ajouté {dataBook.title} de {dataBook.authors} à leur bibliothèque </h3>
+            </Col>
+            </Row>
+            <Row>
+            <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+            <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+            <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+            <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+            </Row>
+        </div>
+        {/* <BookList bookListTitle="Nos recommandations"/> */}
+       
+        <Review/>
+</Content>
+>>>>>>> c6cf5c19506c6627197c3748dcab031fc86a269c
 );
 }
 

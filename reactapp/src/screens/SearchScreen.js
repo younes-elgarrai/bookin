@@ -4,9 +4,12 @@ import { DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import '../App.css';
 import Background from '../assets/picto.png';
-import Unavailable from '../assets/cover_nondispo.jpg'
+import Unavailable from '../assets/cover_nondispo.jpg';
+import BookCard from '../components/BookCard';
+import { useHistory } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
-// composant vignette avec lien vers page livre
+// Utiliser IdGoogle ?
 // insérer module dernières nouveautés lorsque pas de recherche encore faite
 
 
@@ -14,8 +17,7 @@ const { Search } = Input;
 const { Meta } = Card;
 
 export default function SearchScreen() {
-
-
+    const history = useHistory();
     const [result, setResult] = useState([]);
     const [query, setQuery] = useState("");
     const [count, setCount] = useState(0);
@@ -26,7 +28,45 @@ export default function SearchScreen() {
     const [selectedMenu, setSelectedMenu] = useState("1");
     const [isFetching, setIsFetching] = useState(false);
     const [error, setError] = useState(false); 
-    const [totalItems, setTotalItems] = useState(0);   
+    const [totalItems, setTotalItems] = useState(0);
+    const [cookies, setCookie] = useCookies(['searchQuery']);
+    const [value, setValue] = useState("");
+
+
+    useEffect(() => {
+          if (history.action === "POP") {
+            var bookSearchApi5 = async() => {
+                setIsFetching(true);
+            try {
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${cookies.searchQuery}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const body = await data.json();
+                setIsFetching(false);
+                console.log(body);
+                if (body.totalItems !== 0) {
+                    setResult(body.items);
+                    setTotalItems(body.totalItems);
+                    if (cookies.searchQuery !== undefined) {
+                    setCount(count+1);
+                    setQuery(cookies.searchQuery);
+                    setValue(cookies.searchQuery)
+                    };
+                    setTotalItems(body.totalItems);
+                    console.log(body);
+                    var limitControl = body.totalItems;
+                    if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
+                    setTotalElementsCount(limitControl);
+                    setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
+                    } else {
+                    setResult([])
+                    };
+            }
+            catch(error) {
+                setError(true);
+              };
+            };
+            bookSearchApi5();
+          };
+      }, [cookies.searchQuery])
 
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     
@@ -48,12 +88,23 @@ export default function SearchScreen() {
             setIsFetching(true);
             setError(false);
         try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(volumeInfo/title,volumeInfo/industryIdentifiers,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
             const body = await data.json();
             setIsFetching(false);
-            setQuery(q)
-            setCount(count+1)
+            setQuery(q);
+            setCookie('searchQuery', q, {path: '/'});
+            setCount(count+1);
             if (body.totalItems !== 0) {
+            var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
+            var filtered2 = [];
+            for (let i = 0; i < filtered.length; i++) {
+                for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
+                  var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
+                    if (sorted[j].type === "ISBN_13") {
+                        filtered2.push(filtered[i])
+                    }
+                }
+            };
             setResult(body.items);
             } else {
             setResult([])
@@ -61,13 +112,14 @@ export default function SearchScreen() {
             setTotalItems(body.totalItems);
             console.log(body);
             var limitControl = body.totalItems;
-            if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/3)}
+            if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
             setTotalElementsCount(limitControl);
             setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
         }
         catch(error) {
             setIsFetching(false);
             setError(true);
+            console.log(error)
           }};
         bookSearchApi();
     };
@@ -78,10 +130,21 @@ export default function SearchScreen() {
             var bookSearchApi2 = async() => {
                 setIsFetching(true);
             try {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(volumeInfo/title,volumeInfo/industryIdentifiers,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
                 if (body.totalItems !== 0) {
+                    var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
+                    var filtered2 = [];
+                    for (let i = 0; i < filtered.length; i++) {
+                        for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
+                          var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
+                            if (sorted[j].type === "ISBN_13") {
+        
+                                filtered2.push(filtered[i])
+                            }
+                        }
+                    };
                     setResult(body.items);
                     } else {
                     setResult([])
@@ -98,10 +161,21 @@ export default function SearchScreen() {
             var bookSearchApi3 = async() => {
                 setIsFetching(true);
             try {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(volumeInfo/title,volumeInfo/industryIdentifiers,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
                 if (body.totalItems !== 0) {
+                    var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
+                    var filtered2 = [];
+                    for (let i = 0; i < filtered.length; i++) {
+                        for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
+                          var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
+                            if (sorted[j].type === "ISBN_13") {
+        
+                                filtered2.push(filtered[i])
+                            }
+                        }
+                    };
                     setResult(body.items);
                     } else {
                     setResult([])
@@ -123,10 +197,21 @@ export default function SearchScreen() {
         var bookSearchApi4 = async() => {
             setIsFetching(true);
         try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&startIndex=${offset}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(volumeInfo/title,volumeInfo/industryIdentifiers,volumeInfo/imageLinks),totalItems&startIndex=${offset}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
             const body = await data.json();
             setIsFetching(false);
             if (body.totalItems !== 0) {
+                var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
+                var filtered2 = [];
+                for (let i = 0; i < filtered.length; i++) {
+                    for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
+                      var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
+                        if (sorted[j].type === "ISBN_13") {
+    
+                            filtered2.push(filtered[i])
+                        }
+                    }
+                };
                 setResult(body.items);
                 } else {
                 setResult([])
@@ -140,27 +225,26 @@ export default function SearchScreen() {
         bookSearchApi4();
     }
 
+
 return (
 <div className="font">
     <Nav/>
-    {isFetching ? spin : null }
+    
     <div style={styles.container} >
         <Row style={styles.bookBloc} >
             <Col xs={24} md={12} >
                 <h1 style={styles.h1}>Rechercher votre prochain livre</h1>
-                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onSearch={(q) => {handleSearch(q)}} />
+                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onChange={(e) => setValue(e.target.value)} onSearch={(q) => {handleSearch(q)}} value={value} />
             </Col>
         </Row>
 
         <div style={{ width:"80%", margin:"auto", border:1}}>
+        {isFetching ? spin : null }
 
-            {error && <div style={{textAlign:"center", marginTop:30}}>Problème de recherche, essayer à nouveau</div>}
-
-            {count !== 0 && 
-
+            {count !== 0  && 
                 <div>
 
-                    {(query === "" || totalItems === 0)  
+                    {(query === "" || totalItems === 0 || error)  
                         ? <div style={{textAlign:"center", marginTop:30}}> Aucun livre ne correspond à votre recherche :( essayer de reformuler votre recherche </div> 
                         : <div> 
                                 <Row align="middle" justify="space-between" style={{marginTop:10}}>
@@ -172,35 +256,38 @@ return (
                                     </Dropdown>
                                 </Row>
 
-                                <div style={{display:'flex', flexWrap:"wrap" ,justifyContent: "center"}}>
+                                <div style={{display:'flex', flexWrap:"wrap" ,justifyContent: "center", marginTop:"10px"}}>
                                         
                                     {
                                         result.map((book,i) => (
-                                            <div key={i} style={{display:'flex',justifyContent:'center'}}>
-                                                    <Card 
-                                                        style={{ 
-                                                            width: 150,
-                                                            margin:'10px', 
-                                                            display:'flex',
-                                                            flexDirection: 'column',
-                                                            justifyContent:'space-between'    
-                                                        }} 
-                                                        bodyStyle={{ padding: 0 }}
-                                                        cover={
-                                                            <img
-                                                                alt={book.volumeInfo.title}
-                                                                src={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail} 
-                                                            />
-                                                            }
-                                                        // actions={}
+
+                                            <BookCard isbn={book.id} bookTitle={book.volumeInfo.title} bookCover={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail}/>
+
+                                            // <div key={i} style={{display:'flex',justifyContent:'center'}}>
+                                            //         <Card 
+                                            //             style={{ 
+                                            //                 width: 150,
+                                            //                 margin:'10px', 
+                                            //                 display:'flex',
+                                            //                 flexDirection: 'column',
+                                            //                 justifyContent:'space-between'    
+                                            //             }} 
+                                            //             bodyStyle={{ padding: 0 }}
+                                            //             cover={
+                                            //                 <img
+                                            //                     alt={book.volumeInfo.title}
+                                            //                     src={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail} 
+                                            //                 />
+                                            //                 }
+                                            //             // actions={}
                                                     
-                                                    >
-                                                        <Meta
-                                                            title={book.volumeInfo.title}
-                                                            style={{fontSize:12}}
-                                                        />
-                                                    </Card>                                        
-                                            </div>
+                                            //         >
+                                            //             <Meta
+                                            //                 title={book.volumeInfo.title}
+                                            //                 style={{fontSize:12}}
+                                            //             />
+                                            //         </Card>                                     
+                                            // </div>
                                         ))
                                     }
                                 </div>
@@ -252,7 +339,7 @@ let styles = {
         borderTopRightRadius:"10px",
         borderTopLeftRadius:"10px",
         marginTop:"10px",
-        padding:'50px',
+        padding:'20px',
         backgroundImage: `url(${Background})`,
         backgroundSize: '15%',
         backgroundRepeat: 'no-repeat',
