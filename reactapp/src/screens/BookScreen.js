@@ -106,7 +106,7 @@ function BookScreen() {
             <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
             </Row>
         </div>
-        <BookList bookListTitle="Nos recommandations"/>
+        {/* <BookList bookListTitle="Nos recommandations"/> */}
        
         <Review/>
 </Content>

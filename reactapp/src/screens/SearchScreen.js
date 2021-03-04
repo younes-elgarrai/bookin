@@ -31,8 +31,6 @@ export default function SearchScreen() {
     const [totalItems, setTotalItems] = useState(0);
     const [cookies, setCookie] = useCookies(['searchQuery']);
 
-    console.log(history);
-    console.log(cookies.searchQuery)
     useEffect(() => {
           if (history.action === "POP") {
             var bookSearchApi5 = async() => {
@@ -57,7 +55,8 @@ export default function SearchScreen() {
                     setResult(filtered2);
                     setTotalItems(body.totalItems);
                     setCount(count+1);
-                    setQuery(cookies.searchQuery)
+                    setQuery(cookies.searchQuery);
+                    // vérifier undefined
                     setTotalItems(body.totalItems);
                     console.log(body);
                     var limitControl = body.totalItems;
@@ -74,7 +73,7 @@ export default function SearchScreen() {
             };
             bookSearchApi5();
           };
-      }, [cookies.searchQuery])
+      }, [])
 
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     
@@ -100,6 +99,7 @@ export default function SearchScreen() {
             const body = await data.json();
             setIsFetching(false);
             setQuery(q);
+            console.log(q);
             setCookie('searchQuery', q, {path: '/'});
             setCount(count+1);
             if (body.totalItems !== 0) {
@@ -241,7 +241,7 @@ return (
         <Row style={styles.bookBloc} >
             <Col xs={24} md={12} >
                 <h1 style={styles.h1}>Rechercher votre prochain livre</h1>
-                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onSearch={(q) => {handleSearch(q)}} />
+                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onSearch={(q) => {handleSearch(q)}}/>
             </Col>
         </Row>
 

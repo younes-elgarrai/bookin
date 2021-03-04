@@ -212,12 +212,12 @@ router.delete('/wishlist/delete/:token/:Isbn13', (req, res) => {
   Body : token (123456), Isbn13(1234567890123)
   */
 
- router.post('/wishlist/add/:token/:Isbn13', (req, res) => {
+ router.post('/wishlist/add/:token/:isbn13', (req, res) => {
   let token = req.params.token;
-  let Isbn13 = req.params.Isbn13
+  let Isbn13 = req.params.isbn13;
 
   //check si book existant en BDD sinon ajouter en BDD
-  // ajouter dans la wishlist de l'utilisateurs si pas déjà dans la wishlist
+  // ajouter dans la wishlist de l'utilisateurs si livre pas déjà dans la wishlist
 
   if (!token) {
     res.json({ result: false });
