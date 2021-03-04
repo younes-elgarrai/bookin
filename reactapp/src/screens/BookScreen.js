@@ -15,9 +15,7 @@ import Review from '../components/Review'
 import BookList from '../components/BookList'
 
 // - ToolTips ?
-// - Gérer la date format FR
-
-
+// - Gérer la date format FR ?
 
 const { Content } = Layout;
 

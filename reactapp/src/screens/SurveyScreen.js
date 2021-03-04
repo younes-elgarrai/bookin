@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
 import { Progress, Button, Row, Col} from 'antd';
 import '../App.css';
@@ -12,6 +13,8 @@ function SurveyScreen(props) {
 const [cookies, setCookie] = useCookies(['survey']);
 
 const [step, setStep] = useState(1);
+
+const [finished, setFinished] = useState(false);
 
 
 var subjects = {'BD & Jeunesse': {
@@ -87,6 +90,7 @@ var handleConfirmClick = ()=>{
 var handleFinishClick = ()=>{
   setCookie('survey', JSON.stringify(props.survey), {path: '/'})
   console.log(cookies.survey);
+  setFinished(true);
 }
 
 
@@ -129,7 +133,7 @@ const surveyStyle = {
             {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary">Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" danger>Terminer</Button>)
                                                           :<Button onClick={()=>handleConfirmClick()} type="primary">Confirmer</Button>}
             </Col>
-
+            {finished&&<Redirect to="/main" />}
           </Row>
 
             
