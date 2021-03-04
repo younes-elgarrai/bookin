@@ -261,7 +261,7 @@ return (
                                     {
                                         result.map((book,i) => (
 
-                                            <BookCard isbn={book.id} bookTitle={book.volumeInfo.title} bookCover={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail}/>
+                                            <BookCard bookId={book.id} bookTitle={book.volumeInfo.title} bookCover={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail}/>
 
                                             // <div key={i} style={{display:'flex',justifyContent:'center'}}>
                                             //         <Card 
