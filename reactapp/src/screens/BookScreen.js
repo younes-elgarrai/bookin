@@ -13,7 +13,7 @@ import BookHeader from '../components/BookHeader';
 import BookInfo from '../components/BookInfo'
 import Review from '../components/Review'
 import BookList from '../components/BookList'
-import { set } from 'mongoose';
+import Footer from '../components/Footer';
 
 const { Content } = Layout;
 
@@ -219,6 +219,7 @@ function BookScreen() {
         
             <Review/>
     </Content>
+    <Footer/>
     </div>
 );
 }
