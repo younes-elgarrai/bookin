@@ -1,4 +1,5 @@
 import React , {useState, useEffect}  from 'react';
+import {Redirect} from 'react-router-dom';
 import { Modal, Button, Row, Col} from 'antd';
 import { StarFilled, CheckCircleFilled} from '@ant-design/icons';
 import {  } from '@ant-design/icons';
@@ -10,7 +11,7 @@ import {connect} from 'react-redux';
 
 
 function BookHeader(props) {
-  console.log('BookScreenHeader> props.token', props.token);
+  console.log('BookScreenHeader > props.token', props.token);
 
   // Récupération du tableau d'auteurs et les séparer par une virgule
   var authors;
@@ -28,47 +29,71 @@ function BookHeader(props) {
 
   // Const pour la modal du bouton ajout à ma wishlit
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalVisible2, setIsModalVisible2] = useState(false);
+  const [isModalVisibleWishList, setIsModalWishList] = useState(false);
   const [addBook, setAddBook] = useState([]);
+  const [boutonStyle, setBoutonStyle]= useState(false);
+  const [ isLoggedIn, setIsLoggedIn ] = useState(false);
 
+
+  // Interroger la route pour ajouter wishList
   const handleClickButton = async () => {
-    var addWishList = async () => {
-      const data = await fetch(`/wishlist/add/${props.token}/${props.bookId}`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `cover=${props.bookCover}&title=${props.bookTitle}`
-      });
-      const body = await data.json();
-      console.log('body', body)
-      console.log('data', data)
-
-      if (body.result===true) {
-        setIsModalVisible(true);
-      }
-
-    };
-
-    addWishList();
-
-
+    if (props.token!==null) {
+      var addWishList = async () => {
+        const data = await fetch(`/wishlist/add/${props.token}/${props.bookId}`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `cover=${props.bookCover}&title=${props.bookTitle}`
+        });
+        const body = await data.json();
+        console.log('body', body)
+        console.log('data', data)
+  
+        if (body.result===true) {
+          setBoutonStyle(!boutonStyle);
+          setIsModalWishList(true);
+        }
+  
+      };
+      addWishList();
+      
+    } else {
+      setIsLoggedIn(true);
+    }
+    
 
   };
+
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
-  const showModal2 = () => {
-    setIsModalVisible2(true);
+  const showModal = () => {
+    setIsModalVisible(true);
   };
 
   const handleCancel2 = () => {
-    setIsModalVisible2(false);
+    setIsModalWishList(false);
   };
 
+  var boutonSelected = (
+    <Button onClick={() => handleClickButton()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>✔ DEJA LU</Button>
+  );
+
+  var boutonDefault = (
+  <Button onClick={() => handleClickButton()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
+  );
+
+
+  
+
+console.log (boutonStyle);
 console.log (props.bookIsbn);
 
-  return (
+if (isLoggedIn) {
+  return(<Redirect to='/connection'/>)
+} else {
+return (
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} >
@@ -89,10 +114,9 @@ console.log (props.bookIsbn);
 
           <p style={styles.note} >Note 3,5/5 | 12 avis</p>
           </div>
-        
-        {/* Tag avec les styles */}
-        {/* <div>
-          <Button style={{marginRight:'10px',  backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{props.bookCat}</Button>
+{/* 
+        <div>
+          <Button style={{marginRight:'10px',  backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{props.bookCat[0]}</Button>
         </div> */}
 
         </Col>
@@ -101,7 +125,7 @@ console.log (props.bookIsbn);
     <Row style={styles.buyBloc}>
       <div>
         <Col xs={24}>
-        <Button onClick={() => handleClickButton()} style={{margin:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
+        <Button  onClick={showModal} style={{margin:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
         <Modal centered title="Félicitations" visible={isModalVisible} footer={null} onCancel={handleCancel} style={{textAlign: "center"}}>
           <img style={{margin:'10px'}} width={70} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle} /> 
 
@@ -112,8 +136,8 @@ console.log (props.bookIsbn);
           </div>
         </Modal>
         
-        <Button onClick={showModal2} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
-          <Modal centered title="Félicitations" visible={isModalVisible2} footer={null} onCancel={handleCancel2} style={{textAlign: "center"}}>
+          {boutonStyle ? boutonSelected : boutonDefault}
+          <Modal centered title="Félicitations" visible={isModalVisibleWishList} footer={null} onCancel={handleCancel2} style={{textAlign: "center"}}>
             <img style={{margin:'10px'}} width={70} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle} /> 
 
             <div>
@@ -136,6 +160,7 @@ console.log (props.bookIsbn);
 
     
 );
+}
 }
 
 let styles = {
@@ -206,7 +231,3 @@ let styles = {
   }
 
   export default connect(mapStateToProps, null)(BookHeader);
-
-
-
-
