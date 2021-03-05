@@ -264,7 +264,14 @@ async function saveNewUser(req) {
   return userSave;
 }
 
-// Update profile
+// GET & POST : Update profile
+// Step 1 : GET to find user email
+router.get('/users/:token', async (req, res) => {
+  const user = await UsersModel.findOne({token: req.params.token});
+  const userEmail = user.email;
+  res.json({result:true, userEmail })
+ })
+// Step 2 : POST to update profile
 router.post('/update', async (req, res) => {
   const user = await UsersModel.find({token: req.body.token});
   // mettre à jour les champs souhaités : tout sauf l'email, le token, library, wishlist. 

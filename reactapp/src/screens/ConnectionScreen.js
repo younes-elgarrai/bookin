@@ -91,6 +91,7 @@ function ConnectionScreen(props) {
             }
            </div>
             {emailCheckedFromBack && 
+            // {hasAccount && 
             <div>
                 <p style={styles.label}>Saisissez votre mot de passe : </p>
                 <Input.Password placeholder="mot de passe" prefix={<LockOutlined className="site-form-item-icon" />} onChange={(e)=> setPassword(e.target.value)} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}></Input.Password>
