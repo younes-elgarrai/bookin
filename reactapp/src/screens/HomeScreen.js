@@ -33,7 +33,7 @@ function HomeScreen(props) {
             <p style={styles.labelInline}>Vous avez déjà un compte ? </p> 
             <Button type='link' style={styles.smallBtn}><Link to='/connection/'>Connectez-vous</Link></Button>
             </div>
-            <h3 style={styles.title}>Découvrez toutes les fonctionnalités :</h3>
+            <h3 style={styles.titleSmall}>Découvrez toutes les fonctionnalités :</h3>
             <div style={styles.features}>
               <div style={styles.featureSmall}>
                 <img src={account} width={100} alt='account' />
@@ -68,11 +68,18 @@ const styles = {
       },
   title: {
       color:"#23396C",
-      fontSize: "24px",
+      fontSize: "36px",
       fontWeight: "500",
       marginTop: "20px",
       paddingBottom:"10px"
   },
+  titleSmall: {
+    color:"#23396C",
+    fontSize: "24px",
+    fontWeight: "500",
+    marginTop: "20px",
+    paddingBottom:"10px"
+},
   label: {
       color:'#000000',
       fontSize:'14px',
