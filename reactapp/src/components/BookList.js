@@ -16,7 +16,7 @@ return (
     </Row>
     <Row>
         {props.data.map((book, index)=>{
-                    return <BookCard  bookTitle={book.title} bookCover={book.imageLinks}/>;
+            return <BookCard  bookId={book.id} bookTitle={book.title} bookCover={book.imageLinks.thumbnail}/>;
         })}
     </Row>
 

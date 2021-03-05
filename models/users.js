@@ -15,8 +15,8 @@ var userSchema = mongoose.Schema({
     email: String,
     password: String,
     userLibraryName: String,
-    library: Array,
-    wishlist: Array,
+    library: [{type:mongoose.Schema.Types.ObjectId, ref:'books'}],
+    wishlist: [{type:mongoose.Schema.Types.ObjectId, ref:'books'}],
     Following: Array
    });
    

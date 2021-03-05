@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Row, Col} from 'antd';
+import React , {useState, useEffect}  from 'react';
+import { Tooltip, Button, Row, Col} from 'antd';
 import { StarFilled} from '@ant-design/icons';
 import '../App.css'
 import Background from '../assets/picto.png'
@@ -8,21 +8,36 @@ import Cover from '../assets/cover.jpg'
 
 function BookHeader(props) {
 
+  // Récupération du tableau d'auteurs et les séparer par une virgule
+  var authors;
+  if (props.bookAuthor){
+    if (props.bookAuthor.length>1){
+      authors=props.bookAuthor.join(', ');
+    } else {
+      authors=props.bookAuthor;
+    }
+  }
+
+  // Création de l'url pour l'achat vers Amazon
+  var urlAmazon = `https://www.amazon.fr/gp/search?ie=UTF8&tag=bookin0c-21&linkCode=ur2&linkId=ed069e44484efe7e5139cd6a95321518&camp=1642&creative=6746&index=books&keywords=${props.bookIsbn}`
+  console.log(urlAmazon);
+
   return (
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} >
         <img width={150}
-        src={!props.bookCover ? `${Cover}` : props.bookCover}
+        src={!props.bookCover ? `${Cover}`:props.bookCover}
         alt={props.bookTitle}
       />
+
   
               
         </Col>
 
         <Col xs={24} md={12} xl={12} >
         <h1 style={styles.h1}>{props.bookTitle}</h1>
-        <h2 style={styles.h2}><a href='https://livre.fnac.com/a15106090/Leila-Slimani-Le-parfum-des-fleurs-la-nuit' target="_blank" rel="noreferrer" style={styles.link}>{props.bookAuthor}</a></h2>
+        <h2 style={styles.h2}>{authors}</h2>
         
         <div>
 
@@ -37,8 +52,7 @@ function BookHeader(props) {
         
         
         <div>
-        <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', color:'#23396c',borderColor:'#23396c', borderRadius:'5px'}}>Roman</Button>
-        <Button style={{marginRight:'10px', backgroundColor:'#e5e5e5', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>Best Seller</Button>
+        <Button style={{marginRight:'10px',  backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{props.bookCat}</Button>
       </div>
         </Col>
     </Row>
@@ -48,8 +62,10 @@ function BookHeader(props) {
         <Col xs={24}>
         <Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
         <Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
-        {/* <Button onClick={()=> window.open(${annonceInfo?.websiteLink}, "_blank")} style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button> */}
-
+        
+        <a href={urlAmazon} target="_blank">
+        <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button>
+        </a>
         </Col>
       </div>
     </Row>
