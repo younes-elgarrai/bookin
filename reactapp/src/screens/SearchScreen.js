@@ -238,7 +238,7 @@ export default function SearchScreen() {
                 setOpen(true)
                 var searchSuggest = async() => {
                     try {
-                        const data = await fetch(`https://corsanywhere.herokuapp.com/https://google.com/complete/search?output=toolbar&client=chrome&hl=fr&q=${value}`)
+                        const data = await fetch(`https://corsanywhere.herokuapp.com/https://google.com/complete/search?output=toolbar&&ds=bo&client=chrome&hl=fr&q=${value}`)
                         const body = await data.json();
                         var res = body[1].map(item => ({'value':item, 'label':item}));
                         setSuggestData(res);
