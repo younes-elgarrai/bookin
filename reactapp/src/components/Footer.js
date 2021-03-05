@@ -30,7 +30,7 @@ const styles = {
         width: '20%',
         justifyContent:'center',
         alignItems:'center',
-        paddingBottom:'20px'
+        paddingBottom:'10px'
     },
     icons:{
         fontSize:'24px',
