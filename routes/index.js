@@ -113,36 +113,13 @@ router.post('/recos', async (req,res)=>{
   //Entrées : cookie questionnaire ou token
   //recherche par category (subjects) puis tri sur longueur et sur nouveautés
   //Sorties : objet suggestions , erreur ==> refaites le questionnarire
-  var catQueryMaker = (cat, styles)=>{
-  
-    var r = {};
-    styles[cat].forEach( (subcat)=>{
-        r[subcat] = subjects[cat][subcat];
-         });
-    return r;
 
-};
-
-  var queryMaker = (styles) => {
-
-    var cats = Object.keys(styles).filter(e=>e!=='void');
-
-    var queries = cats.map( cat => {
-        return catQueryMaker(cat, styles);
-    })
-
-    var r = {}
-    for (var i = 0; i < cats.length; i++) {
-        r[cats[i]] = queries[i];}
-    
-    return r; };
 
     var handleSearch = async (q) => {
 
       try {
-            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=6&langRestrict=en&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
             const body = await response.data;
-            console.log(body);
             const books = await body.items.map((elem, index)=>{return elem});               
             return books ;
           }catch(error) {
@@ -165,7 +142,6 @@ router.post('/recos', async (req,res)=>{
 
     }
 
-
     var handleSubCatSearchv2 = async (q) => {
 
       var qArray = Object.values(q);
@@ -184,8 +160,6 @@ router.post('/recos', async (req,res)=>{
 
 
       return result;
-
-
     }
   
       var handleSurveySearch = async (q) => {
@@ -211,7 +185,6 @@ router.post('/recos', async (req,res)=>{
   
       }
 
-
       try {
 
         const response = await handleSurveySearch(req.body)
@@ -223,9 +196,6 @@ router.post('/recos', async (req,res)=>{
         res.json({result:error})
         
       }
-      
-  
-
 })
  
 
@@ -236,17 +206,6 @@ router.get('/library/:token', function (req, res) {
   //Sorties : success, failure, [ISBN13]
  })
 
-
-// POST : Login/Signup step 0 : check email from user ("continuer")
-router.post('/check-email', async function (req, res, next) {
-  const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
-  console.log('check', checkExistingUserFromEmail); // null 
-  if (checkExistingUserFromEmail) {
-    res.json({result:true});
-  } else {
-    res.json({result:false})
-  }
-});
 
 // POST : Login
 router.post('/log-in', async function(req, res, next) {
@@ -259,7 +218,7 @@ router.post('/log-in', async function(req, res, next) {
   if (bcrypt.compareSync(password, user.password)) {
     res.json({ login: true, userToken });
   } else { 
-    res.json({login: false, message: "Ce compte n'existe pas, veuillez réessayer ou créer un compte." }); }
+    res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }
 }});
 
 // POST : Signup
@@ -294,14 +253,24 @@ async function saveNewUser(req) {
   return userSave;
 }
 
-// Update profile
+// GET & POST : Update profile
+// Step 1 : GET to find user email
+router.get('/users/:token', async (req, res) => {
+  const user = await UsersModel.findOne({token: req.params.token});
+  const userEmail = user.email;
+  const userLibraryName = user.userLibraryName;
+  res.json({result:true, userEmail, userLibraryName })
+ })
+// Step 2 : POST to update profile
 router.post('/update', async (req, res) => {
+  console.log('update req',req);
   const user = await UsersModel.find({token: req.body.token});
   // mettre à jour les champs souhaités : tout sauf l'email, le token, library, wishlist. 
   // par ex : 
-  if (req.body.userLibraryName) {
-    user.userLibraryName = req.body.userLibraryName;
+  if (req.body.name) {
+    user.userLibraryName = req.body.name;
   }
+ 
   const userSave = await user.save();
   res.json({ result: true, userSave });
 });

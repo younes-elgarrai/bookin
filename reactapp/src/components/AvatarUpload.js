@@ -51,7 +51,7 @@ export default function AvatarUpload() {
       </div>
     );
     return (
-        <div style={{display:'flex'}}>
+        <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
       <Upload
         name="avatar"
         listType="picture-card"

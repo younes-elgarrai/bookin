@@ -28,8 +28,8 @@ function NavigationBar(props) {
           <Nav navbar>
             <NavItem><Link to="/search" className="menu-nav-item"><SearchOutlined className="menu-nav-icon" /> Rechercher</Link></NavItem> 
             <NavItem><Link to="/main" className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
-            <NavItem><Link to="/library" className="menu-nav-item"><BookOutlined className="menu-nav-icon"/> Bibliothèque</Link></NavItem> 
-            <NavItem><Link to="/library" className="menu-nav-item"><HeartOutlined className="menu-nav-icon"/> A lire</Link></NavItem> 
+            <NavItem><Link to={props.token ? "/library" : "/create-account"} className="menu-nav-item"><BookOutlined className="menu-nav-icon"/> Bibliothèque</Link></NavItem> 
+            <NavItem><Link to={props.token ? "/library" : "/create-account"} className="menu-nav-item"><HeartOutlined className="menu-nav-icon"/> A lire</Link></NavItem> 
             {props.token ? 
               <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav>
@@ -58,9 +58,9 @@ function NavigationBar(props) {
                   <NavbarBrand href="/connection" className="menu-header-xs-item"><UserOutlined /></NavbarBrand>
               </Navbar>
           <DropdownMenu>
-            <DropdownItem><Link to="/result" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></DropdownItem>
-            <DropdownItem><Link to="/library" className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
-            <DropdownItem><Link to="/library" className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></DropdownItem>
+            <DropdownItem><Link to="/main" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></DropdownItem>
+            <DropdownItem><Link to={props.token ? "/library" : "/create-account"}  className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
+            <DropdownItem><Link to={props.token ? "/library" : "/create-account"}  className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></DropdownItem>
             {props.token ? 
             <div>
              <DropdownItem href="/update-account" className="menu-nav-item-xs"><SettingOutlined className="menu-nav-icon-xs" /> Modifier compte</DropdownItem>
