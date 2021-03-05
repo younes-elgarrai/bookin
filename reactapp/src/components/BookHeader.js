@@ -104,9 +104,31 @@ console.log('Props WishList', props.wishlist);
 console.log('props.bookid',props.bookId);
 
 useEffect(() => {
-if (props.wishlist.indexOf(props.bookId)!==-1) {
-  setBoutonStyle(true);
-}
+  if (props.token!==null) {
+    var CheckWishList = async () => {
+      const data = await fetch(`/wishlist`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `token=${props.token}`
+      });
+      const body = await data.json();
+      console.log('bodyCheck', body.wishlist)
+      console.log('dataCheck', data)
+
+      if (body.result===true) {
+        for (let i = 0; i < body.wishlist.length; i++) {
+          if (body.wishlist[i].bookid===props.bookId) {
+            setBoutonStyle(true);
+          } 
+        } 
+      }
+
+    };
+    CheckWishList();
+    
+  }
+
+
 },[])
 
 
