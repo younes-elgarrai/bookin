@@ -5,7 +5,7 @@ import '../App.css';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
 import {connect} from 'react-redux';
-import { Button, Image, Avatar } from 'antd';
+import { Button, Avatar } from 'antd';
 import library from '../assets/library.png';
 import account from '../assets/account.png';
 import reading from '../assets/reading.png';
@@ -35,20 +35,20 @@ function HomeScreen(props) {
             <h3 style={styles.title}>Découvrez toutes les fonctionnalités :</h3>
             <div style={styles.features}>
               <div style={styles.featureSmall}>
-                <Image src={account} width={100} />
+                <img src={account} width={100} />
                 <p style={styles.label}><BookFilled style={{color:'#FCA311', fontSize:'18px'}} /> Ajoutez des livres à votre bibliothèque virtuelle</p>
             </div>
             <div style={styles.featureSmall}>
-            <Image src={reading} width={100} />
+            <img src={reading} width={100} />
             <p style={styles.label}><BulbFilled style={{color:'#FCA311', fontSize:'18px'}} /> Découvrez des suggestions de lecture personnalisées</p>
             </div>
             <div style={styles.featureSmall}>
-            <Image src={review} width={100} />
+            <img src={review} width={100} />
            <p style={styles.label}><HeartFilled style={{color:'#FCA311', fontSize:'18px'}}/> Enregistrez et partagez vos coups de coeur</p>
            </div>
            </div>
            </div>
-      <div className="order-1 order-md-2 col-12 col-md-6"><Image src={library}></Image></div>
+      <div className="order-1 order-md-2 col-12 col-md-6"><img src={library} /></div>
     </div>
     </div>
     <Footer />

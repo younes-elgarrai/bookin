@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
-import logo from '../assets/bookin.png';
+import logo from '../assets/bookin-transparent.png';
 import './Navbar.css';
 import {connect} from 'react-redux';
 
@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
   NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
   // Ant Design
-import { Image, Avatar } from 'antd';
+import { Avatar } from 'antd';
 import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
 
 function NavigationBar(props) {
@@ -32,7 +32,7 @@ function NavigationBar(props) {
         <Collapse isOpen={isOpen} navbar className="right-menu">
           <Nav navbar>
             <NavItem><Link to="/search" className="menu-nav-item"><SearchOutlined className="menu-nav-icon" /> Rechercher</Link></NavItem> 
-            <NavItem><Link to="/result" className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
+            <NavItem><Link to="/main" className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
             <NavItem><Link to="/library" className="menu-nav-item"><BookOutlined className="menu-nav-icon"/> Bibliothèque</Link></NavItem> 
             <NavItem><Link to="/library" className="menu-nav-item"><HeartOutlined className="menu-nav-icon"/> A lire</Link></NavItem> 
             {props.token ? 
@@ -58,7 +58,7 @@ function NavigationBar(props) {
               <Nav navbar className="menu-nav-header">
               <UncontrolledDropdown setActiveFromChild>
               <Navbar light className="menu-nav-header-xs">
-                  <DropdownToggle tag="a" className="menu-header-xs-item"><MenuOutlined/><Image src={logo} alt="logo Bookin" width={90}/></DropdownToggle> 
+                  <DropdownToggle tag="a" className="menu-header-xs-item"><MenuOutlined/><img src={logo} alt="logo Bookin" width={90}/></DropdownToggle> 
                   <NavbarBrand href="/search" className="menu-header-xs-item"><SearchOutlined /></NavbarBrand>
                   <NavbarBrand href="/connection" className="menu-header-xs-item"><UserOutlined /></NavbarBrand>
               </Navbar>

@@ -5,6 +5,7 @@ const ReviewsModel = require('../models/reviews');
 const BooksModel = require('../models/books');
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
+const axios = require('axios');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -39,12 +40,125 @@ router.delete('/library/delete/:token/:isbn13/', async (req, res) => {
 });
 
 
-router.post('/recos', (req,res)=>{
+router.post('/recos', async (req,res)=>{
   //Recupérer les résultats du questionnaire stockés dans un cookie, et renvoyer des suggestions.
   //Entrées : cookie questionnaire ou token
   //recherche par category (subjects) puis tri sur longueur et sur nouveautés
   //Sorties : objet suggestions , erreur ==> refaites le questionnarire
- })
+  var catQueryMaker = (cat, styles)=>{
+  
+    var r = {};
+    styles[cat].forEach( (subcat)=>{
+        r[subcat] = subjects[cat][subcat];
+         });
+    return r;
+
+};
+
+  var queryMaker = (styles) => {
+
+    var cats = Object.keys(styles).filter(e=>e!=='void');
+
+    var queries = cats.map( cat => {
+        return catQueryMaker(cat, styles);
+    })
+
+    var r = {}
+    for (var i = 0; i < cats.length; i++) {
+        r[cats[i]] = queries[i];}
+    
+    return r; };
+
+    var handleSearch = async (q) => {
+
+      try {
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+            const body = await response.data;
+            console.log(body);
+            const books = await body.items.map((elem, index)=>{return elem});               
+            return books ;
+          }catch(error) {
+              console.log(error)
+        }};
+
+
+    var handleSubcatQueriesSearch = async (queries) => {
+
+        const pArray = queries.map(async (query)=>{
+            const response = handleSearch(query);
+            return response;
+        })
+
+        const items = await Promise.all(pArray);
+
+        var merged = [].concat.apply([], items);
+
+        return merged;
+
+    }
+
+
+    var handleSubCatSearchv2 = async (q) => {
+
+      var qArray = Object.values(q);
+
+      var subcats = Object.keys(q);
+
+      const pArray = qArray.map(async (queries) =>{
+        return handleSubcatQueriesSearch(queries);
+      });
+
+      const resultArray = await Promise.all(pArray);
+
+      var result = {};
+
+      subcats.forEach((key, i) => result[key] = resultArray[i]);
+
+
+      return result;
+
+
+    }
+  
+      var handleSurveySearch = async (q) => {
+  
+  
+          var results = {};
+  
+          var cats = Object.keys(q);
+  
+          for (var i = 0; i < cats.length; i++) {
+  
+              const cat = cats[i];
+  
+              results[cat] = [];
+  
+              var catItems = await handleSubCatSearchv2(q[cat]);
+  
+              results[cat] = catItems
+              
+              };
+  
+          return results;
+  
+      }
+
+
+      try {
+
+        const response = await handleSurveySearch(req.body)
+
+        res.json({result:response});
+        
+      } catch (error) {
+
+        res.json({result:error})
+        
+      }
+      
+  
+
+})
  
 
 router.get('/library/:token', function (req, res) {
