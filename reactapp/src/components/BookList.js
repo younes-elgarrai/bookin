@@ -17,7 +17,7 @@ return (
         </Col>
     </Row>
     <Row>
-        <div style={{display:'flex', flexWrap:"wrap" ,justifyContent: "center", marginTop:"10px"}}>
+        <div style={{display:'flex', flexWrap:"wrap", justifyContent: "center", marginTop:"10px"}}>
 
             {props.data.slice(0,6).map((book, index)=>{
                 return <BookCard  bookId={book.id} bookTitle={book.volumeInfo.title} bookCover={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail}/>;
