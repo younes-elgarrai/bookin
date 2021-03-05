@@ -1,60 +1,37 @@
 import React, {useState} from 'react';
 import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
-import { Progress, Button, Row, Col} from 'antd';
+import { Progress, Button, Row, Col, Modal} from 'antd';
 import '../App.css';
 
 import {connect} from 'react-redux';
 
 import SurveyContainer from '../components/SurveyContainer';
 
+import subjects from '../assets/subjects'
+
 function SurveyScreen(props) {
 
 const [cookies, setCookie] = useCookies(['survey']);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
 const [step, setStep] = useState(1);
 
 const [finished, setFinished] = useState(false);
 
-
-var subjects = {'BD & Jeunesse': {
-                                  'BD, Comics, Manga' : 'subject:"Comics & Graphic Novels"',
-                                  'Humour' : 'subject:"Humour"',
-                                  'Livre jeunesse' : 'subject:"Juvenile Fiction" OR subject:"Juvenile non fiction"',
-                                  'Livre Ados / Young Adults' : 'subject:"Young Adults Fiction" OR subject:"Young Adults nonfiction"'
-                                  }, 
-                'Littérature & Fiction': { 
-                                  'Roman' : 'subject:"Fiction" OR subject:"LITERARY COLLECTIONS"',
-                                  'Poésie & théatre' : 'subject:"Poetry" OR subject:"Drama"',
-                                  'Thriller, Roman Policier' : 'subject:"Thriller" OR subject:"Roman policier"',
-                                  'Fantasy, Science Fiction' : 'subject:"Fantasy" OR subject:"science fiction"'
-
-                                  },
-                'Vie Pratique':{
-                                  'Cuisine': 'subject:"Cooking" OR subject:"Cuisine"',
-                                  'Self Help' : 'subject:"Self Help"',
-                                  'Santé, Bien être' : 'subject:"HEALTH & FITNESS" OR subject:"BODY, MIND & SPIRIT" OR subject:"FAMILY & RELATIONSHIPS"', 
-                                  'Loisirs Créatifs': 'subject:"CRAFTS AND HOBBIES"'
-                                  }, 
-                'Art, Culture & Société':{
-                                  'Actualités Politique, Economie, Société' : 'subject:"BUSINESS & ECONOMICS" OR subject:"POLITICAL SCIENCE" OR subject;"SOCIAL SCIENCE"', 
-                                  'Art, Cinema, Musique': 'subject:"ART" OR subject:"LANGUAGE ARTS & DISCIPLINES" OR subject:"PERFORMING ARTS" OR subject:"PHOTOGRAPHY" OR subject:"MUSIC"',
-                                  'Biographie, Autobiographie' : 'subject:"BIOGRAPHY & AUTOBIOGRAPHY"',
-                                  'Histoire' : 'subject:"HISTORY"',
-                                  'Religion & Spiritualité' : 'subject:"RELIGION"',
-                                  'Sciences Humaines' : 'subject:"SOCIAL SCIENCE" OR subject:"PSYCHOLOGY" OR subject:"PHILOSOPHY"'
-                                  }, 
-                'Nature & Loisirs':{
-                                  'Nature, Animaux, Jardin' : 'subject:"NATURE" OR subject:"PETS" OR subject:"GARDENING"',
-                                  'Sport, Loisirs, Transport': 'subject:"SPORTS & RECREATION" OR subject:"TRANSPORTATION"',
-                                  'Tourisme & Voyage' : 'subject:"TRAVEL"',
-                                  }, 
-                'Savoirs':{
-                                  'Droit' : 'subject:"Law"', 
-                                  'Entreprise, Management' : 'subject:"Business & Economics"',
-                                  'Livres informatique' : 'subject:"Computers"',
-                                  'Science & Médecine' : 'subject:"Science" OR subject:"Medical"'
-                }};
 
 var mainSubjects = Object.keys(subjects);
 
@@ -127,6 +104,11 @@ const surveyStyle = {
               <SurveyContainer style={surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
             </Col>
           </Row>
+          <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            <Col span={10}>
+              <SurveyContainer style={surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
+            </Col>
+          </Modal>
           <Row justify='center'>
             <Col span={10} flex={1}>
             {step!==1?<Button onClick={()=>handleBackClick()} type="primary">Précédent</Button>:null}

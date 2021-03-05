@@ -17,58 +17,112 @@ import BookList from '../components/BookList'
 const { Content } = Layout;
 
 var bookArray = [{
-        "id":"RgiMzQEACAAJ",
-        "title": "Batman La Légende - Neal Adams - Tome 3",
-        "authors": [
-          "Denis O'Neil",
-          "Collectif",
-          "Neal Adams"
-        ],
-        "publisher": "Urban Comics",
-        "publishedDate": "2020-10-05",
-        "description": "Le Joker, Double-Face, Man-Bat, le Professeur Milo... Batman a combattu les plus dangereux criminels de Gotham mais il n'a jamais rencontré un adversaire aussi implacable que Ra's al Ghul, le seigneur du crime et leader de l'organisation du Démon. Ce dernier tient à ce que le Chevalier Noir rejoigne sa croisade et prenne sa fille, la séduisante Talia, pour épouse ! (Contient Detective #410, Batman #232, 234, 237, 243-245, 251, 255)",
-        "industryIdentifiers": [
-          {
-            "type": "ISBN_13",
-            "identifier": "9791026845805"
-          }
-        ],
-        "readingModes": {
-          "text": true,
-          "image": true
+  "kind": "books#volume",
+  "id": "4fX_DwAAQBAJ",
+  "etag": "IqrkRgWuA4M",
+  "selfLink": "https://books.googleapis.com/books/v1/volumes/4fX_DwAAQBAJ",
+  "volumeInfo": {
+    "title": "Batman La Légende - Neal Adams - Tome 3",
+    "authors": [
+      "Denis O'Neil",
+      "Collectif",
+      "Neal Adams"
+    ],
+    "publisher": "Urban Comics",
+    "publishedDate": "2020-10-05",
+    "description": "Le Joker, Double-Face, Man-Bat, le Professeur Milo... Batman a combattu les plus dangereux criminels de Gotham mais il n'a jamais rencontré un adversaire aussi implacable que Ra's al Ghul, le seigneur du crime et leader de l'organisation du Démon. Ce dernier tient à ce que le Chevalier Noir rejoigne sa croisade et prenne sa fille, la séduisante Talia, pour épouse ! (Contient Detective #410, Batman #232, 234, 237, 243-245, 251, 255)",
+    "industryIdentifiers": [
+      {
+        "type": "ISBN_13",
+        "identifier": "9791026845805"
+      }
+    ],
+    "readingModes": {
+      "text": true,
+      "image": true
+    },
+    "printType": "BOOK",
+    "categories": [
+      "Comics & Graphic Novels"
+    ],
+    "maturityRating": "NOT_MATURE",
+    "allowAnonLogging": false,
+    "contentVersion": "preview-1.0.0",
+    "panelizationSummary": {
+      "containsEpubBubbles": true,
+      "containsImageBubbles": true,
+      "epubBubbleVersion": "c0b9a3661d71b229_A",
+      "imageBubbleVersion": "c0b9a3661d71b229_A"
+    },
+    "imageLinks": {
+      "smallThumbnail": "http://books.google.com/books/content?id=4fX_DwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+      "thumbnail": "http://books.google.com/books/content?id=4fX_DwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    },
+    "language": "fr",
+    "previewLink": "http://books.google.fr/books?id=4fX_DwAAQBAJ&printsec=frontcover&dq=Batman+La+L%C3%A9gende+-+Neal+Adams+-+Tome+3&hl=&cd=1&source=gbs_api",
+    "infoLink": "https://play.google.com/store/books/details?id=4fX_DwAAQBAJ&source=gbs_api",
+    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=4fX_DwAAQBAJ",
+    "seriesInfo": {
+      "kind": "books#volume_series_info",
+      "bookDisplayNumber": "3",
+      "volumeSeries": [
+        {
+          "seriesId": "zcorGwAAABDn0M",
+          "seriesBookType": "COLLECTED_EDITION",
+          "orderNumber": 3
+        }
+      ]
+    }
+  },
+  "saleInfo": {
+    "country": "FR",
+    "saleability": "FOR_SALE",
+    "isEbook": true,
+    "listPrice": {
+      "amount": 9.99,
+      "currencyCode": "EUR"
+    },
+    "retailPrice": {
+      "amount": 9.99,
+      "currencyCode": "EUR"
+    },
+    "buyLink": "https://play.google.com/store/books/details?id=4fX_DwAAQBAJ&rdid=book-4fX_DwAAQBAJ&rdot=1&source=gbs_api",
+    "offers": [
+      {
+        "finskyOfferType": 1,
+        "listPrice": {
+          "amountInMicros": 9990000,
+          "currencyCode": "EUR"
         },
-        "printType": "BOOK",
-        "categories": [
-          "Comics & Graphic Novels"
-        ],
-        "maturityRating": "NOT_MATURE",
-        "allowAnonLogging": false,
-        "contentVersion": "preview-1.0.0",
-        "panelizationSummary": {
-          "containsEpubBubbles": true,
-          "containsImageBubbles": true,
-          "epubBubbleVersion": "c0b9a3661d71b229_A",
-          "imageBubbleVersion": "c0b9a3661d71b229_A"
+        "retailPrice": {
+          "amountInMicros": 9990000,
+          "currencyCode": "EUR"
         },
-        "imageLinks": {
-          "smallThumbnail": "http://books.google.com/books/content?id=4fX_DwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-          "thumbnail": "http://books.google.com/books/content?id=4fX_DwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
-        },
-        "language": "fr",
-        "previewLink": "http://books.google.fr/books?id=4fX_DwAAQBAJ&printsec=frontcover&dq=o&hl=&cd=1&source=gbs_api",
-        "infoLink": "https://play.google.com/store/books/details?id=4fX_DwAAQBAJ&source=gbs_api",
-        "canonicalVolumeLink": "https://play.google.com/store/books/details?id=4fX_DwAAQBAJ",
-        "seriesInfo": {
-          "kind": "books#volume_series_info",
-          "bookDisplayNumber": "3",
-          "volumeSeries": [
-            {
-              "seriesId": "zcorGwAAABDn0M",
-              "seriesBookType": "COLLECTED_EDITION",
-              "orderNumber": 3
-            }
-          ]
-        } 
+        "giftable": true
+      }
+    ]
+  },
+  "accessInfo": {
+    "country": "FR",
+    "viewability": "PARTIAL",
+    "embeddable": true,
+    "publicDomain": false,
+    "textToSpeechPermission": "ALLOWED",
+    "epub": {
+      "isAvailable": true,
+      "acsTokenLink": "http://books.google.fr/books/download/Batman_La_L%C3%A9gende_Neal_Adams_Tome_3-sample-epub.acsm?id=4fX_DwAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+    },
+    "pdf": {
+      "isAvailable": true,
+      "acsTokenLink": "http://books.google.fr/books/download/Batman_La_L%C3%A9gende_Neal_Adams_Tome_3-sample-pdf.acsm?id=4fX_DwAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api"
+    },
+    "webReaderLink": "http://play.google.com/books/reader?id=4fX_DwAAQBAJ&hl=&printsec=frontcover&source=gbs_api",
+    "accessViewStatus": "SAMPLE",
+    "quoteSharingAllowed": false
+  },
+  "searchInfo": {
+    "textSnippet": "Le Joker, Double-Face, Man-Bat, le Professeur Milo."
+  }
 }]
 
 function BookScreen() {

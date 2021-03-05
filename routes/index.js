@@ -75,8 +75,8 @@ router.post('/recos', async (req,res)=>{
             const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
             const body = await response.data;
             console.log(body);
-            const volumeInfos = await body.items.map((elem, index)=>{return elem.volumeInfo});               
-            return volumeInfos ;
+            const books = await body.items.map((elem, index)=>{return elem});               
+            return books ;
           }catch(error) {
               console.log(error)
         }};
@@ -134,8 +134,6 @@ router.post('/recos', async (req,res)=>{
               results[cat] = [];
   
               var catItems = await handleSubCatSearchv2(q[cat]);
-
-              console.log('catItems',catItems);
   
               results[cat] = catItems
               
