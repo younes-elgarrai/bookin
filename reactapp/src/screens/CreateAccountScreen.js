@@ -146,8 +146,6 @@ const styles = {
           borderRadius:'5px',
       }   
   }   
-<<<<<<< HEAD
-=======
 
   function mapDispatchToProps(dispatch) {
     return {
@@ -160,4 +158,3 @@ const styles = {
     return { token: state.token }
   }
   export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountScreen);
->>>>>>> 4cf76f15161f9c8f65afaf19e4d89f261154af78

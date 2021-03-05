@@ -72,9 +72,8 @@ router.post('/recos', async (req,res)=>{
     var handleSearch = async (q) => {
 
       try {
-            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=6&langRestrict=en&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
             const body = await response.data;
-            console.log(body);
             const books = await body.items.map((elem, index)=>{return elem});               
             return books ;
           }catch(error) {
