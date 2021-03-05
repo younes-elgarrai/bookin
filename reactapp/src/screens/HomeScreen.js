@@ -2,6 +2,7 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import {Link} from 'react-router-dom';
 import '../App.css';
+import '../components/Navbar.css'
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
 import {connect} from 'react-redux';

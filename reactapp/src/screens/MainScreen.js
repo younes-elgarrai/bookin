@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
+import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
-import { Avatar, Layout, Row, Col} from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Layout, Row, Col} from 'antd';
+
 import '../components/BookHeader'
 import '../App.css';
-import Nav from '../components/Navbar';
 
-import BookHeader from '../components/BookHeader';
-import BookInfo from '../components/BookInfo';
+import Nav from '../components/Navbar';
 import Review from '../components/Review';
 import BookList from '../components/BookList';
 
@@ -82,27 +81,6 @@ var queryMaker = (styles) => {
             return r; };
                                     
 
-
-
-var handleSearch = async (q) => {
-
-    try {
-        const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`)
-        const body = await data.json();
-        const volumeInfos = await body.items.map((elem, index)=>{
-            return elem.volumeInfo;
-        })               
-        return volumeInfos ;
-    }
-    catch(error) {
-        console.log(error)
-      }};
-
-
-
-
-
-
 function MainScreen() {
 
     
@@ -111,7 +89,7 @@ function MainScreen() {
 
     const [data, setData] = useState(voidSubj);
 
-    var query = queryMaker(cookies.survey.Styles);
+    var query = cookies.survey!==undefined&&queryMaker(cookies.survey.Styles);
 
 
   useEffect(  ()=>{
@@ -133,7 +111,7 @@ function MainScreen() {
 
         }
 
-            dataQuery();
+        cookies.survey!==undefined&&dataQuery();
    
   },[]);
 
@@ -148,7 +126,7 @@ function MainScreen() {
 
         for (const subcat in data[cat]){
             bloc.push(
-            <Row>
+            <Row style={{width:'100%' , display:'flex', justifyContent:'center'}}>
                 <BookList bookListTitle={subcat} data={data[cat][subcat]} />
             </Row>
             )
@@ -176,6 +154,7 @@ function MainScreen() {
             </div>      
             <Review/>
         </Content>
+        {cookies.survey===undefined&&<Redirect to="/survey" />}
     </div>
 
     );
@@ -195,8 +174,9 @@ let styles = {
         backgroundColor: 'white',
         paddingLeft:'30px',
         paddingTight:'30px',
-        paddingTop: '30px',
+        paddingTop: '30px', 
     },
+
 
     h3: {
         color:"#23396C",

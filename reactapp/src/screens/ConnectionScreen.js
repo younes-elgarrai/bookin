@@ -66,7 +66,7 @@ function ConnectionScreen(props) {
     if (needToSignUp) {
         return(<Redirect to='/create-account'/>)
     } else if (isLoggedIn) {
-        return(<Redirect to='/library'/>)
+        return(<Redirect to='/search'/>)
     } else {
     return (
         <div className='font'>

@@ -6,9 +6,11 @@ import '../App.css'
 import Background from '../assets/picto.png'
 import Cover from '../assets/cover.jpg'
 import {Link} from "react-router-dom";
+import {connect} from 'react-redux';
 
 
 function BookHeader(props) {
+  console.log('BookScreenHeader> props.token', props.token);
 
   // Récupération du tableau d'auteurs et les séparer par une virgule
   var authors;
@@ -27,9 +29,29 @@ function BookHeader(props) {
   // Const pour la modal du bouton ajout à ma wishlit
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisible2, setIsModalVisible2] = useState(false);
+  const [addBook, setAddBook] = useState([]);
 
-  const showModal = () => {
-    setIsModalVisible(true);
+  const handleClickButton = async () => {
+    var addWishList = async () => {
+      const data = await fetch(`/wishlist/add/${props.token}/${props.bookId}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `cover=${props.bookCover}&title=${props.bookTitle}`
+      });
+      const body = await data.json();
+      console.log('body', body)
+      console.log('data', data)
+
+      if (body.result===true) {
+        setIsModalVisible(true);
+      }
+
+    };
+
+    addWishList();
+
+
+
   };
 
   const handleCancel = () => {
@@ -79,7 +101,7 @@ console.log (props.bookIsbn);
     <Row style={styles.buyBloc}>
       <div>
         <Col xs={24}>
-        <Button onClick={showModal} style={{margin:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
+        <Button onClick={() => handleClickButton()} style={{margin:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
         <Modal centered title="Félicitations" visible={isModalVisible} footer={null} onCancel={handleCancel} style={{textAlign: "center"}}>
           <img style={{margin:'10px'}} width={70} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle} /> 
 
@@ -179,6 +201,12 @@ let styles = {
       }
   }
 
-export default BookHeader;
+  function mapStateToProps(state) {
+    return { token: state.token }
+  }
+
+  export default connect(mapStateToProps, null)(BookHeader);
+
+
 
 
