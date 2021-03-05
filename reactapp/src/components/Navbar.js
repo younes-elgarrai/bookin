@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
-import logo from '../assets/bookin.png';
+import logo from '../assets/bookin-transparent.png';
 import './Navbar.css';
 import {connect} from 'react-redux';
 
@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
   NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
   // Ant Design
-import { Image, Avatar } from 'antd';
+import { Avatar } from 'antd';
 import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
 
 function NavigationBar(props) {
@@ -58,7 +58,7 @@ function NavigationBar(props) {
               <Nav navbar className="menu-nav-header">
               <UncontrolledDropdown setActiveFromChild>
               <Navbar light className="menu-nav-header-xs">
-                  <DropdownToggle tag="a" className="menu-header-xs-item"><MenuOutlined/><Image src={logo} alt="logo Bookin" width={90}/></DropdownToggle> 
+                  <DropdownToggle tag="a" className="menu-header-xs-item"><MenuOutlined/><img src={logo} alt="logo Bookin" width={90}/></DropdownToggle> 
                   <NavbarBrand href="/search" className="menu-header-xs-item"><SearchOutlined /></NavbarBrand>
                   <NavbarBrand href="/connection" className="menu-header-xs-item"><UserOutlined /></NavbarBrand>
               </Navbar>
