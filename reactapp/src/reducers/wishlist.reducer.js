@@ -11,7 +11,23 @@ export default function(wishList = [], action) {
                 wishListCopy.push(action.bookId)         
         }                  
         return wishListCopy
-    } else {
-        return wishList
+    } 
+    else if (action.type == 'DeleteToWishList') {
+        var wishListCopy = [...wishList];
+        var position;  
+
+        for(let i=0;i<wishListCopy.length;i++){             
+            if(wishListCopy[i].bookId == action.bookId){                 
+                position = i            
+            };         
+        }     
+        if (!position) {
+            wishListCopy.splice(position,1)     
+        }
+        return wishListCopy
     }
+    else {
+        return wishList
+    } 
 }
+

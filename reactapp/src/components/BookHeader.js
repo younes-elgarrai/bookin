@@ -60,8 +60,23 @@ function BookHeader(props) {
     } else {
       setIsLoggedIn(true);
     }
-    
+  };
 
+  const handleClickButtonDelete = async () => {
+    if (props.token!==null) {
+      const dataDelete = await fetch(`/wishlist/delete/${props.token}/${props.bookId}`, {
+      method: 'DELETE'
+      });
+      const bodyDelete = await dataDelete.json();
+      console.log('data', dataDelete)
+      console.log('body', bodyDelete)
+
+      if (bodyDelete.result===true) {
+        setBoutonStyle(!boutonStyle);
+        props.DeleteToWishList(props.bookId);
+      }
+      
+    }
   };
 
 
@@ -78,7 +93,7 @@ function BookHeader(props) {
   };
 
   var boutonSelected = (
-    <Button onClick={() => handleClickButton()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>✔ DEJA LU</Button>
+    <Button onClick={() => handleClickButtonDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>✔ DEJA LU</Button>
   );
 
   var boutonDefault = (
@@ -235,7 +250,10 @@ let styles = {
     return {
       addToWishList: function(bookId) {
           dispatch( {type: 'addToWishList', bookId:bookId} )
-      } 
+      }, 
+      DeleteToWishList: function(bookId) {
+        dispatch( {type: 'DeleteToWishList', bookId:bookId} )
+      }
     }
   }
 
