@@ -129,9 +129,6 @@ function BookScreen() {
     const [dataBook, setDataBook] = useState ([]);
     const [isbn, setIsbn] = useState();
     let {bookid} = useParams();
-
-    console.log('Typebookid', typeof bookid);
-    console.log('bookid', bookid)
     
     useEffect(() => {
         if (bookid)
@@ -193,7 +190,7 @@ function BookScreen() {
         <Nav/>
         <Content style={styles.container}  >
                 <BookHeader bookTitle={dataBook.title} bookAuthor={dataBook.authors} 
-                bookCover={coverImg} bookCat={dataBook.categories} bookIsbn={isbn}/>
+                bookCover={coverImg} bookCat={dataBook.categories} bookIsbn={isbn} bookId={bookid}/>
 
                 <BookInfo bookTitle={dataBook.title} bookDesc={dataBook.description} publishedDate={dataBook.publishedDate}
                 bookPublisher={dataBook.publisher} bookPageCount={dataBook.pageCount} bookIsbn={isbn}/>
