@@ -67,8 +67,6 @@ export default function CreateAccountScreen() {
         </div>
       );
     }
-<<<<<<< HEAD
-=======
 
 const styles = {
       container: {
@@ -107,4 +105,3 @@ const styles = {
           borderRadius:'5px',
       }   
   }   
->>>>>>> ef683ee0efedc6ceadc09fbcf9ab0a30066f67a7
