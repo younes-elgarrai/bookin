@@ -30,11 +30,11 @@ const styles = {
         width: '20%',
         justifyContent:'center',
         alignItems:'center',
-        paddingBottom:'10px'
+        paddingBottom:'10px',
     },
     icons:{
         fontSize:'24px',
-        marginRight:'10px'
+        marginRight:'10px',
     }
 }
 export default Footer;

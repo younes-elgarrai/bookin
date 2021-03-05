@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {Redirect} from 'react-router-dom';
+import {Redirect, Link} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import '../App.css';
-import { Input, Button, Form, Image } from 'antd';
+import { Input, Button, Form } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -58,7 +58,7 @@ function CreateAccountScreen(props) {
 
     if (isSignedUp) {
       return(
-        <Redirect to='/library'/>
+        <Redirect to='/search'/>
       )
     } else if (alreadyHasAccount) {
       // fonctionne mais pas le temps de voir le message contextuel donc un peu abrupt...
@@ -72,19 +72,23 @@ function CreateAccountScreen(props) {
         <div style={styles.container}>
             <h3 style={styles.title}>Créez votre compte</h3>
             <p style={styles.label}>Créez un compte pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
+            <div>
+                  <p style={styles.labelInline}>Vous avez déjà un compte ?  </p> 
+                  <Button type='link' style={styles.smallBtn}><Link to='/connection'>Connectez-vous</Link></Button>
+            </div> 
             <div className="row justify-content-center">
-            <div className="order-2 order-md-1 col-12 col-md-6">
+            <div className="order-2 order-md-1 col-11 offset-1 col-md-4 offset-md-2">
               <AvatarUpload />
-              <p style={styles.smallLabel}>Choisissez votre avatar (png / jpg)</p>
+              <p style={styles.smallAvatar}>Choisissez votre avatar (png / jpg)</p>
             <Form layout="vertical">
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Choisissez le nom de votre bibliothèque :">
-                  <Input placeholder="Bibliothèque de Victor" prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} />
+                  <Input placeholder="Bibliothèque de Victor" prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} style={{width:'90%'}}/>
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre adresse email :">
-                    <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} onChange={(e)=> setUserEmail(e.target.value)} value={userEmail}/>
+                    <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} onChange={(e)=> setUserEmail(e.target.value)} value={userEmail} style={{width:'90%'}}/>
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre mot de passe :">
-                    <Input.Password placeholder="Fantine123" prefix={<LockOutlined className="site-form-item-icon" />} onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
+                    <Input.Password placeholder="Fantine123" prefix={<LockOutlined className="site-form-item-icon" />} onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} style={{width:'90%'}}/>
                 </Form.Item>
                 <Form.Item>
                     <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer compte</Button>
@@ -94,7 +98,7 @@ function CreateAccountScreen(props) {
             <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
             <div className="order-1 order-md-2 col-4 col-md-6">
-            <Image src={account} alt='Illustration by Olha Khomich from Icons8'></Image>
+            <img src={account} alt='Illustration by Olha Khomich from Icons8' style={styles.image}/>
             </div>
         </div>
         </div>
@@ -130,8 +134,13 @@ const styles = {
       smallLabel:{
         color:'#000000',
         fontSize:'10px',
-        marginTop:'5px',
+        marginTop:'40px',
         marginBottom:'10px'
+      },
+      smallAvatar:{
+        color:'#000000',
+        fontSize:'10px',
+        marginBottom:'40px'
       },
       userMsg: {
         color:"#23396C",
@@ -145,6 +154,24 @@ const styles = {
           color:'#23396c', 
           borderColor:'#fca311', 
           borderRadius:'5px',
+      },
+      smallBtn:{
+        color:'#23396c',
+        fontSize:'12px',
+        padding:0,
+        fontWeight:'bold',
+        marginTop:'5px',
+        marginBottom:'10px',
+    },
+    labelInline: {
+        display:'inline',
+        color:'#000000',
+        fontSize:'12px',
+        marginTop:'20px',
+        marginBottom:'10px'
+      }, 
+      image:{
+        width:'70%'
       }   
   }   
 

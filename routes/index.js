@@ -207,17 +207,6 @@ router.get('/library/:token', function (req, res) {
  })
 
 
-// POST : Login/Signup step 0 : check email from user ("continuer")
-router.post('/check-email', async function (req, res, next) {
-  const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
-  console.log('check', checkExistingUserFromEmail); // null 
-  if (checkExistingUserFromEmail) {
-    res.json({result:true});
-  } else {
-    res.json({result:false})
-  }
-});
-
 // POST : Login
 router.post('/log-in', async function(req, res, next) {
   if (!req.body.email || !req.body.password) {
@@ -229,7 +218,7 @@ router.post('/log-in', async function(req, res, next) {
   if (bcrypt.compareSync(password, user.password)) {
     res.json({ login: true, userToken });
   } else { 
-    res.json({login: false, message: "Ce compte n'existe pas, veuillez réessayer ou créer un compte." }); }
+    res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }
 }});
 
 // POST : Signup
@@ -269,16 +258,19 @@ async function saveNewUser(req) {
 router.get('/users/:token', async (req, res) => {
   const user = await UsersModel.findOne({token: req.params.token});
   const userEmail = user.email;
-  res.json({result:true, userEmail })
+  const userLibraryName = user.userLibraryName;
+  res.json({result:true, userEmail, userLibraryName })
  })
 // Step 2 : POST to update profile
 router.post('/update', async (req, res) => {
+  console.log('update req',req);
   const user = await UsersModel.find({token: req.body.token});
   // mettre à jour les champs souhaités : tout sauf l'email, le token, library, wishlist. 
   // par ex : 
-  if (req.body.userLibraryName) {
-    user.userLibraryName = req.body.userLibraryName;
+  if (req.body.name) {
+    user.userLibraryName = req.body.name;
   }
+ 
   const userSave = await user.save();
   res.json({ result: true, userSave });
 });
