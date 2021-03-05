@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useCookies } from 'react-cookie';
 import '../App.css';
 import { Input, Button, Form, Image } from 'antd';
@@ -16,15 +16,24 @@ function UpdateAccountScreen(props) {
     const [cookies, setCookie] = useCookies(['survey']);
     console.log('cookies survey', cookies.survey);
 
-    const [userLibraryName, setUserLibraryName]= useState('');
-    const [userEmail, setUserEmail]= useState('');
-    const [userPassword, setUserPassword]= useState('');
+    const [ userLibraryName, setUserLibraryName]= useState('');
+    const [ userEmail, setUserEmail ] = useState('');
+    const [ userPassword, setUserPassword]= useState('');
     const [ userMessage, setUserMessage ] = useState('');
 
     const checkEmailFormat = (email) => {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return email ? re.test(String(email).toLowerCase()) : false;
     }
+
+    useEffect(() => {
+      async function loadEmailFromDatabase() {
+        var rawResponse = await fetch(`/users/${props.token}`);
+        var response = await rawResponse.json();
+        setUserEmail(response.userEmail);
+       }
+       loadEmailFromDatabase();
+    }, []);
 
     // MODIFIER POUR UPDATE
     const createUserAccount = async () => {
@@ -60,19 +69,19 @@ function UpdateAccountScreen(props) {
             <div className="row">
             <div className="order-2 order-md-1 col-12 col-md-6">
               <AvatarUpload />
-              <p style={styles.smallLabel}>Choisissez votre avatar (png / jpg)</p>
+              <p style={styles.smallLabel}>Modifiez votre avatar (png / jpg)</p>
             <Form layout="vertical">
-                <Form.Item required tooltip="Ce champ est obligatoire" label="Choisissez le nom de votre bibliothèque :">
+                <Form.Item required tooltip="Ce champ est obligatoire" label="Modifiez le nom de votre bibliothèque :">
                   <Input placeholder="Bibliothèque de Victor" prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} />
                 </Form.Item>
-                <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre adresse email :">
-                    <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} value={userEmail}/>
+                <Form.Item required tooltip="Ce champ est obligatoire et ne peut pas être modifié" label="Votre adresse email :">
+                    <Input disabled placeholder={userEmail} prefix={<MailOutlined className="site-form-item-icon" />} value={userEmail}/>
                 </Form.Item>
-                <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre mot de passe :">
+                <Form.Item required tooltip="Ce champ est obligatoire" label="Modifiez votre mot de passe :">
                     <Input.Password placeholder="Fantine123" prefix={<LockOutlined className="site-form-item-icon" />} onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
                 </Form.Item>
                 <Form.Item>
-                    <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer compte</Button>
+                    <Button style={styles.btn} onClick={()=> createUserAccount()} >Modifier compte</Button>
                     <span style={styles.userMsg}>{userMessage}</span>
                 </Form.Item>
             </Form>
