@@ -7,13 +7,17 @@ var width = '';
 
 function Response(props){
 
-    var background = props.isSelected?'red':null;
+    var background = props.isSelected?'#23396C':null;
+    var color = props.isSelected?'#E1E1E1':null;
+    var weight = props.isSelected?'bold':null;
 
 
     const dynamicStyle = {
         width: width,
         textAlign: 'center',
-        backgroundColor: background
+        backgroundColor: background,
+        color: color,
+        fontWeight: weight
       };
 
 
