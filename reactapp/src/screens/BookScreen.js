@@ -17,82 +17,38 @@ import BookList from '../components/BookList'
 const { Content } = Layout;
 
 var bookArray = [{
-  "kind": "books#volume",
-  "id": "4fX_DwAAQBAJ",
-  "etag": "IqrkRgWuA4M",
-  "selfLink": "https://books.googleapis.com/books/v1/volumes/4fX_DwAAQBAJ",
-  "volumeInfo": {
-    "title": "Batman La Légende - Neal Adams - Tome 3",
-    "authors": [
-      "Denis O'Neil",
-      "Collectif",
-      "Neal Adams"
-    ],
-    "publisher": "Urban Comics",
-    "publishedDate": "2020-10-05",
-    "description": "Le Joker, Double-Face, Man-Bat, le Professeur Milo... Batman a combattu les plus dangereux criminels de Gotham mais il n'a jamais rencontré un adversaire aussi implacable que Ra's al Ghul, le seigneur du crime et leader de l'organisation du Démon. Ce dernier tient à ce que le Chevalier Noir rejoigne sa croisade et prenne sa fille, la séduisante Talia, pour épouse ! (Contient Detective #410, Batman #232, 234, 237, 243-245, 251, 255)",
-    "industryIdentifiers": [
-      {
-        "type": "ISBN_13",
-        "identifier": "9791026845805"
-      }
-    ],
-    "readingModes": {
-      "text": true,
-      "image": true
-    },
-    "printType": "BOOK",
-    "categories": [
-      "Comics & Graphic Novels"
-    ],
-    "maturityRating": "NOT_MATURE",
-    "allowAnonLogging": false,
-    "contentVersion": "preview-1.0.0",
-    "panelizationSummary": {
-      "containsEpubBubbles": true,
-      "containsImageBubbles": true,
-      "epubBubbleVersion": "c0b9a3661d71b229_A",
-      "imageBubbleVersion": "c0b9a3661d71b229_A"
-    },
-    "imageLinks": {
-      "smallThumbnail": "http://books.google.com/books/content?id=4fX_DwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-      "thumbnail": "http://books.google.com/books/content?id=4fX_DwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
-    },
-    "language": "fr",
-    "previewLink": "http://books.google.fr/books?id=4fX_DwAAQBAJ&printsec=frontcover&dq=Batman+La+L%C3%A9gende+-+Neal+Adams+-+Tome+3&hl=&cd=1&source=gbs_api",
-    "infoLink": "https://play.google.com/store/books/details?id=4fX_DwAAQBAJ&source=gbs_api",
-    "canonicalVolumeLink": "https://play.google.com/store/books/details?id=4fX_DwAAQBAJ",
-    "seriesInfo": {
-      "kind": "books#volume_series_info",
-      "bookDisplayNumber": "3",
-      "volumeSeries": [
-        {
-          "seriesId": "zcorGwAAABDn0M",
-          "seriesBookType": "COLLECTED_EDITION",
-          "orderNumber": 3
-        }
-      ]
-    }
-  },
-  "saleInfo": {
-    "country": "FR",
-    "saleability": "FOR_SALE",
-    "isEbook": true,
-    "listPrice": {
-      "amount": 9.99,
-      "currencyCode": "EUR"
-    },
-    "retailPrice": {
-      "amount": 9.99,
-      "currencyCode": "EUR"
-    },
-    "buyLink": "https://play.google.com/store/books/details?id=4fX_DwAAQBAJ&rdid=book-4fX_DwAAQBAJ&rdot=1&source=gbs_api",
-    "offers": [
-      {
-        "finskyOfferType": 1,
-        "listPrice": {
-          "amountInMicros": 9990000,
-          "currencyCode": "EUR"
+        "id":"4fX_DwAAQBAJ",
+        "title": "Batman La Légende - Neal Adams - Tome 3",
+        "authors": [
+          "Denis O'Neil",
+          "Collectif",
+          "Neal Adams"
+        ],
+        "publisher": "Urban Comics",
+        "publishedDate": "2020-10-05",
+        "description": "Le Joker, Double-Face, Man-Bat, le Professeur Milo... Batman a combattu les plus dangereux criminels de Gotham mais il n'a jamais rencontré un adversaire aussi implacable que Ra's al Ghul, le seigneur du crime et leader de l'organisation du Démon. Ce dernier tient à ce que le Chevalier Noir rejoigne sa croisade et prenne sa fille, la séduisante Talia, pour épouse ! (Contient Detective #410, Batman #232, 234, 237, 243-245, 251, 255)",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9791026845805"
+          }
+        ],
+        "readingModes": {
+          "text": true,
+          "image": true
+        },
+        "printType": "BOOK",
+        "categories": [
+          "Comics & Graphic Novels"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": true,
+          "containsImageBubbles": true,
+          "epubBubbleVersion": "c0b9a3661d71b229_A",
+          "imageBubbleVersion": "c0b9a3661d71b229_A"
         },
         "retailPrice": {
           "amountInMicros": 9990000,
@@ -137,33 +93,43 @@ function BookScreen() {
         if (bookid)
             {
             const findBook = async() => {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${bookid}&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}`)
                 const datajson = await data.json();
                     if (datajson.totalItems!==0){
-                        setDataBook(datajson.items[0].volumeInfo);
-                        setIsbn(datajson.items[0].volumeInfo.industryIdentifiers[0].identifier);
+                        setDataBook(datajson.volumeInfo);
+                        if (datajson.volumeInfo.industryIdentifiers) {
+                            setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
+                        } else {
+                            setIsbn('nc')
+                        }
+
                     } else {
                         const findBook2 = async() => {
                             alert('Livre inconnu, nous vous recommandons cette lecture');
-                            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=9782203214095&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`);
+                            const data = await fetch(`https://books.googleapis.com/books/v1/volumes/GlrPDwAAQBAJ`);
                             const datajson = await data.json();
-                            setDataBook(datajson.items[0].volumeInfo);
-                            setIsbn(datajson.items[0].volumeInfo.industryIdentifiers[0].identifier);
+                            setDataBook(datajson.volumeInfo);
+                            setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
                           }
                           findBook2();
+                          window.scrollTo(0, 0)
                     }
               }
               findBook()    
+              window.scrollTo(0, 0)
         } else {
             const findBook2 = async() => {
                 alert('Livre inconnu, nous vous recommandons cette lecture');
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=9782203214095&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`);
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes/GlrPDwAAQBAJ`);
                 const datajson = await data.json();
-                setDataBook(datajson.items[0].volumeInfo);
-                setIsbn(datajson.items[0].volumeInfo.industryIdentifiers[0].identifier);
+                setDataBook(datajson.volumeInfo);
+                setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
               }
               findBook2();
+              window.scrollTo(0, 0)
         }
+
+
 
       },[bookid])
 
@@ -196,10 +162,11 @@ function BookScreen() {
                 </Col>
                 </Row>
                 <Row>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                {/* xs={24} sm={12} md={8} lg={6} xl={4} */}
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
                 </Row>
             </div>
             <BookList bookListTitle="Nos recommandations" data={bookArray}/>
@@ -217,7 +184,7 @@ let styles = {
         alignItems:'center',
         width:'100vw',
         backgroundColor:'#f3f5f7',
-        marginTop:'10px',
+        paddingTop:'10px',
     },
 
     libraryBloc: {
