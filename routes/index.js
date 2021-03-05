@@ -12,11 +12,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-/*
-  Add a book in my library
-  Body : token et isbn13
-  Response : result
-*/
+/* Add a book in my library */
 router.post('/library/add/:token/:isbn13/', (req, res) => {
   let isbn13 = req.params.isbn13;
   let token = req.params.token;
