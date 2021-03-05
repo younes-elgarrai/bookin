@@ -113,29 +113,7 @@ router.post('/recos', async (req,res)=>{
   //Entrées : cookie questionnaire ou token
   //recherche par category (subjects) puis tri sur longueur et sur nouveautés
   //Sorties : objet suggestions , erreur ==> refaites le questionnarire
-  var catQueryMaker = (cat, styles)=>{
-  
-    var r = {};
-    styles[cat].forEach( (subcat)=>{
-        r[subcat] = subjects[cat][subcat];
-         });
-    return r;
 
-};
-
-  var queryMaker = (styles) => {
-
-    var cats = Object.keys(styles).filter(e=>e!=='void');
-
-    var queries = cats.map( cat => {
-        return catQueryMaker(cat, styles);
-    })
-
-    var r = {}
-    for (var i = 0; i < cats.length; i++) {
-        r[cats[i]] = queries[i];}
-    
-    return r; };
 
     var handleSearch = async (q) => {
 
@@ -164,7 +142,6 @@ router.post('/recos', async (req,res)=>{
 
     }
 
-
     var handleSubCatSearchv2 = async (q) => {
 
       var qArray = Object.values(q);
@@ -183,8 +160,6 @@ router.post('/recos', async (req,res)=>{
 
 
       return result;
-
-
     }
   
       var handleSurveySearch = async (q) => {
@@ -210,7 +185,6 @@ router.post('/recos', async (req,res)=>{
   
       }
 
-
       try {
 
         const response = await handleSurveySearch(req.body)
@@ -222,9 +196,6 @@ router.post('/recos', async (req,res)=>{
         res.json({result:error})
         
       }
-      
-  
-
 })
  
 

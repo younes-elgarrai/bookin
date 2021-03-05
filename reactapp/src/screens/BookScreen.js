@@ -13,6 +13,7 @@ import BookHeader from '../components/BookHeader';
 import BookInfo from '../components/BookInfo'
 import Review from '../components/Review'
 import BookList from '../components/BookList'
+import { set } from 'mongoose';
 
 const { Content } = Layout;
 
@@ -128,6 +129,7 @@ var bookArray = [{
 function BookScreen() {
     const [dataBook, setDataBook] = useState ([]);
     const [isbn, setIsbn] = useState();
+    const [associated, setAssociated]= useState(bookArray);
     let {bookid} = useParams();
     
     useEffect(() => {
@@ -136,6 +138,9 @@ function BookScreen() {
             const findBook = async() => {
                 const data = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}`)
                 const datajson = await data.json();
+                const assoc = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}/associated`);
+                const assocjson = await assoc.json()
+                setAssociated(( await assocjson.items || bookArray));
                     if (datajson.totalItems!==0){
                         setDataBook(datajson.volumeInfo);
                         if (datajson.volumeInfo.industryIdentifiers) {
@@ -210,7 +215,7 @@ function BookScreen() {
                 <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
                 </Row>
             </div>
-            <BookList bookListTitle="Nos recommandations" data={bookArray}/>
+            <BookList bookListTitle="Nos recommandations" data={associated}/>
         
             <Review/>
     </Content>
