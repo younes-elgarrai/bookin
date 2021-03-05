@@ -28,7 +28,7 @@ function HomeScreen(props) {
         <div className="row pt-2 pr-5 pl-5">
           <div className="order-2 order-md-1 col-12 col-md-6">
             <h3 style={styles.title}>bookin trouve vos prochains livres préférés et vous permet de gérer votre bibliothèque.</h3>
-            <Button style={styles.btn}><Link to='/survey'>Commencer</Link></Button>
+            <Button style={styles.btn}><Link to={cookies.survey ? '/main' : '/survey'}>Commencer</Link></Button>
             <div>
             <p style={styles.labelInline}>Vous avez déjà un compte ? </p> 
             <Button type='link' style={styles.smallBtn}><Link to='/connection/'>Connectez-vous</Link></Button>
@@ -36,20 +36,20 @@ function HomeScreen(props) {
             <h3 style={styles.title}>Découvrez toutes les fonctionnalités :</h3>
             <div style={styles.features}>
               <div style={styles.featureSmall}>
-                <img src={account} width={100} />
+                <img src={account} width={100} alt='account' />
                 <p style={styles.label}><BookFilled style={{color:'#FCA311', fontSize:'18px'}} /> Ajoutez des livres à votre bibliothèque virtuelle</p>
             </div>
             <div style={styles.featureSmall}>
-            <img src={reading} width={100} />
+            <img src={reading} width={100} alt='reading' />
             <p style={styles.label}><BulbFilled style={{color:'#FCA311', fontSize:'18px'}} /> Découvrez des suggestions de lecture personnalisées</p>
             </div>
             <div style={styles.featureSmall}>
-            <img src={review} width={100} />
+            <img src={review} width={100} alt='review'/>
            <p style={styles.label}><HeartFilled style={{color:'#FCA311', fontSize:'18px'}}/> Enregistrez et partagez vos coups de coeur</p>
            </div>
            </div>
            </div>
-      <div className="order-1 order-md-2 col-12 col-md-6"><img src={library} /></div>
+      <div className="order-1 order-md-2 col-12 col-md-6"><img src={library} alt='library' style={styles.image} /></div>
     </div>
     </div>
     <Footer />
@@ -118,6 +118,9 @@ const styles = {
    featureSmall:{
      width:'25%',
      marginRight:'40px'
+   },
+   image:{
+     width:'100%',
    }
 }
 function mapStateToProps(state) {
