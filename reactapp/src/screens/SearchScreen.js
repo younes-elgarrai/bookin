@@ -8,6 +8,7 @@ import Unavailable from '../assets/cover_nondispo.jpg';
 import BookCard from '../components/BookCard';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import {connect} from 'react-redux';
 
 // Utiliser IdGoogle ?
 // insérer module dernières nouveautés lorsque pas de recherche encore faite
@@ -16,7 +17,7 @@ import { useCookies } from 'react-cookie';
 const { Search } = Input;
 const { Meta } = Card;
 
-export default function SearchScreen() {
+function SearchScreen(props) {
     const history = useHistory();
     const [result, setResult] = useState([]);
     const [query, setQuery] = useState("");
@@ -392,3 +393,7 @@ let styles = {
     },
 
   }
+  function mapStateToProps(state) {
+    return { token: state.token }
+  }
+  export default connect(mapStateToProps, null)(SearchScreen);

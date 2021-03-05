@@ -3,8 +3,9 @@ export default function tokenReducer(token = null, action) {
         console.log('action.token in reducer', action.token);
         return action.token ;
     } else if (action.type==='deleteToken'){
-        console.log('action.token in delete reducer', token);
-        return token;
+        const logOutToken = null;
+        console.log('action.token in delete reducer', logOutToken);
+        return logOutToken;
     } else {
         return token;
     }

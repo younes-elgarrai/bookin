@@ -71,7 +71,8 @@ function CreateAccountScreen(props) {
         <Nav/>
         <div style={styles.container}>
             <h3 style={styles.title}>Créez votre compte</h3>
-            <div className="row">
+            <p style={styles.label}>Créez un compte pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
+            <div className="row justify-content-center">
             <div className="order-2 order-md-1 col-12 col-md-6">
               <AvatarUpload />
               <p style={styles.smallLabel}>Choisissez votre avatar (png / jpg)</p>
