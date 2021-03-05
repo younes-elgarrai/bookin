@@ -51,6 +51,7 @@ function BookHeader(props) {
         if (body.result===true) {
           setBoutonStyle(!boutonStyle);
           setIsModalWishList(true);
+          props.addToWishList(props.bookId);
         }
   
       };
@@ -84,11 +85,15 @@ function BookHeader(props) {
   <Button onClick={() => handleClickButton()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
   );
 
+console.log('Props WishList', props.wishlist);
+console.log('props.bookid',props.bookId);
 
-  
+useEffect(() => {
+if (props.wishlist.indexOf(props.bookId)!==-1) {
+  setBoutonStyle(true);
+}
+},[])
 
-console.log (boutonStyle);
-console.log (props.bookIsbn);
 
 if (isLoggedIn) {
   return(<Redirect to='/connection'/>)
@@ -114,7 +119,7 @@ return (
 
           <p style={styles.note} >Note 3,5/5 | 12 avis</p>
           </div>
-{/* 
+      {/* 
         <div>
           <Button style={{marginRight:'10px',  backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{props.bookCat[0]}</Button>
         </div> */}
@@ -226,8 +231,17 @@ let styles = {
       }
   }
 
-  function mapStateToProps(state) {
-    return { token: state.token }
+  function mapDispatchToProps(dispatch) {
+    return {
+      addToWishList: function(bookId) {
+          dispatch( {type: 'addToWishList', bookId:bookId} )
+      } 
+    }
   }
 
-  export default connect(mapStateToProps, null)(BookHeader);
+  function mapStateToProps(state) {
+    console.log('state', state);
+    return { token: state.token, wishlist: state.wishlist }
+  }
+
+  export default connect(mapStateToProps, mapDispatchToProps)(BookHeader);
