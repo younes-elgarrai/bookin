@@ -12,32 +12,100 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-/*
-  Add a book in my library
-  Body : token et isbn13
-  Response : result
-*/
-router.post('/library/add/:token/:isbn13/', (req, res) => {
-  let isbn13 = req.params.isbn13;
+/* Ajout d'un livre dans la wishlist d'un user dans la BDD  */
+router.post('/library/add/:token/:bookid', async (req, res) => {
   let token = req.params.token;
+  let bookid = req.params.bookid;
+  const regex = new RegExp("[0-9A-Za-z_\-]{12}")
 
+  if (!token || !regex.test(bookid) ) {
+    res.json({ result: false, message: "Aie, nous n'avons pas pu ajouter le livre à votre bibliothèque" });
+  
+  } else {
+
+  try {
+
+    var bookToCheck = await BooksModel.findOne({bookid: bookid});
+    console.log("bookToCheck",bookToCheck);
+
+    if (bookToCheck === null) { 
+      const newBookInLibrary =  new BooksModel({
+        title: req.body.title, 
+        cover: req.body.cover, 
+        bookid: bookid, 
+      });
+      savedBookInLibrary = await newBookInLibrary.save();
+      console.log("newBookInLibrary",newBookInLibrary);
+      
+      var userCheck = await UsersModel.findOne({token: token});
+      var userCheckTab = [];
+      for (let i = 0; i < userCheck.library.length; i++) {
+        console.log("userCheck.library[i]",userCheck.library[i])
+        if (JSON.stringify(userCheck.library[i]) === JSON.stringify(savedBookInLibrary._id)) {
+          userCheckTab.push(userCheck)
+        }
+      }
+      console.log("userCheck",userCheck);
+      console.log("userCheckTab",userCheckTab);
+
+      if (userCheckTab.length === 0) { 
+        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {library: savedBookInLibrary._id}});
+        console.log("user",user);
+      } else {res.json({ result: false, message: "Livre déjà dans votre bibliothèque" });}
+
+    } else {
+      var userCheck2 = await UsersModel.findOne({token: token});
+      console.log("userCheck2",userCheck2);
+      var userCheckTab2 = [];
+      for (let i = 0; i < userCheck2.library.length; i++) {
+        if (JSON.stringify(userCheck2.library[i]) === JSON.stringify(bookToCheck._id)) {
+          userCheckTab2.push(userCheck2)
+        }
+      }
+      console.log("userCheckTab2",userCheckTab2);
+
+      if (userCheckTab2.length === 0) {
+        var user2 = await UsersModel.findOneAndUpdate({token: token},{ $push: {library: bookToCheck._id}});
+        console.log("user2",user2)
+      } else {res.json({ result: false, message: "Livre déjà dans votre bibliothèque" });}
+
+    }
+    var result = true;
+  }
+  catch (error) {
+    var result = false
+  }
   res.json({result})
+ }});
+
+
+/* Recherche de library à la BDD  */
+router.post('/library', async (req, res) => {
+  let token = req.body.token;
+  if (!token) {
+    res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
+  } else {
+  const user = await UsersModel.findOne({token: req.body.token}).populate('library').exec()
+  var userLibrary = user.library
+  res.json({result: true, library: userLibrary})
+}
 });
 
-
-/*
-  Delete a book from library
-  Body : token et isbn13
-  Response : result (true),
-*/
-router.delete('/library/delete/:token/:isbn13/', async (req, res) => {
-  let isbn13 = req.params.isbn13;
+/* Delete a book from library */
+router.delete('/library/delete/:token/:bookid', async (req, res) => {
   let token = req.params.token;
+  let bookid = req.params.bookid;
+  const regex = new RegExp("[0-9A-Za-z_\-]{12}");
 
-  var result = await bookModel.deleteOne({ idBook : req.params.idBook})
-
-  res.json({result})
+  if (!token || !regex.test(bookid) ) {
+    res.json({ result: false, message: "Aie, nous n'avons pas pu supprimer le livre de votre bibliothèque" });
+  } else {
+    var bookToDelete = await BooksModel.findOne({bookid: bookid});
+    var user = await UsersModel.findOneAndUpdate({token: token},{ $pull: {library: bookToDelete._id}});
+    res.json({ result: true});
+  }
 });
+
 
 
 router.post('/recos', async (req,res)=>{
@@ -257,36 +325,33 @@ router.get('/reviews', async (req, res) => {
   res.json({ result: true, reviews });
 });
 
-/*
-  Recherche sur Google Books API de livres
-  Query : q ("tintin" || "saint-exupery" || "des fleurs pour algernon" || "978-2-7654-0912-0")
-  Response : result (true), books [{title ("Tintin au Congo"), cover ("http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"), resultCount(56), publishedDate(1970), ISBN13(9782203192157)}, ...]
+/* Recherche sur Google Books API de livres
 API_key: "AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE"
-  */
+*/
 
- router.get('/search', (req, res) => {
-  let q = req.query.q;
+//  router.get('/search', (req, res) => {
+//   let q = req.query.q;
 
-  if (!q) {
-    res.json({ result: false });
-  } else {
-    // Appel à la google books API
-    // limiter le nb de résultats
-    res.json({ result: true, books: [{
-      title: 'Tintin au Congo',
-      cover: 'http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-      publishedDate: "1970",
-      ISBN13: "9782203192157",
-    },] });
-  }
-});
+//   if (!q) {
+//     res.json({ result: false });
+//   } else {
+//     // Appel à la google books API
+//     // limiter le nb de résultats
+//     res.json({ result: true, books: [{
+//       title: 'Tintin au Congo',
+//       cover: 'http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
+//       publishedDate: "1970",
+//       ISBN13: "9782203192157",
+//     },] });
+//   }
+// });
 
 /* Recherche de wishlist à la BDD  */
 
 router.post('/wishlist', async (req, res) => {
   let token = req.body.token;
   if (!token) {
-    res.json({ result: false });
+    res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
   } else {
   const user = await UsersModel.findOne({token: req.body.token}).populate('wishlist').exec()
   var userWishlist = user.wishlist
@@ -303,7 +368,7 @@ router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
   const regex = new RegExp("[0-9A-Za-z_\-]{12}")
 
   if (!token || !regex.test(bookid) ) {
-    res.json({ result: false });
+    res.json({ result: false, message: "Aie, nous n'avons pas pu supprimer le livre de votre wishlist" });
   } else {
     var bookToDelete = await BooksModel.findOne({bookid: bookid});
     var user = await UsersModel.findOneAndUpdate({token: token},{ $pull: {wishlist: bookToDelete._id}});
@@ -318,7 +383,7 @@ router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
   const regex = new RegExp("[0-9A-Za-z_\-]{12}")
 
   if (!token || !regex.test(bookid) ) {
-    res.json({ result: false });
+    res.json({ result: false, message: "Aie, nous n'avons pas pu ajouter le livre à votre wishlist" });
   
   } else {
 
@@ -350,7 +415,7 @@ router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
       if (userCheckTab.length === 0) { 
         var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: savedBookInWishlist._id}});
         console.log("user",user);
-      };
+      } else {res.json({ result: false, message: "Livre déjà dans votre wishlist" });}
 
     } else {
       var userCheck2 = await UsersModel.findOne({token: token});
@@ -366,7 +431,7 @@ router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
       if (userCheckTab2.length === 0) {
         var user2 = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: bookToCheck._id}});
         console.log("user2",user2)
-      };
+      } else {res.json({ result: false, message: "Livre déjà dans votre wishlist" });}
 
     }
 
