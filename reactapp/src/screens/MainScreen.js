@@ -113,81 +113,23 @@ function MainScreen() {
 
     var query = queryMaker(cookies.survey.Styles);
 
-    console.log(data);
-
-
-    var handleSubcatSearch = async (q) => {
-
-        var results = {};
-
-        var subcats = Object.keys(q);
-
-        for (var i = 0; i < subcats.length; i++) {
-
-            const subcat = subcats[i];
-
-            results[subcat] = [];
-
-            q[subcats[i]].forEach(async (element) => {
-
-                var newItems = await handleSearch(element);
-
-                 results[subcat] = results[subcat].concat(await newItems);
-                
-            });
-
-        };
-        
-        return results;
-    };
-
-    var handleSurveySearch = async (q) => {
-
-
-        var results = {};
-
-        var cats = Object.keys(q);
-
-        for (var i = 0; i < cats.length; i++) {
-
-            const cat = cats[i];
-
-            results[cat] = [];
-
-            var catItems = await handleSubcatSearch(q[cat]);
-
-            results[cat] = catItems
-            
-            };
-
-        return results;
-
-    }
-
-
-  
-
-
-
-
 
   useEffect(  ()=>{
 
 
             async function dataQuery(){
 
-            const response = await fetch('/recos', {
+            const rawResponse = await fetch('/recos', {
                 method: 'POST',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify(query)
                 });
 
-            console.log('response',await response.json());
-            
-            console.log('query', query)
+            var response = await rawResponse.json();
+
+            console.log(response);
          
-            // setData(results)
-            // setCookie('suggest', JSON.stringify(results), {path: '/'});
+            setData(response.result);
 
         }
 
@@ -195,7 +137,33 @@ function MainScreen() {
    
   },[]);
 
-  console.log('data?', cookies.suggest);
+
+    console.log(data);
+
+    const suggest = []
+
+    for (const cat in data) {
+
+        var bloc = [];
+
+        for (const subcat in data[cat]){
+            bloc.push(
+            <Row>
+                <BookList bookListTitle={subcat} data={data[cat][subcat]} />
+            </Row>
+            )
+        }
+    
+        suggest.push(
+            <Row>
+                <Col xs={24}>
+                    <h3 style={styles.h3}>{cat}</h3>
+                </Col>
+            </Row>
+            )
+
+        suggest.push(bloc);
+    }
   
     
   return (
@@ -203,11 +171,8 @@ function MainScreen() {
     <div>
         <Nav />
         <Content style={styles.container}>
-                <BookHeader/>
             <div style={styles.libraryBloc}>
-                <Row>
-                    <BookList bookListTitle={"Vie Pratique"} data={data["BD & Jeunesse"].Humour} />
-                </Row>
+                {suggest}
             </div>      
             <Review/>
         </Content>

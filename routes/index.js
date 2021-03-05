@@ -73,47 +73,13 @@ router.post('/recos', async (req,res)=>{
       try {
             const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
             const body = await response.data;
+            console.log(body);
             const volumeInfos = await body.items.map((elem, index)=>{return elem.volumeInfo});               
             return volumeInfos ;
           }catch(error) {
               console.log(error)
         }};
 
-  
-    var handleSubcatSearch = async (q) => {
-
-            var subcats = Object.keys(q);
-
-            let results = {};
-
-            for (var i = 0; i < subcats.length; i++) {
-  
-              const subcat = subcats[i];
-  
-              async function processArray(array) {
-          
-                for (const element of array) {
-    
-                  var newItems = await handleSearch(element);
-      
-                  results[subcat] = await (results[subcat] || []).concat(await newItems);
-    
-                  console.log('results inside', results)
-    
-                }
-
-              }
-  
-              processArray(q[subcats[i]]);
-  
-          };
-
-          var final = await results;
-
-          console.log('results outside', results)
-          
-          return final;
-      };
 
     var handleSubcatQueriesSearch = async (queries) => {
 
@@ -124,9 +90,9 @@ router.post('/recos', async (req,res)=>{
 
         const items = await Promise.all(pArray);
 
-        items.reduce((a,b)=>a.concat(b));
+        var merged = [].concat.apply([], items);
 
-        return items;
+        return merged;
 
     }
 
@@ -135,9 +101,20 @@ router.post('/recos', async (req,res)=>{
 
       var qArray = Object.values(q);
 
-      const pArray = 
+      var subcats = Object.keys(q);
+
+      const pArray = qArray.map(async (queries) =>{
+        return handleSubcatQueriesSearch(queries);
+      });
+
+      const resultArray = await Promise.all(pArray);
+
+      var result = {};
+
+      subcats.forEach((key, i) => result[key] = resultArray[i]);
 
 
+      return result;
 
 
     }
@@ -155,7 +132,7 @@ router.post('/recos', async (req,res)=>{
   
               results[cat] = [];
   
-              var catItems = await handleSubcatSearch(q[cat]);
+              var catItems = await handleSubCatSearchv2(q[cat]);
 
               console.log('catItems',catItems);
   
