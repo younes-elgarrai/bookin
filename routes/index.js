@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-/* Ajout d'un livre dans la wishlist d'un user dans la BDD  */
+/* Ajout d'un livre dans la bibliothèque d'un user dans la BDD  */
 router.post('/library/add/:token/:bookid', async (req, res) => {
   let token = req.params.token;
   let bookid = req.params.bookid;
