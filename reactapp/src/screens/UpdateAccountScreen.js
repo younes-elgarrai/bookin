@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {Redirect} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import '../App.css';
 import { Input, Button, Form, Image } from 'antd';
@@ -10,8 +9,9 @@ import account from '../assets/account.png';
 import AvatarUpload from '../components/AvatarUpload';
 import {connect} from 'react-redux';
 
-function CreateAccountScreen(props) {
-  console.log('CreateAccountScreen > props.token', props.token);
+function UpdateAccountScreen(props) {
+    // récupérer l'email de l'utilisateur pour le figer (+ autres infos préremplies).
+  console.log('UpdateAccountScreen > props.token', props.token);
 
     const [cookies, setCookie] = useCookies(['survey']);
     console.log('cookies survey', cookies.survey);
@@ -20,22 +20,21 @@ function CreateAccountScreen(props) {
     const [userEmail, setUserEmail]= useState('');
     const [userPassword, setUserPassword]= useState('');
     const [ userMessage, setUserMessage ] = useState('');
-    const [ isSignedUp, setIsSignedUp ] = useState(false);
-    const [ alreadyHasAccount, setAlreadyHasAccount ] = useState(false);
 
     const checkEmailFormat = (email) => {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return email ? re.test(String(email).toLowerCase()) : false;
     }
 
+    // MODIFIER POUR UPDATE
     const createUserAccount = async () => {
     // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire' + redirect ?
       if (!checkEmailFormat(userEmail)) {
         setUserMessage('veuillez saisir un email valide.');
     } else {
-      const style = encodeURIComponent(JSON.stringify(cookies.survey.Styles));
-      const length = encodeURIComponent(cookies.survey.Length);
-      const period = encodeURIComponent(cookies.survey.Period);
+      const style = JSON.stringify(cookies.survey.Styles);
+      const length = cookies.survey.Length;
+      const period = cookies.survey.Period;
       const response = await fetch('/sign-up', {
         method: 'POST',
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -45,32 +44,19 @@ function CreateAccountScreen(props) {
       console.log('dataResponse',dataResponse);  // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
       if (dataResponse.userToken) {
         props.onCreateAccountClick(dataResponse.userToken);
-        setIsSignedUp(true);
       }
       if (dataResponse.result === false) {
         setUserMessage(dataResponse.message);
-        if (dataResponse.message === "Il existe déjà un compte associé à cet email.") {
-          setAlreadyHasAccount(true);
-        }
       }
       }
     }
 
-    if (isSignedUp) {
-      return(
-        <Redirect to='/library'/>
-      )
-    } else if (alreadyHasAccount) {
-      // fonctionne mais pas le temps de voir le message contextuel donc un peu abrupt...
-      return(
-        <Redirect to='/connection'/>
-      )
-    } else {
     return (
         <div className='font'>
         <Nav/>
         <div style={styles.container}>
-            <h3 style={styles.title}>Créez votre compte</h3>
+            <h3 style={styles.title}>Modifiez votre compte</h3>
+
             <div className="row">
             <div className="order-2 order-md-1 col-12 col-md-6">
               <AvatarUpload />
@@ -80,7 +66,7 @@ function CreateAccountScreen(props) {
                   <Input placeholder="Bibliothèque de Victor" prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} />
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre adresse email :">
-                    <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} onChange={(e)=> setUserEmail(e.target.value)} value={userEmail}/>
+                    <Input placeholder="victor@hugo.com" prefix={<MailOutlined className="site-form-item-icon" />} value={userEmail}/>
                 </Form.Item>
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Saisissez votre mot de passe :">
                     <Input.Password placeholder="Fantine123" prefix={<LockOutlined className="site-form-item-icon" />} onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
@@ -100,8 +86,7 @@ function CreateAccountScreen(props) {
         <Footer/>
         </div>
       );
-    }    
-  }
+    }
 
 const styles = {
       container: {
@@ -146,18 +131,9 @@ const styles = {
           borderRadius:'5px',
       }   
   }   
-<<<<<<< HEAD
-=======
 
-  function mapDispatchToProps(dispatch) {
-    return {
-      onCreateAccountClick: function(token) {
-          dispatch( {type: 'saveToken', token} )
-      } 
-    }
-  }
+
   function mapStateToProps(state) {
     return { token: state.token }
   }
-  export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountScreen);
->>>>>>> 4cf76f15161f9c8f65afaf19e4d89f261154af78
+  export default connect(mapStateToProps, null)(UpdateAccountScreen);
