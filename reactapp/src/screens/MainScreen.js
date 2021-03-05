@@ -7,68 +7,64 @@ import '../App.css';
 import Nav from '../components/Navbar';
 
 import BookHeader from '../components/BookHeader';
-import BookInfo from '../components/BookInfo'
-import Review from '../components/Review'
-import BookList from '../components/BookList'
+import BookInfo from '../components/BookInfo';
+import Review from '../components/Review';
+import BookList from '../components/BookList';
 
+import subjects from '../assets/subjects';
 
 
 const {Content} = Layout;
 
 
-var subjects = {'BD & Jeunesse': {
-                    'BD, Comics, Manga' : 'subject%3A"Comics+%26+Graphic Novels"',
-                    'Humour' : 'subject%3A"Humour"',
-                    'Livre jeunesse' : 'subject%3A"Juvenile+Fiction"',
-                    'Livre Ados / Young Adults' : 'subject%3A"Young+Adults+Fiction" OR subject%3A"Young+Adults+nonfiction"'
-                    }, 
+var voidSubj = {'BD & Jeunesse': {
+                    'BD, Comics, Manga' : [],
+                    'Humour' : [],
+                    'Livre jeunesse' : []
+},
                 'Littérature & Fiction': { 
-                    'Roman' : 'subject%3A"Fiction" OR subject%3A"LITERARY+COLLECTIONS"',
-                    'Poésie & théatre' : 'subject%3A"Poetry" OR subject%3A"Drama"',
-                    'Thriller, Roman Policier' : 'subject%3A"Thriller" OR subject%3A"Roman =+policier"',
-                    'Fantasy, Science Fiction' : 'subject%3A"Fantasy" OR subject%3A"science+fiction"'
+                    'Roman' : [],
+                    'Poésie & théatre' : [],
+                    'Thriller, Roman Policier' : [],
+                    'Fantasy, Science Fiction' : []
 
                     },
                 'Vie Pratique':{
-                    'Cuisine': 'subject%3A"Cooking" OR subject%3A"Cuisine"',
-                    'Self Help' : 'subject%3A"Self Help"', 
-                    'Santé, Bien être' : 'subject%3A"HEALTH & FITNESS" OR subject%3A"BODY+MIND+%26+SPIRIT" OR subject%3A"FAMILY+%26+RELATIONSHIPS"', 
-                    'Loisirs Créatifs': 'subject%3A"CRAFTS+%26+HOBBIES"'
+                    'Cuisine': [],
+                    'Self Help' : [], 
+                    'Santé, Bien être' : [], 
+                    'Loisirs Créatifs': []
                     }, 
                 'Art, Culture & Société':{
-                    'Actualités Politique, Economie, Société' : 'subject%3A"BUSINESS+%26+ECONOMICS" OR subject%3A"POLITICAL+SCIENCE" OR subject;"SOCIAL+SCIENCE"', 
-                    'Art, Cinema, Musique': 'subject%3A"ART" OR subject%3A"LANGUAGE ARTS+%26+DISCIPLINES" OR subject%3A"PERFORMING+ARTS" OR subject%3A"PHOTOGRAPHY" OR subject%3A"MUSIC"',
-                    'Biographie, Autobiographie' : 'subject%3A"BIOGRAPHY+%26+AUTOBIOGRAPHY"',
-                    'Histoire' : 'subject%3A"HISTORY"',
-                    'Religion & Spiritualité' : 'subject%3A"RELIGION"',
-                    'Sciences Humaines' : 'subject%3A"SOCIAL SCIENCE" OR subject%3A"PSYCHOLOGY" OR subject%3A"PHILOSOPHY"'
+                    'Actualités Politique, Economie, Société' : [], 
+                    'Art, Cinema, Musique': [],
+                    'Biographie, Autobiographie' : [],
+                    'Histoire' : [],
+                    'Religion & Spiritualité' : [],
+                    'Sciences Humaines' : []
                     }, 
                 'Nature & Loisirs':{
-                    'Nature, Animaux, Jardin' : 'subject%3A"NATURE" OR subject%3A"PETS" OR subject%3A"GARDENING"',
-                    'Sport, Loisirs, Transport': 'subject%3A"SPORTS+%26+RECREATION" OR subject%3A"TRANSPORTATION"',
-                    'Tourisme & Voyage' : 'subject%3A"TRAVEL"',
+                    'Nature, Animaux, Jardin' : [],
+                    'Sport, Loisirs, Transport': [],
+                    'Tourisme & Voyage' : [],
                     }, 
                 'Savoirs':{
-                    'Droit' : 'subject%3A"Law"', 
-                    'Entreprise, Management' : 'subject%3A"Business+%26+Economics"',
-                    'Livres informatique' : 'subject%3A"Computers"',
-                    'Science & Médecine' : 'subject%3A"Science" OR subject%3A"Medical"'
+                    'Droit' : [], 
+                    'Entreprise, Management' : [],
+                    'Livres informatique' : [],
+                    'Science & Médecine' : []
                 }};
 
 
-var mainSubjects = Object.keys(subjects);
-
-var mainSubjectsQueries = Object.values(subjects).map((obj, index)=>{
-                                                            return Object.values(obj);})
-                                                 .map((array,index)=>{
-                                                            return array.reduce((a,b)=> {return a+" OR "+b})
-                                                 });
 
 var catQueryMaker = (cat, styles)=>{
+  
+            var r = {};
+            styles[cat].forEach( (subcat)=>{
+                r[subcat] = subjects[cat][subcat];
+                 });
+            return r;
 
-            return styles[cat].map( (subcat)=>{
-                    return subjects[cat][subcat];
-            });
 };
 
 var queryMaker = (styles) => {
@@ -76,7 +72,7 @@ var queryMaker = (styles) => {
             var cats = Object.keys(styles).filter(e=>e!=='void');
 
             var queries = cats.map( cat => {
-                return catQueryMaker(cat, styles).reduce((a,b)=>{return a +" OR "+b});
+                return catQueryMaker(cat, styles);
             })
 
             var r = {}
@@ -91,7 +87,7 @@ var queryMaker = (styles) => {
 var handleSearch = async (q) => {
 
     try {
-        const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+        const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`)
         const body = await data.json();
         const volumeInfos = await body.items.map((elem, index)=>{
             return elem.volumeInfo;
@@ -106,69 +102,83 @@ var handleSearch = async (q) => {
 
 
 
+
 function MainScreen() {
+
+    
 
     const [cookies, setCookie] = useCookies(['survey']);
 
-    const [data, setData] = useState({});
+    const [data, setData] = useState(voidSubj);
 
-    var queries = queryMaker(cookies.survey.Styles);
-
-    var handleMultipleSearch = async (queries) => {
-
-        var results = {};
-
-        var cats = Object.keys(queries);
-
-        for (var i = 0; i < cats.length; i++) {
-
-            try {
-                console.log(cats[i]);
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${queries[cats[i]]}&maxResults=10&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
-                const body = await data.json();
-                const volumeInfos = await body.items.map((elem, index)=>{
-                    return elem.volumeInfo;
-                })
-                results[cats[i]] = await volumeInfos;               
-            }
-            catch(error) {
-                console.log(error)
-              }
-        };
-
-        console.log(queries);
-
-        return results;
-    }
-
+    var query = queryMaker(cookies.survey.Styles);
 
 
   useEffect(  ()=>{
-      
-    (async ()=>{setData(await handleMultipleSearch(queries));})()}
-    
-    ,[]);
 
+
+            async function dataQuery(){
+
+            const rawResponse = await fetch('/recos', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(query)
+                });
+
+            var response = await rawResponse.json();
+
+            console.log(response);
+         
+            setData(response.result);
+
+        }
+
+            dataQuery();
+   
+  },[]);
+
+
+    console.log(data);
+
+    const suggest = []
+
+    for (const cat in data) {
+
+        var bloc = [];
+
+        for (const subcat in data[cat]){
+            bloc.push(
+            <Row>
+                <BookList bookListTitle={subcat} data={data[cat][subcat]} />
+            </Row>
+            )
+        }
+    
+        suggest.push(
+            <Row>
+                <Col xs={24}>
+                    <h3 style={styles.h3}>{cat}</h3>
+                </Col>
+            </Row>
+            )
+
+        suggest.push(bloc);
+    }
+  
     
   return (
+
     <div>
         <Nav />
         <Content style={styles.container}>
-                <BookHeader/>
             <div style={styles.libraryBloc}>
-                {Object.keys(data).map((elem,index)=>{
-                    console.log(data[elem]);
-                    return  <Row>
-                                <BookList bookListTitle={elem} data={data[elem]}/>
-                            </Row>
-
-                })}
+                {suggest}
             </div>      
             <Review/>
         </Content>
     </div>
 
-);
+    );
 }
 
 let styles = {

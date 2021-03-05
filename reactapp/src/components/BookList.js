@@ -2,7 +2,7 @@ import React from 'react';
 import {Row, Col} from 'antd';
 import '../App.css'
 import BookCard from '../components/BookCard'
-import { useCookies } from 'react-cookie';
+
 
 function BookList(props) {
 
@@ -16,7 +16,7 @@ return (
     </Row>
     <Row>
         {props.data.map((book, index)=>{
-            return <BookCard  bookId={book.id} bookTitle={book.title} bookCover={book.imageLinks.thumbnail}/>;
+            return <BookCard  bookId={book.id} bookTitle={book.volumeInfo.title} bookCover={book.volumeInfo.imageLinks.thumbnail}/>;
         })}
     </Row>
 

@@ -31,7 +31,9 @@ function Response(props){
 function SurveyContainer(props){
 
 
-    width = props.type!=='Length'?'33%':'100%';
+    // width = props.type!=='Length'?'33%':'100%';
+
+    width="100%";
 
     var handleClickAdd = (e,typ)=>{
         

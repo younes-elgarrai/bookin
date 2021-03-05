@@ -5,6 +5,7 @@ const ReviewsModel = require('../models/reviews');
 const BooksModel = require('../models/books');
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
+const axios = require('axios');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -39,12 +40,125 @@ router.delete('/library/delete/:token/:isbn13/', async (req, res) => {
 });
 
 
-router.post('/recos', (req,res)=>{
+router.post('/recos', async (req,res)=>{
   //Recupérer les résultats du questionnaire stockés dans un cookie, et renvoyer des suggestions.
   //Entrées : cookie questionnaire ou token
   //recherche par category (subjects) puis tri sur longueur et sur nouveautés
   //Sorties : objet suggestions , erreur ==> refaites le questionnarire
- })
+  var catQueryMaker = (cat, styles)=>{
+  
+    var r = {};
+    styles[cat].forEach( (subcat)=>{
+        r[subcat] = subjects[cat][subcat];
+         });
+    return r;
+
+};
+
+  var queryMaker = (styles) => {
+
+    var cats = Object.keys(styles).filter(e=>e!=='void');
+
+    var queries = cats.map( cat => {
+        return catQueryMaker(cat, styles);
+    })
+
+    var r = {}
+    for (var i = 0; i < cats.length; i++) {
+        r[cats[i]] = queries[i];}
+    
+    return r; };
+
+    var handleSearch = async (q) => {
+
+      try {
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+            const body = await response.data;
+            console.log(body);
+            const books = await body.items.map((elem, index)=>{return elem});               
+            return books ;
+          }catch(error) {
+              console.log(error)
+        }};
+
+
+    var handleSubcatQueriesSearch = async (queries) => {
+
+        const pArray = queries.map(async (query)=>{
+            const response = handleSearch(query);
+            return response;
+        })
+
+        const items = await Promise.all(pArray);
+
+        var merged = [].concat.apply([], items);
+
+        return merged;
+
+    }
+
+
+    var handleSubCatSearchv2 = async (q) => {
+
+      var qArray = Object.values(q);
+
+      var subcats = Object.keys(q);
+
+      const pArray = qArray.map(async (queries) =>{
+        return handleSubcatQueriesSearch(queries);
+      });
+
+      const resultArray = await Promise.all(pArray);
+
+      var result = {};
+
+      subcats.forEach((key, i) => result[key] = resultArray[i]);
+
+
+      return result;
+
+
+    }
+  
+      var handleSurveySearch = async (q) => {
+  
+  
+          var results = {};
+  
+          var cats = Object.keys(q);
+  
+          for (var i = 0; i < cats.length; i++) {
+  
+              const cat = cats[i];
+  
+              results[cat] = [];
+  
+              var catItems = await handleSubCatSearchv2(q[cat]);
+  
+              results[cat] = catItems
+              
+              };
+  
+          return results;
+  
+      }
+
+
+      try {
+
+        const response = await handleSurveySearch(req.body)
+
+        res.json({result:response});
+        
+      } catch (error) {
+
+        res.json({result:error})
+        
+      }
+      
+  
+
+})
  
 
 router.get('/library/:token', function (req, res) {
@@ -167,52 +281,37 @@ API_key: "AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE"
   }
 });
 
-/*
-  Recherche de wishlist à la BDD
-  Query : token (123456)
-  Response : result (true), books [{title ("Tintin au Congo"), cover ("http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api")}, ...]
-  */
+/* Recherche de wishlist à la BDD  */
 
-router.post('/wishlist', (req, res) => {
+router.post('/wishlist', async (req, res) => {
   let token = req.body.token;
-
   if (!token) {
     res.json({ result: false });
   } else {
-    // Appel à la BDD
-    res.json({ result: true, books: [{
-      title: 'Tintin au Congo',
-      cover: 'http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-
-},] });
-  }
+  const user = await UsersModel.findOne({token: req.body.token}).populate('wishlist').exec()
+  var userWishlist = user.wishlist
+  res.json({result: true, wishlist: userWishlist})
+}
 });
 
-/*
-  Suppression d'un livre dans la wishlist d'un user dans la BDD
-  Body : token (123456), book_Id,
-  Response : result (true)
-  */
 
-router.delete('/wishlist/delete/:token/:Isbn13', (req, res) => {
+/* Suppression d'un livre dans la wishlist d'un user dans la BDD */
+
+router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
   let token = req.params.token;
-  let book_Id = req.params.isbn13
+  let bookid = req.params.bookid;
+  const regex = new RegExp("[0-9A-Za-z_\-]{12}")
 
-  if (!token) {
+  if (!token || !regex.test(bookid) ) {
     res.json({ result: false });
   } else {
-    // deleteOne sur la BDD
+    var bookToDelete = await BooksModel.findOne({bookid: bookid});
+    var user = await UsersModel.findOneAndUpdate({token: token},{ $pull: {wishlist: bookToDelete._id}});
     res.json({ result: true});
   }
 });
 
 /* Ajout d'un livre dans la wishlist d'un user dans la BDD  */
-  //check si book existant en BDD
-      // si pas déjà existant => l'ajouter en BDD
-      // si déjà existant => test si déjà dans wishlist
-           // si déjà en wishlist => ne fait rien
-           // si pas déjà en wislist => ajouter en wishlist 
-
  router.post('/wishlist/add/:token/:bookid', async (req, res) => {
   let token = req.params.token;
   let bookid = req.params.bookid;
@@ -237,21 +336,37 @@ router.delete('/wishlist/delete/:token/:Isbn13', (req, res) => {
       savedBookInWishlist = await newBookInWishlist.save();
       console.log("newBookInWishlist",newBookInWishlist);
       
-      var userCheck = await UsersModel.findOne({token: token},{wishlist: newBookInWishlist._id});
+      var userCheck = await UsersModel.findOne({token: token});
+      var userCheckTab = [];
+      for (let i = 0; i < userCheck.wishlist.length; i++) {
+        console.log("userCheck.wishlist[i]",userCheck.wishlist[i])
+        if (JSON.stringify(userCheck.wishlist[i]) === JSON.stringify(savedBookInWishlist._id)) {
+          userCheckTab.push(userCheck)
+        }
+      }
       console.log("userCheck",userCheck);
+      console.log("userCheckTab",userCheckTab);
 
-      if (userCheck === null) { 
-        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: savedBookInWishlist.id}});
+      if (userCheckTab.length === 0) { 
+        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: savedBookInWishlist._id}});
         console.log("user",user);
       };
 
     } else {
-      var userCheck2 = await UsersModel.findOne({token: token},{wishlist: bookToCheck._id});
+      var userCheck2 = await UsersModel.findOne({token: token});
       console.log("userCheck2",userCheck2);
+      var userCheckTab2 = [];
+      for (let i = 0; i < userCheck2.wishlist.length; i++) {
+        if (JSON.stringify(userCheck2.wishlist[i]) === JSON.stringify(bookToCheck._id)) {
+          userCheckTab2.push(userCheck2)
+        }
+      }
+      console.log("userCheckTab2",userCheckTab2);
 
-      if (userCheck === null) { 
-        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: bookToCheck.id}});
-      }; 
+      if (userCheckTab2.length === 0) {
+        var user2 = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: bookToCheck._id}});
+        console.log("user2",user2)
+      };
 
     }
 
