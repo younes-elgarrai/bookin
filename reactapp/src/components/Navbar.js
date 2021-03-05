@@ -58,7 +58,7 @@ function NavigationBar(props) {
                   <NavbarBrand href="/connection" className="menu-header-xs-item"><UserOutlined /></NavbarBrand>
               </Navbar>
           <DropdownMenu>
-            <DropdownItem><Link to="/result" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></DropdownItem>
+            <DropdownItem><Link to="/main" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></DropdownItem>
             <DropdownItem><Link to={props.token ? "/library" : "/create-account"}  className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
             <DropdownItem><Link to={props.token ? "/library" : "/create-account"}  className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></DropdownItem>
             {props.token ? 
