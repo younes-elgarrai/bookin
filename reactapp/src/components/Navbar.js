@@ -16,11 +16,6 @@ function NavigationBar(props) {
   // Large menu
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  // Small menu
-  const [collapsed, setCollapsed] = useState(true);
-  const toggleNavbar = () => setCollapsed(!collapsed);
-  // Small menu dropdown test
-
 
   return(
     <div>
@@ -93,4 +88,3 @@ function mapStateToProps(state) {
   return { token: state.token }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);
-
