@@ -72,7 +72,7 @@ function BookHeader(props) {
       console.log('body', bodyDelete)
 
       if (bodyDelete.result===true) {
-        setBoutonStyle(!boutonStyle);
+        setBoutonStyle(false);
         props.DeleteToWishList(props.bookId);
       }
       
@@ -93,7 +93,7 @@ function BookHeader(props) {
   };
 
   var boutonSelected = (
-    <Button onClick={() => handleClickButton()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>✔ DANS MA WISHLIST</Button>
+    <Button onClick={() => handleClickButtonDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>❤ WISHLIST</Button>
   );
 
   var boutonDefault = (
