@@ -335,20 +335,30 @@ router.post('/update', async (req, res) => {
   });
 });
 
-// Post review
-router.post('/new-review', (req, res) => {
-  const review = new ReviewsModel({ // voir sur le cours
-    isbn13: req.body.isbn13,
-    userLibraryName: req.body.userLibraryName,
-    avatar: req.body.avatar,
-    rating: req.body.rating,
-    comment: req.body.comment,
-  })
-  // save.
-  res.json({
-    result: true,
-    review
-  });
+
+// POST : book review
+router.post('/new-review', async (req, res) => {
+  console.log('req', req.body);
+  const user = await UsersModel.findOne({token: req.body.token});
+  if (!user) {
+    res.json({
+      result: false,
+      message: "Veuillez vous identifier pour écrire un avis."
+    })
+  } else {
+    const review = new ReviewsModel({ 
+      bookid: req.body.isbn13,
+      userLibraryName: user.userLibraryName,
+      avatar: user.avatar,
+      rating: req.body.rating,
+      comment: req.body.comment,
+    })
+    // save.
+    res.json({
+      result: true,
+      review
+    });
+  }
 });
 
 // Get reviews
