@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 
 
 function BookHeader(props) {
-  console.log('BookScreenHeader > props.token', props.token);
+  console.log('BookScreenHeader > props.user.token', props.user.token);
 
   // Récupération du tableau d'auteurs et les séparer par une virgule
   var authors;
@@ -36,6 +36,7 @@ function BookHeader(props) {
 
 
   // Interroger la route pour ajouter wishList
+<<<<<<< HEAD
     // Bouton pour ajout à la WishList
     var boutonWishListSelected = (
       <Button onClick={() => handleClickWLDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>❤ WISHLIST</Button>
@@ -52,8 +53,12 @@ function BookHeader(props) {
 
   const handleClicWLAdd = async () => {
     if (props.token!==null) {
+=======
+  const handleClickButton = async () => {
+    if (props.user.token!==null) {
+>>>>>>> avatar
       var addWishList = async () => {
-        const data = await fetch(`/wishlist/add/${props.token}/${props.bookId}`, {
+        const data = await fetch(`/wishlist/add/${props.user.token}/${props.bookId}`, {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
@@ -74,9 +79,15 @@ function BookHeader(props) {
     }
   };
 
+<<<<<<< HEAD
   const handleClickWLDelete = async () => {
     if (props.token!==null) {
       const dataDelete = await fetch(`/wishlist/delete/${props.token}/${props.bookId}`, {
+=======
+  const handleClickButtonDelete = async () => {
+    if (props.user.token!==null) {
+      const dataDelete = await fetch(`/wishlist/delete/${props.user.token}/${props.bookId}`, {
+>>>>>>> avatar
       method: 'DELETE'
       });
       const bodyDelete = await dataDelete.json();
@@ -147,12 +158,12 @@ var boutonLibraryDefault = (
 
 
 useEffect(() => {
-  if (props.token!==null) {
+  if (props.user.token!==null) {
     var CheckWishList = async () => {
       const data = await fetch(`/wishlist`, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `token=${props.token}`
+        body: `token=${props.user.token}`
       });
       const body = await data.json();
 
@@ -322,7 +333,7 @@ let styles = {
 
   function mapStateToProps(state) {
     console.log('state', state);
-    return { token: state.token, wishlist: state.wishlist }
+    return { user:state.user, wishlist: state.wishlist }
   }
 
   export default connect(mapStateToProps, mapDispatchToProps)(BookHeader);
