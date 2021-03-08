@@ -7,7 +7,7 @@ import '../components/BookHeader'
 import '../App.css';
 
 import Nav from '../components/Navbar';
-import Review from '../components/Review';
+import Review from '../components/Reviews';
 import BookList from '../components/BookList';
 
 import subjects from '../assets/subjects';

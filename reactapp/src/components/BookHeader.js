@@ -36,27 +36,8 @@ function BookHeader(props) {
 
 
   // Interroger la route pour ajouter wishList
-<<<<<<< HEAD
-    // Bouton pour ajout à la WishList
-    var boutonWishListSelected = (
-      <Button onClick={() => handleClickWLDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>❤ WISHLIST</Button>
-    );
-  
-    var boutonWishListDefault = (
-    <Button onClick={() => handleClicWLAdd()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
-    );
-
-      // Cancel WishLit
-  const handleCancelWL = () => {
-    setIsModalVisibleWL(false);
-  };
-
-  const handleClicWLAdd = async () => {
-    if (props.token!==null) {
-=======
   const handleClickButton = async () => {
     if (props.user.token!==null) {
->>>>>>> avatar
       var addWishList = async () => {
         const data = await fetch(`/wishlist/add/${props.user.token}/${props.bookId}`, {
           method: 'POST',
@@ -79,15 +60,9 @@ function BookHeader(props) {
     }
   };
 
-<<<<<<< HEAD
-  const handleClickWLDelete = async () => {
-    if (props.token!==null) {
-      const dataDelete = await fetch(`/wishlist/delete/${props.token}/${props.bookId}`, {
-=======
   const handleClickButtonDelete = async () => {
     if (props.user.token!==null) {
       const dataDelete = await fetch(`/wishlist/delete/${props.user.token}/${props.bookId}`, {
->>>>>>> avatar
       method: 'DELETE'
       });
       const bodyDelete = await dataDelete.json();

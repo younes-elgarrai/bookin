@@ -10,9 +10,9 @@ import {useParams} from "react-router-dom";
 
 import Nav from '../components/Navbar';
 import BookHeader from '../components/BookHeader';
-import BookInfo from '../components/BookInfo'
-import Review from '../components/Review'
-import BookList from '../components/BookList'
+import BookInfo from '../components/BookInfo';
+import Review from '../components/Reviews';
+import BookList from '../components/BookList';
 import Footer from '../components/Footer';
 
 const { Content } = Layout;
