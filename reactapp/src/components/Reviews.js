@@ -4,7 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import '../App.css'
 
 
-function BookHeader() {
+function Reviews() {
 
 return (
     <div style={styles.reviewBloc}>
@@ -75,4 +75,4 @@ let styles = {
         paddingBottom:"10px"
       }
   }
-export default BookHeader;
+export default Reviews;

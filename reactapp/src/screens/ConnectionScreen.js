@@ -9,7 +9,7 @@ import reading from '../assets/reading.png';
 import {connect} from 'react-redux';
 
 function ConnectionScreen(props) {
-    console.log('ConnectionScreen > props.token', props.token);
+    console.log('ConnectionScreen > props.user', props.user);
     const [ email, setEmail ] = useState();
     const [ password, setPassword ] = useState();
     const [ userMessage, setUserMessage ] = useState('');
@@ -29,8 +29,9 @@ function ConnectionScreen(props) {
             body: `email=${email}&password=${password}`
         });
         const dataResponse = await response.json(); // {login: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
+        console.log("login dataresponse", dataResponse);
         if (dataResponse.login) {
-            props.onCheckAccountClick(dataResponse.userToken);
+            props.onCheckAccountClick({token : dataResponse.userToken, avatar: dataResponse.userAvatar});
             setIsLoggedIn(true);
         } else {
             setUserMessage(dataResponse.message);
@@ -62,7 +63,7 @@ function ConnectionScreen(props) {
                 <Button type='link' style={styles.smallBtn} onClick={()=> console.log("click")}>mot de passe oublié ?</Button>
                 </div>
                 <p style={styles.userMsg}>{userMessage}</p>
-                <Button style={styles.btn} onClick={()=> checkPasswordToLogin()}>Continuer</Button>
+                <Button style={styles.btn} onClick={()=> checkPasswordToLogin()}>Se connecter</Button>
                 <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
             </div>
             <div className="order-1 order-md-2 col-4 col-md-6">
@@ -138,12 +139,12 @@ const styles = {
 }
 function mapDispatchToProps(dispatch) {
     return {
-      onCheckAccountClick: function(token) {
-          dispatch( {type: 'saveToken', token} )
-      } 
+      onCheckAccountClick: function(user) {
+          dispatch( {type: 'saveUser', user} )
+      }, 
     }
   }
   function mapStateToProps(state) {
-    return { token: state.token }
+    return { user: state.user }
   }
   export default connect(mapStateToProps, mapDispatchToProps)(ConnectionScreen);

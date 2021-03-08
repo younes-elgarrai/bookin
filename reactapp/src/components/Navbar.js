@@ -13,6 +13,9 @@ import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutline
 
 function NavigationBar(props) {
   console.log('NavBar > props.token', props.token);
+  console.log('NavBar > props.avatar', props.avatar);
+  console.log('NavBar > props.user', props.user);
+
   // Large menu
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
@@ -22,18 +25,21 @@ function NavigationBar(props) {
     {/* Large Menu */}
     <div className="d-none d-sm-none d-md-inline">
       <Navbar expand="md" className="menu-nav">
-        <NavbarBrand href="/"><img src={logo} alt="logo Bookin" width={90}/></NavbarBrand>
+        <NavbarBrand href='/'><img src={logo} alt="logo Bookin" width={90}/></NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar className="right-menu">
           <Nav navbar>
             <NavItem><Link to="/search" className="menu-nav-item"><SearchOutlined className="menu-nav-icon" /> Rechercher</Link></NavItem> 
             <NavItem><Link to="/main" className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
-            <NavItem><Link to={props.token ? "/library" : "/create-account"} className="menu-nav-item"><BookOutlined className="menu-nav-icon"/> Bibliothèque</Link></NavItem> 
-            <NavItem><Link to={props.token ? "/library" : "/create-account"} className="menu-nav-item"><HeartOutlined className="menu-nav-icon"/> A lire</Link></NavItem> 
-            {props.token ? 
+            <NavItem><Link to={props.user ? "/library" : "/create-account"} className="menu-nav-item"><BookOutlined className="menu-nav-icon"/> Bibliothèque</Link></NavItem> 
+            <NavItem><Link to={props.user ? "/library" : "/create-account"} className="menu-nav-item"><HeartOutlined className="menu-nav-icon"/> A lire</Link></NavItem> 
+            {props.user ? 
               <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav>
-                <Avatar className="menu-nav-avatar" icon={<UserOutlined/>}/>
+                {props.user.avatar ? 
+                <Avatar className="menu-nav-avatar" src={props.user.avatar}/>
+                :
+                <Avatar className="menu-nav-avatar" icon={<UserOutlined/>}/>}
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem><Link to='/update-account' className="menu-nav-item-dropdown">Modifier compte</Link></DropdownItem>
@@ -59,12 +65,12 @@ function NavigationBar(props) {
               </Navbar>
           <DropdownMenu>
             <DropdownItem><Link to="/main" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></DropdownItem>
-            <DropdownItem><Link to={props.token ? "/library" : "/create-account"}  className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
-            <DropdownItem><Link to={props.token ? "/library" : "/create-account"}  className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></DropdownItem>
-            {props.token ? 
+            <DropdownItem><Link to={props.user ? "/library" : "/create-account"}  className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
+            <DropdownItem><Link to={props.user ? "/library" : "/create-account"}  className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></DropdownItem>
+            {props.user ? 
             <div>
              <DropdownItem href="/update-account" className="menu-nav-item-xs"><SettingOutlined className="menu-nav-icon-xs" /> Modifier compte</DropdownItem>
-             <DropdownItem href="/" className="menu-nav-item-xs" onClick={()=>props.onLogoutClick(props.token)}><LogoutOutlined className="menu-nav-icon-xs" /> Déconnexion</DropdownItem>
+             <DropdownItem href="/" className="menu-nav-item-xs" onClick={()=>props.onLogoutClick(props.user)}><LogoutOutlined className="menu-nav-icon-xs" /> Déconnexion</DropdownItem>
             </div>
             :
             <DropdownItem href="/connection" className="menu-nav-item-xs"><LoginOutlined className="menu-nav-icon-xs"/> Connexion</DropdownItem>
@@ -79,12 +85,12 @@ function NavigationBar(props) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    onLogoutClick: function(token) {
-        dispatch( {type:'deleteToken', token} )
+    onLogoutClick: function(user) {
+        dispatch( {type:'deleteUser', user} )
     } 
   }
 }
 function mapStateToProps(state) {
-  return { token: state.token }
+  return { user: state.user }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);
