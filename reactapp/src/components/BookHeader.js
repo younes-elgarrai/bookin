@@ -159,7 +159,7 @@ useEffect(() => {
       if (body.result===true) {
         for (let i = 0; i < body.wishlist.length; i++) {
           if (body.wishlist[i].bookid===props.bookId) {
-            setBoutonWLStyle(true);
+            setBoutonLBStyle(true);
           } 
         } 
       }

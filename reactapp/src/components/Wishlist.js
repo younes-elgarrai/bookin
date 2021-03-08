@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Row, Col} from 'antd';
 import '../App.css'
-import BookCard from './BookCard'
-import Unavailable from '../assets/cover_nondispo.jpg';
-import { PicCenterOutlined } from '@ant-design/icons';
+import BookCardHover from './BookCardHover'
 import { connect } from 'react-redux';
-
 
 function Wishlist(props) {
 
@@ -30,7 +27,8 @@ function Wishlist(props) {
             };
             CheckWishList();
         }
-    },[])
+    },[]);
+
 
 return (
 <div style={styles.libraryBloc}  className='font'>
@@ -39,21 +37,21 @@ return (
             <h3 style={styles.h3}>Ma Wishlist</h3>
         </Col>
     </Row>
-    <Row>
-        <div style={{display:'flex', flexWrap:"wrap", justifyContent: "center", marginTop:"10px"}}>
+
+        <div>
 
             {!displayWishlist 
                 ?
                 <div> Aucun livre dans votre wishlist </div> 
                 :
-                <div>
-                {result.map((book)=>{
-                    return <BookCard  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover}/>;
-                })}
+                <div style={{display:'flex', flexWrap:"wrap" ,justifyContent:"flex-start", marginTop:"0px"}}>
+                {result.map((book)=>(
+                    <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover}/>
+                ))}
                 </div>
             }
         </div>
-    </Row>
+
 
 
 </div>
