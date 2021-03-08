@@ -18,8 +18,8 @@ function BookCardHover(props) {
     };
 
     const handleClickWLDelete = async () => {
-        if (props.token!==null) {
-          const dataDelete = await fetch(`/library/delete/${props.token}/${props.bookId}`, {
+        if (props.user.token!==null) {
+          const dataDelete = await fetch(`/library/delete/${props.user.token}/${props.bookId}`, {
           method: 'DELETE'
           });
           const bodyDelete = await dataDelete.json();
@@ -53,7 +53,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
     console.log('state', state);
-    return { token: state.token, wishlist: state.wishlist }
+    return { user: state.user, wishlist: state.wishlist }
   }
 
   export default connect(mapStateToProps, mapDispatchToProps)(BookCardHover);

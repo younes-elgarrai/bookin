@@ -10,12 +10,12 @@ function Wishlist(props) {
     const [result, setResult] = useState([]);
 
     useEffect(() => {
-        if (props.token!==null) {
+        if (props.user.token!==null) {
             var CheckWishList = async () => {
                 const data = await fetch(`/wishlist`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `token=${props.token}`
+                body: `token=${props.user.token}`
                 });
                 const body = await data.json();
                 console.log('bodyCheck', body.wishlist)
@@ -80,7 +80,7 @@ let styles = {
 
 function mapStateToProps(state) {
     console.log('state', state);
-    return { token: state.token, wishlist: state.wishlist }
+    return { user: state.user, wishlist: state.wishlist }
   }
 
   export default connect(mapStateToProps, null)(Wishlist);
