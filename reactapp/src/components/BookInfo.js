@@ -13,7 +13,9 @@ return (
         <Row style={styles.textBloc}>
             <Col xs={24} md={16} xl={18}>
                 <h3 style={styles.h3}>Résumé du livre : {props.bookTitle}</h3>
-                <p style={{color:"#333", fontSize:"14px", fontWeight:"300", marginRight:"30px"}}>{striptags(props.bookDesc)}</p>
+                <p style={{color:"#333", fontSize:"14px", fontWeight:"300", marginRight:"30px"}}>
+                {striptags(props.bookDesc)}
+                </p>
             </Col>
 
             <Col xs={24} md={8} xl={6} >

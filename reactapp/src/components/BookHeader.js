@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 
 
 function BookHeader(props) {
-  console.log('BookScreenHeader > props.user.token', props.user.token);
+  console.log('BookScreenHeader > props.user.token', props.user);
 
   // Récupération du tableau d'auteurs et les séparer par une virgule
   var authors;
@@ -51,7 +51,7 @@ function BookHeader(props) {
   };
 
   const handleClickWLAdd = async () => {
-    if (props.user.token!==null) {
+    if (props.user!==null) {
       var addWishList = async () => {
         const data = await fetch(`/wishlist/add/${props.user.token}/${props.bookId}`, {
           method: 'POST',
@@ -59,6 +59,8 @@ function BookHeader(props) {
           body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
         });
         const body = await data.json();
+
+        console.log('body', body);
   
         if (body.result===true) {
           setBoutonWLStyle(!boutonWLStyle);
@@ -75,7 +77,7 @@ function BookHeader(props) {
   };
 
   const handleClickWLDelete = async () => {
-    if (props.user.token!==null) {
+    if (props.user!==null) {
       const dataDelete = await fetch(`/wishlist/delete/${props.user.token}/${props.bookId}`, {
       method: 'DELETE'
       });
@@ -91,7 +93,7 @@ function BookHeader(props) {
 
   // Interroger la route pour ajouter à la biblitohèque
   const handleClicLBAdd = async () => {
-    if (props.user.token!==null) {
+    if (props.user!==null) {
       var addLibrary= async () => {
         const data = await fetch(`/library/add/${props.user.token}/${props.bookId}`, {
           method: 'POST',
@@ -115,7 +117,7 @@ function BookHeader(props) {
 
   // Interroger la route pour supprimer de la biblitohèque
   const handleClickLBDelete = async () => {
-    if (props.user.token!==null) {
+    if (props.user!==null) {
       const dataDelete = await fetch(`/library/delete/${props.user.token}/${props.bookId}`, {
       method: 'DELETE'
       });
@@ -146,7 +148,7 @@ var boutonLibraryDefault = (
 
 
 useEffect(() => {
-  if (props.user.token!==null) {
+  if (props.user!==null) {
     var CheckWishList = async () => {
       const data = await fetch(`/wishlist`, {
         method: 'POST',
@@ -159,15 +161,35 @@ useEffect(() => {
         for (let i = 0; i < body.wishlist.length; i++) {
           if (body.wishlist[i].bookid===props.bookId) {
             setBoutonWLStyle(true);
-          } 
+          } else {
+            setBoutonWLStyle(false);
+          }
         } 
       }
+    };
+    CheckWishList();
 
+    var CheckWishList = async () => {
+      const data = await fetch(`/library`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `token=${props.user.token}`
+      });
+      const body = await data.json();
+
+      if (body.result===true) {
+        for (let i = 0; i < body.library.length; i++) {
+          if (body.library[i].bookid===props.bookId) {
+            setBoutonLBStyle(true);
+          } else {
+            setBoutonLBStyle(false);
+          }
+        } 
+      }
     };
     CheckWishList();
     
-  }
-
+  };
 
 },[])
 
@@ -179,7 +201,7 @@ return (
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} >
-          <img width={150} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
+          <img style={styles.images} width={150} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
         </Col>
 
         <Col xs={24} md={12} xl={12} >
@@ -305,7 +327,12 @@ let styles = {
     link: {
         textDecoration: 'none',
         color:'#ffffff',
-      }
+      },
+
+    images: {
+      borderRadius:5,
+      boxShadow: "1px 1px 1px #e1e1e1"
+    }
   }
 
   function mapDispatchToProps(dispatch) {
