@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 
 
 function BookHeader(props) {
-  console.log('BookScreenHeader > props.token', props.token);
+  console.log('BookScreenHeader > props.user.token', props.user.token);
 
   // Récupération du tableau d'auteurs et les séparer par une virgule
   var authors;
@@ -37,9 +37,9 @@ function BookHeader(props) {
 
   // Interroger la route pour ajouter wishList
   const handleClickButton = async () => {
-    if (props.token!==null) {
+    if (props.user.token!==null) {
       var addWishList = async () => {
-        const data = await fetch(`/wishlist/add/${props.token}/${props.bookId}`, {
+        const data = await fetch(`/wishlist/add/${props.user.token}/${props.bookId}`, {
           method: 'POST',
           headers: {'Content-Type': 'application/x-www-form-urlencoded' },
           body: `cover=${props.bookCover}&title=${props.bookTitle}`
@@ -63,8 +63,8 @@ function BookHeader(props) {
   };
 
   const handleClickButtonDelete = async () => {
-    if (props.token!==null) {
-      const dataDelete = await fetch(`/wishlist/delete/${props.token}/${props.bookId}`, {
+    if (props.user.token!==null) {
+      const dataDelete = await fetch(`/wishlist/delete/${props.user.token}/${props.bookId}`, {
       method: 'DELETE'
       });
       const bodyDelete = await dataDelete.json();
@@ -104,12 +104,12 @@ console.log('Props WishList', props.wishlist);
 console.log('props.bookid',props.bookId);
 
 useEffect(() => {
-  if (props.token!==null) {
+  if (props.user.token!==null) {
     var CheckWishList = async () => {
       const data = await fetch(`/wishlist`, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `token=${props.token}`
+        body: `token=${props.user.token}`
       });
       const body = await data.json();
       console.log('bodyCheck', body.wishlist)
@@ -281,7 +281,7 @@ let styles = {
 
   function mapStateToProps(state) {
     console.log('state', state);
-    return { token: state.token, wishlist: state.wishlist }
+    return { user:state.user, wishlist: state.wishlist }
   }
 
   export default connect(mapStateToProps, mapDispatchToProps)(BookHeader);

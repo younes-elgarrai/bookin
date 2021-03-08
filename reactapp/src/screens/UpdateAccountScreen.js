@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useCookies } from 'react-cookie';
 import '../App.css';
-import { Input, Button, Form } from 'antd';
+import { Input, Button, Form , Avatar} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -10,7 +10,7 @@ import AvatarUpload from '../components/AvatarUpload';
 import {connect} from 'react-redux';
 
 function UpdateAccountScreen(props) {
-  console.log('UpdateAccountScreen > props.token', props.token);
+  console.log('UpdateAccountScreen > props.user', props.user);
 
     const [cookies, setCookie] = useCookies(['survey']);
     console.log('cookies survey', cookies.survey);
@@ -22,7 +22,7 @@ function UpdateAccountScreen(props) {
 
     useEffect(() => {
       async function loadEmailFromDatabase() {
-        var rawResponse = await fetch(`/users/${props.token}`);
+        var rawResponse = await fetch(`/users/${props.user.token}`);
         var response = await rawResponse.json();
         setUserEmail(response.userEmail);
         setUserLibraryName(response.userLibraryName);
@@ -31,17 +31,16 @@ function UpdateAccountScreen(props) {
     }, [props.token]);
 
     const updateAccount = async () => {
-    // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire' + redirect ?
       const style = JSON.stringify(cookies.survey.Styles);
       const length = cookies.survey.Length;
       const period = cookies.survey.Period;
       const response = await fetch('/update', {
         method: 'POST',
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: `token=${props.token}&name=${userLibraryName}&password=${userPassword}&styles=${style}&length=${length}&period=${period}`
+        body: `token=${props.user.token}&name=${userLibraryName}&password=${userPassword}&styles=${style}&length=${length}&period=${period}`
       });
       const dataResponse = await response.json();
-      console.log('dataResponse',dataResponse);  // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
+      console.log('dataResponse',dataResponse); 
       if (dataResponse.userToken) {
         props.onCreateAccountClick(dataResponse.userToken);
       }
@@ -59,8 +58,13 @@ function UpdateAccountScreen(props) {
 
             <div className="row justify-content-center">
             <div className="order-2 order-md-1 col-11 offset-1 col-md-4 offset-md-2" >
+              {props.user ?
+              <Avatar src={props.user.avatar} size={100} style={{marginBottom:'20px'}} />
+              :
+              <div>
               <AvatarUpload />
               <p style={styles.smallAvatar}>Modifiez votre avatar (png / jpg)</p>
+              </div>}
             <Form layout="vertical">
                 <Form.Item required tooltip="Ce champ est obligatoire" label="Modifiez le nom de votre bibliothèque :">
                   <Input  prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setUserLibraryName(e.target.value)} value={userLibraryName} style={{width:'90%'}}/>
@@ -142,6 +146,6 @@ const styles = {
 
 
   function mapStateToProps(state) {
-    return { token: state.token }
+    return { user: state.user }
   }
   export default connect(mapStateToProps, null)(UpdateAccountScreen);

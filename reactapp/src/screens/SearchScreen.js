@@ -394,6 +394,6 @@ let styles = {
 
   }
   function mapStateToProps(state) {
-    return { token: state.token }
+    return { user: state.user }
   }
   export default connect(mapStateToProps, null)(SearchScreen);

@@ -11,7 +11,7 @@ import AvatarUpload from '../components/AvatarUpload';
 import {connect} from 'react-redux';
 
 function CreateAccountScreen(props) {
-  console.log('CreateAccountScreen > props.token', props.token);
+  console.log('CreateAccountScreen > props.user', props.user);
 
     const [cookies, setCookie] = useCookies(['survey']);
     console.log('cookies survey', cookies.survey);
@@ -21,7 +21,6 @@ function CreateAccountScreen(props) {
     const [userPassword, setUserPassword]= useState('');
     const [ userMessage, setUserMessage ] = useState('');
     const [ isSignedUp, setIsSignedUp ] = useState(false);
-    const [ alreadyHasAccount, setAlreadyHasAccount ] = useState(false);
 
     const checkEmailFormat = (email) => {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -29,7 +28,7 @@ function CreateAccountScreen(props) {
     }
 
     const createUserAccount = async () => {
-    // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire' + redirect ?
+    // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire' ?
       if (!checkEmailFormat(userEmail)) {
         setUserMessage('veuillez saisir un email valide.');
     } else {
@@ -39,31 +38,24 @@ function CreateAccountScreen(props) {
       const response = await fetch('/sign-up', {
         method: 'POST',
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: `name=${userLibraryName}&email=${userEmail}&password=${userPassword}&styles=${style}&length=${length}&period=${period}`
+        body: `avatar=${props.avatar}&name=${userLibraryName}&email=${userEmail}&password=${userPassword}&styles=${style}&length=${length}&period=${period}`
       });
       const dataResponse = await response.json();
-      console.log('dataResponse',dataResponse);  // {result: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
+      console.log('dataResponse',dataResponse); 
       if (dataResponse.userToken) {
-        props.onCreateAccountClick(dataResponse.userToken);
+        props.onCreateAccountClick({token: dataResponse.userToken, avatar: dataResponse.userAvatar});
         setIsSignedUp(true);
       }
       if (dataResponse.result === false) {
         setUserMessage(dataResponse.message);
-        if (dataResponse.message === "Il existe déjà un compte associé à cet email.") {
-          setAlreadyHasAccount(true);
-        }
       }
       }
     }
 
+    
     if (isSignedUp) {
       return(
         <Redirect to='/search'/>
-      )
-    } else if (alreadyHasAccount) {
-      // fonctionne mais pas le temps de voir le message contextuel donc un peu abrupt...
-      return(
-        <Redirect to='/connection'/>
       )
     } else {
     return (
@@ -92,7 +84,7 @@ function CreateAccountScreen(props) {
                 </Form.Item>
                 <Form.Item>
                     <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer compte</Button>
-                    <span style={styles.userMsg}>{userMessage}</span>
+                    <p style={styles.userMsg}>{userMessage}</p>
                 </Form.Item>
             </Form>
             <p style={styles.smallLabel}>En vous connectant et en commandant sur notre site, vous acceptez nos Conditions Générales de Vente et notre politique de protection de données personnelles.</p>
@@ -177,12 +169,12 @@ const styles = {
 
   function mapDispatchToProps(dispatch) {
     return {
-      onCreateAccountClick: function(token) {
-          dispatch( {type: 'saveToken', token} )
+      onCreateAccountClick: function(user) {
+          dispatch( {type: 'saveUser', user} )
       } 
     }
   }
   function mapStateToProps(state) {
-    return { token: state.token }
+    return { user: state.user, avatar: state.avatar}
   }
   export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountScreen);

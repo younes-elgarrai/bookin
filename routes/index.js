@@ -6,6 +6,14 @@ const BooksModel = require('../models/books');
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
+const uniqid = require('uniqid');
+var fs = require('fs');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+ cloud_name: 'deyw4czpf',
+ api_key: '652491259593498',
+ api_secret: 'tz5mXMcSbUPLjiBo4oikcnuXnzw' });
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -215,17 +223,34 @@ router.post('/log-in', async function(req, res, next) {
   const user = await UsersModel.findOne({email: req.body.email});
   const password = req.body.password;
   const userToken = user.token;
+  const userAvatar = user.avatar;
   if (bcrypt.compareSync(password, user.password)) {
-    res.json({ login: true, userToken });
+    res.json({ login: true, userToken, userAvatar });
   } else { 
     res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }
 }});
+
+
+// POST : upload user avatar
+router.post('/upload', async function (req, res, next) {
+  console.log("req.files", req.files);
+  const imagePath = './temp/'+uniqid()+'.jpg';
+  const resultCopy = await req.files.avatar.mv(imagePath);
+  console.log('result copy', resultCopy);
+  if(!resultCopy) {
+    const resultCloudinary = await cloudinary.uploader.upload(imagePath);
+    console.log('result cloudinary', resultCloudinary);
+    fs.unlinkSync(imagePath);
+    res.json({result: true, message: 'File uploaded!', url: resultCloudinary.url } );      
+  } else {
+    res.json({result: false, message: resultCopy} ); } 
+});
 
 // POST : Signup
 router.post('/sign-up', async function(req, res, next) {
   const checkExistingUserFromEmail = await UsersModel.findOne({email: req.body.email});
   if (checkExistingUserFromEmail) {
-    res.json({result: false, message: "Il existe déjà un compte associé à cet email."})
+    res.json({result: false, message: "Il existe déjà un compte associé à cet email. Vous pouvez y accéder en vous connectant."})
   }
   if (!req.body.name || !req.body.email || !req.body.password) {
     res.json({result: false, message: "Veuillez remplir tous les champs pour créer un compte."})
@@ -233,7 +258,8 @@ router.post('/sign-up', async function(req, res, next) {
     const userSave = await saveNewUser(req);
     console.log('usersave', userSave);
     const userToken = userSave.token;
-    res.json({result:true, userToken});
+    const userAvatar = userSave.avatar;
+    res.json({result:true, userToken, userAvatar});
   }
 });
 async function saveNewUser(req) {
@@ -244,7 +270,7 @@ async function saveNewUser(req) {
     favoriteBookLength: [req.body.length], 
     favoriteBookPeriod: [req.body.period], 
     userLibraryName: req.body.name,
-    avatar: 'req.body.avatar' ,
+    avatar: req.body.avatar,
     email: req.body.email,
     password: hash,
     token: uid2(32), 
@@ -261,7 +287,7 @@ router.get('/users/:token', async (req, res) => {
   const userLibraryName = user.userLibraryName;
   res.json({result:true, userEmail, userLibraryName })
  })
-// Step 2 : POST to update profile
+// Step 2 : POST to update profile // In progress....
 router.post('/update', async (req, res) => {
   console.log('update req',req);
   const user = await UsersModel.find({token: req.body.token});
