@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { Card, Menu, Dropdown, Input, Row, Col, Button, Pagination, Spin} from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, Menu, Dropdown, Input, Row, Col, Button, Pagination, Spin, AutoComplete} from 'antd';
 import { DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import '../App.css';
@@ -8,15 +8,17 @@ import Unavailable from '../assets/cover_nondispo.jpg';
 import BookCard from '../components/BookCard';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { connect } from 'react-redux';
 
-// Utiliser IdGoogle ?
+
 // insérer module dernières nouveautés lorsque pas de recherche encore faite
 
 
 const { Search } = Input;
 const { Meta } = Card;
 
-export default function SearchScreen() {
+function SearchScreen(props) {
+
     const history = useHistory();
     const [result, setResult] = useState([]);
     const [query, setQuery] = useState("");
@@ -31,6 +33,8 @@ export default function SearchScreen() {
     const [totalItems, setTotalItems] = useState(0);
     const [cookies, setCookie] = useCookies(['searchQuery']);
     const [value, setValue] = useState("");
+    const [suggestData, setSuggestData] = useState([]);
+    const [open, setOpen] = useState(false);
 
 
     useEffect(() => {
@@ -38,10 +42,12 @@ export default function SearchScreen() {
             var bookSearchApi5 = async() => {
                 setIsFetching(true);
             try {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${cookies.searchQuery}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${cookies.searchQuery}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
                 console.log(body);
+                console.log("data",data);
+                
                 if (body.totalItems !== 0) {
                     setResult(body.items);
                     setTotalItems(body.totalItems);
@@ -49,6 +55,7 @@ export default function SearchScreen() {
                     setCount(count+1);
                     setQuery(cookies.searchQuery);
                     setValue(cookies.searchQuery)
+                    console.log(cookies.searchQuery);
                     };
                     setTotalItems(body.totalItems);
                     console.log(body);
@@ -88,7 +95,7 @@ export default function SearchScreen() {
             setIsFetching(true);
             setError(false);
         try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(volumeInfo/title,volumeInfo/industryIdentifiers,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
             const body = await data.json();
             setIsFetching(false);
             setQuery(q);
@@ -131,7 +138,7 @@ export default function SearchScreen() {
             var bookSearchApi2 = async() => {
                 setIsFetching(true);
             try {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(volumeInfo/title,volumeInfo/industryIdentifiers,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
                 if (body.totalItems !== 0) {
@@ -162,7 +169,7 @@ export default function SearchScreen() {
             var bookSearchApi3 = async() => {
                 setIsFetching(true);
             try {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(volumeInfo/title,volumeInfo/industryIdentifiers,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
                 if (body.totalItems !== 0) {
@@ -192,13 +199,14 @@ export default function SearchScreen() {
         }
     };
 
+
     var handlePageClick = (pageNumber) => {
         const currentPage = pageNumber - 1;
         offset = currentPage * elementsPerPage;
         var bookSearchApi4 = async() => {
             setIsFetching(true);
         try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(volumeInfo/title,volumeInfo/industryIdentifiers,volumeInfo/imageLinks),totalItems&startIndex=${offset}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&startIndex=${offset}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)     
             const body = await data.json();
             setIsFetching(false);
             if (body.totalItems !== 0) {
@@ -217,6 +225,7 @@ export default function SearchScreen() {
                 } else {
                 setResult([])
                 };
+            console.log(data);
             console.log(body);
         }
         catch(error) {
@@ -226,6 +235,28 @@ export default function SearchScreen() {
         bookSearchApi4();
     }
 
+    var handleInputChange = (value) => {
+        setValue(value);
+        if (value && value.length > 2) {
+            if (value.length % 2 === 0) {
+                setOpen(true)
+                var searchSuggest = async() => {
+                    try {
+                        const data = await fetch(`https://corsanywhere.herokuapp.com/https://google.com/complete/search?output=toolbar&&ds=bo&client=chrome&hl=fr&gl=fr&q=${value}`)
+                        const body = await data.json();
+                        var res = body[1].map(item => ({'value':item, 'label':item}));
+                        setSuggestData(res);
+
+                        console.log("suggest",body[1])
+                    } catch(error) {
+                        setError(true);
+                        };
+                };
+                searchSuggest();
+            }
+        };
+                    
+    }
 
 return (
 <div className="font">
@@ -235,7 +266,9 @@ return (
         <Row style={styles.bookBloc} >
             <Col xs={24} md={12} >
                 <h1 style={styles.h1}>Rechercher votre prochain livre</h1>
-                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onChange={(e) => setValue(e.target.value)} onSearch={(q) => {handleSearch(q)}} value={value} />
+                <AutoComplete  options={suggestData} style={{ width: "100%" }}open={open}>
+                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onChange={(e) => handleInputChange(e.target.value)} onSearch={(q) => {handleSearch(q); setOpen(false)}} value={value}  />
+                </AutoComplete>
             </Col>
         </Row>
 
@@ -363,3 +396,7 @@ let styles = {
     },
 
   }
+  function mapStateToProps(state) {
+    return { token: state.token }
+  }
+  export default connect(mapStateToProps, null)(SearchScreen);

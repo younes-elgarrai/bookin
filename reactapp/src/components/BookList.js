@@ -2,6 +2,8 @@ import React from 'react';
 import {Row, Col} from 'antd';
 import '../App.css'
 import BookCard from '../components/BookCard'
+import Unavailable from '../assets/cover_nondispo.jpg';
+import { PicCenterOutlined } from '@ant-design/icons';
 
 
 function BookList(props) {
@@ -15,10 +17,14 @@ return (
         </Col>
     </Row>
     <Row>
-        {props.data.map((book, index)=>{
-            return <BookCard  bookId={book.id} bookTitle={book.volumeInfo.title} bookCover={book.volumeInfo.imageLinks.thumbnail}/>;
-        })}
+        <div style={{display:'flex', flexWrap:"wrap", justifyContent: "center", marginTop:"10px"}}>
+
+            {props.data.slice(0,6).map((book, index)=>{
+                return <BookCard  bookId={book.id} bookTitle={book.volumeInfo.title} bookCover={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail}/>;
+            })}
+        </div>
     </Row>
+
 
 </div>
 );
@@ -26,6 +32,7 @@ return (
 
 let styles = {
     libraryBloc: {
+        justifyContent: 'center',
         width:'80%',
         backgroundColor: 'white',
         paddingTop:'30px',

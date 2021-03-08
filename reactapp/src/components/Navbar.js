@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
-import logo from '../assets/bookin.png';
+import logo from '../assets/bookin-transparent.png';
 import './Navbar.css';
 import {connect} from 'react-redux';
 
@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
   NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
   // Ant Design
-import { Image, Avatar } from 'antd';
+import { Avatar } from 'antd';
 import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
 
 function NavigationBar(props) {
@@ -16,11 +16,6 @@ function NavigationBar(props) {
   // Large menu
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  // Small menu
-  const [collapsed, setCollapsed] = useState(true);
-  const toggleNavbar = () => setCollapsed(!collapsed);
-  // Small menu dropdown test
-
 
   return(
     <div>
@@ -33,8 +28,8 @@ function NavigationBar(props) {
           <Nav navbar>
             <NavItem><Link to="/search" className="menu-nav-item"><SearchOutlined className="menu-nav-icon" /> Rechercher</Link></NavItem> 
             <NavItem><Link to="/main" className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
-            <NavItem><Link to="/library" className="menu-nav-item"><BookOutlined className="menu-nav-icon"/> Bibliothèque</Link></NavItem> 
-            <NavItem><Link to="/library" className="menu-nav-item"><HeartOutlined className="menu-nav-icon"/> A lire</Link></NavItem> 
+            <NavItem><Link to={props.token ? "/library" : "/create-account"} className="menu-nav-item"><BookOutlined className="menu-nav-icon"/> Bibliothèque</Link></NavItem> 
+            <NavItem><Link to={props.token ? "/library" : "/create-account"} className="menu-nav-item"><HeartOutlined className="menu-nav-icon"/> A lire</Link></NavItem> 
             {props.token ? 
               <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav>
@@ -58,14 +53,14 @@ function NavigationBar(props) {
               <Nav navbar className="menu-nav-header">
               <UncontrolledDropdown setActiveFromChild>
               <Navbar light className="menu-nav-header-xs">
-                  <DropdownToggle tag="a" className="menu-header-xs-item"><MenuOutlined/><Image src={logo} alt="logo Bookin" width={90}/></DropdownToggle> 
+                  <DropdownToggle tag="a" className="menu-header-xs-item"><MenuOutlined/><img src={logo} alt="logo Bookin" width={90}/></DropdownToggle> 
                   <NavbarBrand href="/search" className="menu-header-xs-item"><SearchOutlined /></NavbarBrand>
                   <NavbarBrand href="/connection" className="menu-header-xs-item"><UserOutlined /></NavbarBrand>
               </Navbar>
           <DropdownMenu>
-            <DropdownItem><Link to="/result" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></DropdownItem>
-            <DropdownItem><Link to="/library" className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
-            <DropdownItem><Link to="/library" className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></DropdownItem>
+            <DropdownItem><Link to="/main" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></DropdownItem>
+            <DropdownItem><Link to={props.token ? "/library" : "/create-account"}  className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
+            <DropdownItem><Link to={props.token ? "/library" : "/create-account"}  className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></DropdownItem>
             {props.token ? 
             <div>
              <DropdownItem href="/update-account" className="menu-nav-item-xs"><SettingOutlined className="menu-nav-icon-xs" /> Modifier compte</DropdownItem>
@@ -93,4 +88,3 @@ function mapStateToProps(state) {
   return { token: state.token }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);
-

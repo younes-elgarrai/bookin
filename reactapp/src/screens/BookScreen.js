@@ -13,6 +13,7 @@ import BookHeader from '../components/BookHeader';
 import BookInfo from '../components/BookInfo'
 import Review from '../components/Review'
 import BookList from '../components/BookList'
+import Footer from '../components/Footer';
 
 const { Content } = Layout;
 
@@ -128,42 +129,53 @@ var bookArray = [{
 function BookScreen() {
     const [dataBook, setDataBook] = useState ([]);
     const [isbn, setIsbn] = useState();
+    const [associated, setAssociated]= useState(bookArray);
     let {bookid} = useParams();
-
-    console.log('Typebookid', typeof bookid);
-    console.log('bookid', bookid)
     
     useEffect(() => {
         if (bookid)
             {
             const findBook = async() => {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${bookid}&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}`)
                 const datajson = await data.json();
+                const assoc = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}/associated`);
+                const assocjson = await assoc.json()
+                setAssociated(( await assocjson.items || bookArray));
                     if (datajson.totalItems!==0){
-                        setDataBook(datajson.items[0].volumeInfo);
-                        setIsbn(datajson.items[0].volumeInfo.industryIdentifiers[0].identifier);
+                        setDataBook(datajson.volumeInfo);
+                        if (datajson.volumeInfo.industryIdentifiers) {
+                            setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
+                        } else {
+                            setIsbn('nc')
+                        }
+
                     } else {
                         const findBook2 = async() => {
                             alert('Livre inconnu, nous vous recommandons cette lecture');
-                            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=9782203214095&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`);
+                            const data = await fetch(`https://books.googleapis.com/books/v1/volumes/GlrPDwAAQBAJ`);
                             const datajson = await data.json();
-                            setDataBook(datajson.items[0].volumeInfo);
-                            setIsbn(datajson.items[0].volumeInfo.industryIdentifiers[0].identifier);
+                            setDataBook(datajson.volumeInfo);
+                            setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
                           }
                           findBook2();
+                          window.scrollTo(0, 0)
                     }
               }
               findBook()    
+              window.scrollTo(0, 0)
         } else {
             const findBook2 = async() => {
                 alert('Livre inconnu, nous vous recommandons cette lecture');
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=9782203214095&langRestrict=fr&orderBy=newest&apiKey=AIzaSyBDzd4vX9LAeML4Hsway4y63xn2ReLuPOc`);
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes/GlrPDwAAQBAJ`);
                 const datajson = await data.json();
-                setDataBook(datajson.items[0].volumeInfo);
-                setIsbn(datajson.items[0].volumeInfo.industryIdentifiers[0].identifier);
+                setDataBook(datajson.volumeInfo);
+                setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
               }
               findBook2();
+              window.scrollTo(0, 0)
         }
+
+
 
       },[bookid])
 
@@ -183,7 +195,7 @@ function BookScreen() {
         <Nav/>
         <Content style={styles.container}  >
                 <BookHeader bookTitle={dataBook.title} bookAuthor={dataBook.authors} 
-                bookCover={coverImg} bookCat={dataBook.categories} bookIsbn={isbn}/>
+                bookCover={coverImg} bookCat={dataBook.categories} bookIsbn={isbn} bookId={bookid}/>
 
                 <BookInfo bookTitle={dataBook.title} bookDesc={dataBook.description} publishedDate={dataBook.publishedDate}
                 bookPublisher={dataBook.publisher} bookPageCount={dataBook.pageCount} bookIsbn={isbn}/>
@@ -196,16 +208,18 @@ function BookScreen() {
                 </Col>
                 </Row>
                 <Row>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={8} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                {/* xs={24} sm={12} md={8} lg={6} xl={4} */}
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
                 </Row>
             </div>
-            <BookList bookListTitle="Nos recommandations" data={bookArray}/>
+            <BookList bookListTitle="Nos recommandations" data={associated}/>
         
             <Review/>
     </Content>
+    <Footer/>
     </div>
 );
 }
@@ -217,7 +231,7 @@ let styles = {
         alignItems:'center',
         width:'100vw',
         backgroundColor:'#f3f5f7',
-        marginTop:'10px',
+        paddingTop:'10px',
     },
 
     libraryBloc: {

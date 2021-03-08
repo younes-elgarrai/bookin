@@ -23,6 +23,7 @@ import MainScreen from './screens/MainScreen'
 import surveyReducer from './reducers/survey.reducer';
 import tokenReducer from './reducers/token.reducer';
 import categoryReducer from './reducers/category.reducer';
+import wishListReducer from './reducers/wishlist.reducer';
 
 import { CookiesProvider } from 'react-cookie';
 
@@ -30,7 +31,7 @@ import {Provider} from 'react-redux';
 
 import {createStore, combineReducers}  from 'redux';
 
-const store = createStore(combineReducers({survey: surveyReducer, token: tokenReducer, category: categoryReducer}));
+const store = createStore(combineReducers({survey: surveyReducer, token: tokenReducer, category: categoryReducer, wishlist:wishListReducer }));
 
 
 

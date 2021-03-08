@@ -14,85 +14,117 @@ router.get('/', function (req, res, next) {
   });
 });
 
-/*
-  Add a book in my library
-  Body : token et isbn13
-  Response : result
-*/
-router.post('/library/add/:token/:isbn13/', (req, res) => {
-  let isbn13 = req.params.isbn13;
+/* Ajout d'un livre dans la bibliothèque d'un user dans la BDD  */
+router.post('/library/add/:token/:bookid', async (req, res) => {
   let token = req.params.token;
+  let bookid = req.params.bookid;
+  const regex = new RegExp("[0-9A-Za-z_\-]{12}")
 
-  res.json({
-    result
-  })
+  if (!token || !regex.test(bookid) ) {
+    res.json({ result: false, message: "Aie, nous n'avons pas pu ajouter le livre à votre bibliothèque" });
+  
+  } else {
+
+  try {
+
+    var bookToCheck = await BooksModel.findOne({bookid: bookid});
+    console.log("bookToCheck",bookToCheck);
+
+    if (bookToCheck === null) { 
+      const newBookInLibrary =  new BooksModel({
+        title: req.body.title, 
+        cover: req.body.cover, 
+        bookid: bookid, 
+      });
+      savedBookInLibrary = await newBookInLibrary.save();
+      console.log("newBookInLibrary",newBookInLibrary);
+      
+      var userCheck = await UsersModel.findOne({token: token});
+      var userCheckTab = [];
+      for (let i = 0; i < userCheck.library.length; i++) {
+        console.log("userCheck.library[i]",userCheck.library[i])
+        if (JSON.stringify(userCheck.library[i]) === JSON.stringify(savedBookInLibrary._id)) {
+          userCheckTab.push(userCheck)
+        }
+      }
+      console.log("userCheck",userCheck);
+      console.log("userCheckTab",userCheckTab);
+
+      if (userCheckTab.length === 0) { 
+        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {library: savedBookInLibrary._id}});
+        console.log("user",user);
+      } else {res.json({ result: false, message: "Livre déjà dans votre bibliothèque" });}
+
+    } else {
+      var userCheck2 = await UsersModel.findOne({token: token});
+      console.log("userCheck2",userCheck2);
+      var userCheckTab2 = [];
+      for (let i = 0; i < userCheck2.library.length; i++) {
+        if (JSON.stringify(userCheck2.library[i]) === JSON.stringify(bookToCheck._id)) {
+          userCheckTab2.push(userCheck2)
+        }
+      }
+      console.log("userCheckTab2",userCheckTab2);
+
+      if (userCheckTab2.length === 0) {
+        var user2 = await UsersModel.findOneAndUpdate({token: token},{ $push: {library: bookToCheck._id}});
+        console.log("user2",user2)
+      } else {res.json({ result: false, message: "Livre déjà dans votre bibliothèque" });}
+
+    }
+    var result = true;
+  }
+  catch (error) {
+    var result = false
+  }
+  res.json({result})
+ }});
+
+
+/* Recherche de library à la BDD  */
+router.post('/library', async (req, res) => {
+  let token = req.body.token;
+  if (!token) {
+    res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
+  } else {
+  const user = await UsersModel.findOne({token: req.body.token}).populate('library').exec()
+  var userLibrary = user.library
+  res.json({result: true, library: userLibrary})
+}
+});
+
+/* Delete a book from library */
+router.delete('/library/delete/:token/:bookid', async (req, res) => {
+  let token = req.params.token;
+  let bookid = req.params.bookid;
+  const regex = new RegExp("[0-9A-Za-z_\-]{12}");
+
+  if (!token || !regex.test(bookid) ) {
+    res.json({ result: false, message: "Aie, nous n'avons pas pu supprimer le livre de votre bibliothèque" });
+  } else {
+    var bookToDelete = await BooksModel.findOne({bookid: bookid});
+    var user = await UsersModel.findOneAndUpdate({token: token},{ $pull: {library: bookToDelete._id}});
+    res.json({ result: true});
+  }
 });
 
 
-/*
-  Delete a book from library
-  Body : token et isbn13
-  Response : result (true),
-*/
-router.delete('/library/delete/:token/:isbn13/', async (req, res) => {
-  let isbn13 = req.params.isbn13;
-  let token = req.params.token;
 
-  var result = await bookModel.deleteOne({
-    idBook: req.params.idBook
-  })
-
-  res.json({
-    result
-  })
-});
-
-
-router.post('/recos', async (req, res) => {
+router.post('/recos', async (req,res)=>{
   //Recupérer les résultats du questionnaire stockés dans un cookie, et renvoyer des suggestions.
   //Entrées : cookie questionnaire ou token
   //recherche par category (subjects) puis tri sur longueur et sur nouveautés
   //Sorties : objet suggestions , erreur ==> refaites le questionnarire
-  var catQueryMaker = (cat, styles) => {
-
-    var r = {};
-    styles[cat].forEach((subcat) => {
-      r[subcat] = subjects[cat][subcat];
-    });
-    return r;
-
-  };
-
-  var queryMaker = (styles) => {
-
-    var cats = Object.keys(styles).filter(e => e !== 'void');
-
-    var queries = cats.map(cat => {
-      return catQueryMaker(cat, styles);
-    })
-
-    var r = {}
-    for (var i = 0; i < cats.length; i++) {
-      r[cats[i]] = queries[i];
-    }
-
-    return r;
-  };
 
   var handleSearch = async (q) => {
-
-    try {
-      const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=5&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
-      const body = await response.data;
-      console.log(body);
-      const books = await body.items.map((elem, index) => {
-        return elem
-      });
-      return books;
-    } catch (error) {
-      console.log(error)
-    }
-  };
+      try {
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=6&langRestrict=en&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+            const body = await response.data;
+            const books = await body.items.map((elem, index)=>{return elem});               
+            return books ;
+          }catch(error) {
+              console.log(error)
+        }};
 
 
   var handleSubcatQueriesSearch = async (queries) => {
@@ -169,8 +201,6 @@ router.post('/recos', async (req, res) => {
 
   }
 
-
-
 })
 
 
@@ -207,24 +237,14 @@ router.post('/log-in', async function (req, res, next) {
       message: "Veuillez remplir tous les champs pour accéder à votre compte."
     })
   } else {
-    const user = await UsersModel.findOne({
-      email: req.body.email
-    });
-    const password = req.body.password;
-    const userToken = user.token;
-    if (bcrypt.compareSync(password, user.password)) {
-      res.json({
-        login: true,
-        userToken
-      });
-    } else {
-      res.json({
-        login: false,
-        message: "Ce compte n'existe pas, veuillez réessayer ou créer un compte."
-      });
-    }
-  }
-});
+  const user = await UsersModel.findOne({email: req.body.email});
+  const password = req.body.password;
+  const userToken = user.token;
+  if (bcrypt.compareSync(password, user.password)) {
+    res.json({ login: true, userToken });
+  } else { 
+    res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }
+}});
 
 // POST : Signup
 router.post('/sign-up', async function (req, res, next) {
@@ -269,16 +289,24 @@ async function saveNewUser(req) {
   return userSave;
 }
 
-// Update profile
+// GET & POST : Update profile
+// Step 1 : GET to find user email
+router.get('/users/:token', async (req, res) => {
+  const user = await UsersModel.findOne({token: req.params.token});
+  const userEmail = user.email;
+  const userLibraryName = user.userLibraryName;
+  res.json({result:true, userEmail, userLibraryName })
+ })
+// Step 2 : POST to update profile
 router.post('/update', async (req, res) => {
-  const user = await UsersModel.find({
-    token: req.body.token
-  });
+  console.log('update req',req);
+  const user = await UsersModel.find({token: req.body.token});
   // mettre à jour les champs souhaités : tout sauf l'email, le token, library, wishlist. 
   // par ex : 
-  if (req.body.userLibraryName) {
-    user.userLibraryName = req.body.userLibraryName;
+  if (req.body.name) {
+    user.userLibraryName = req.body.name;
   }
+ 
   const userSave = await user.save();
   res.json({
     result: true,
@@ -311,43 +339,33 @@ router.get('/reviews', async (req, res) => {
   });
 });
 
-/*
-  Recherche sur Google Books API de livres
-  Query : q ("tintin" || "saint-exupery" || "des fleurs pour algernon" || "978-2-7654-0912-0")
-  Response : result (true), books [{title ("Tintin au Congo"), cover ("http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"), resultCount(56), publishedDate(1970), ISBN13(9782203192157)}, ...]
+/* Recherche sur Google Books API de livres
 API_key: "AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE"
-  */
+*/
 
-router.get('/search', (req, res) => {
-  let q = req.query.q;
+//  router.get('/search', (req, res) => {
+//   let q = req.query.q;
 
-  if (!q) {
-    res.json({
-      result: false
-    });
-  } else {
-    // Appel à la google books API
-    // limiter le nb de résultats
-    res.json({
-      result: true,
-      books: [{
-        title: 'Tintin au Congo',
-        cover: 'http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-        publishedDate: "1970",
-        ISBN13: "9782203192157",
-      }, ]
-    });
-  }
-});
+//   if (!q) {
+//     res.json({ result: false });
+//   } else {
+//     // Appel à la google books API
+//     // limiter le nb de résultats
+//     res.json({ result: true, books: [{
+//       title: 'Tintin au Congo',
+//       cover: 'http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
+//       publishedDate: "1970",
+//       ISBN13: "9782203192157",
+//     },] });
+//   }
+// });
 
 /* Recherche de wishlist à la BDD  */
 
 router.post('/wishlist', async (req, res) => {
   let token = req.body.token;
   if (!token) {
-    res.json({
-      result: false
-    });
+    res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
   } else {
     const user = await UsersModel.findOne({
       token: req.body.token
@@ -368,10 +386,8 @@ router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
   let bookid = req.params.bookid;
   const regex = new RegExp("[0-9A-Za-z_\-]{12}")
 
-  if (!token || !regex.test(bookid)) {
-    res.json({
-      result: false
-    });
+  if (!token || !regex.test(bookid) ) {
+    res.json({ result: false, message: "Aie, nous n'avons pas pu supprimer le livre de votre wishlist" });
   } else {
     var bookToDelete = await BooksModel.findOne({
       bookid: bookid
@@ -395,11 +411,9 @@ router.post('/wishlist/add/:token/:bookid', async (req, res) => {
   let bookid = req.params.bookid;
   const regex = new RegExp("[0-9A-Za-z_\-]{12}")
 
-  if (!token || !regex.test(bookid)) {
-    res.json({
-      result: false
-    });
-
+  if (!token || !regex.test(bookid) ) {
+    res.json({ result: false, message: "Aie, nous n'avons pas pu ajouter le livre à votre wishlist" });
+  
   } else {
 
     try {
@@ -427,48 +441,34 @@ router.post('/wishlist/add/:token/:bookid', async (req, res) => {
           if (JSON.stringify(userCheck.wishlist[i]) === JSON.stringify(savedBookInWishlist._id)) {
             userCheckTab.push(userCheck)
           }
-        }
-        console.log("userCheck", userCheck);
-        console.log("userCheckTab", userCheckTab);
+        
+      }
+      console.log("userCheck",userCheck);
+      console.log("userCheckTab",userCheckTab);
 
-        if (userCheckTab.length === 0) {
-          var user = await UsersModel.findOneAndUpdate({
-            token: token
-          }, {
-            $push: {
-              wishlist: savedBookInWishlist._id
-            }
-          });
-          console.log("user", user);
-        };
+      if (userCheckTab.length === 0) { 
+        var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: savedBookInWishlist._id}});
+        console.log("user",user);
+      } else {res.json({ result: false, message: "Livre déjà dans votre wishlist" });}
 
-      } else {
-        var userCheck2 = await UsersModel.findOne({
-          token: token
-        });
-        console.log("userCheck2", userCheck2);
-        var userCheckTab2 = [];
-        for (let i = 0; i < userCheck2.wishlist.length; i++) {
-          if (JSON.stringify(userCheck2.wishlist[i]) === JSON.stringify(bookToCheck._id)) {
-            userCheckTab2.push(userCheck2)
-          }
+    } else {
+      var userCheck2 = await UsersModel.findOne({token: token});
+      console.log("userCheck2",userCheck2);
+      var userCheckTab2 = [];
+      for (let i = 0; i < userCheck2.wishlist.length; i++) {
+        if (JSON.stringify(userCheck2.wishlist[i]) === JSON.stringify(bookToCheck._id)) {
+          userCheckTab2.push(userCheck2)
         }
         console.log("userCheckTab2", userCheckTab2);
-
-        if (userCheckTab2.length === 0) {
-          var user2 = await UsersModel.findOneAndUpdate({
-            token: token
-          }, {
-            $push: {
-              wishlist: bookToCheck._id
-            }
-          });
-          console.log("user2", user2)
-        };
-
       }
 
+      if (userCheckTab2.length === 0) {
+        var user2 = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: bookToCheck._id}});
+        console.log("user2",user2)
+      } else {res.json({ result: false, message: "Livre déjà dans votre wishlist" });}
+
       var result = true;
+    }
     } catch (error) {
       var result = false
     }
