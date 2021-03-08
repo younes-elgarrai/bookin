@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Menu, Dropdown, Input, Row, Col, Button, Pagination, Spin, AutoComplete} from 'antd';
+import { Menu, Dropdown, Input, Row, Col, Button, Pagination, Spin, AutoComplete} from 'antd';
 import { DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 
 
 const { Search } = Input;
-const { Meta } = Card;
+// const { Meta } = Card;
 
 function SearchScreen(props) {
 
@@ -96,7 +96,7 @@ function SearchScreen(props) {
             setIsFetching(true);
             setError(false);
         try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
             const body = await data.json();
             setIsFetching(false);
             setQuery(q);
@@ -139,7 +139,7 @@ function SearchScreen(props) {
             var bookSearchApi2 = async() => {
                 setIsFetching(true);
             try {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&orderBy=newest&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=newest&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
                 if (body.totalItems !== 0) {
@@ -170,7 +170,7 @@ function SearchScreen(props) {
             var bookSearchApi3 = async() => {
                 setIsFetching(true);
             try {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&orderBy=relevance&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
                 if (body.totalItems !== 0) {
@@ -373,8 +373,7 @@ let styles = {
         alignItems:'center',
         justifyContent:'center',
         backgroundColor: '#23396C',
-        borderTopRightRadius:"10px",
-        borderTopLeftRadius:"10px",
+        borderRadius:"10px",
         marginTop:"10px",
         padding:'20px',
         backgroundImage: `url(${Background})`,

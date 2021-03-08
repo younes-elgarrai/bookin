@@ -11,7 +11,6 @@ import {connect} from 'react-redux';
 
 
 function BookHeader(props) {
-  console.log('BookScreenHeader > props.user.token', props.user.token);
 
   // Récupération du tableau d'auteurs et les séparer par une virgule
   var authors;
@@ -51,7 +50,7 @@ function BookHeader(props) {
   };
 
   const handleClickWLAdd = async () => {
-    if (props.user.token!==null) {
+    if (props.user !==null) {
       var addWishList = async () => {
         const data = await fetch(`/wishlist/add/${props.user.token}/${props.bookId}`, {
           method: 'POST',
@@ -75,7 +74,7 @@ function BookHeader(props) {
   };
 
   const handleClickWLDelete = async () => {
-    if (props.user.token!==null) {
+    if (props.user!==null) {
       const dataDelete = await fetch(`/wishlist/delete/${props.user.token}/${props.bookId}`, {
       method: 'DELETE'
       });
@@ -91,7 +90,7 @@ function BookHeader(props) {
 
   // Interroger la route pour ajouter à la biblitohèque
   const handleClicLBAdd = async () => {
-    if (props.user.token!==null) {
+    if (props.user !==null) {
       var addLibrary= async () => {
         const data = await fetch(`/library/add/${props.user.token}/${props.bookId}`, {
           method: 'POST',
@@ -115,7 +114,7 @@ function BookHeader(props) {
 
   // Interroger la route pour supprimer de la biblitohèque
   const handleClickLBDelete = async () => {
-    if (props.user.token!==null) {
+    if (props.user !==null) {
       const dataDelete = await fetch(`/library/delete/${props.user.token}/${props.bookId}`, {
       method: 'DELETE'
       });
@@ -146,7 +145,7 @@ var boutonLibraryDefault = (
 
 
 useEffect(() => {
-  if (props.user.token!==null) {
+  if (props.user !==null) {
     var CheckWishList = async () => {
       const data = await fetch(`/wishlist`, {
         method: 'POST',

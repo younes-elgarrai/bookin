@@ -3,11 +3,11 @@ import {Col, Card, Badge, Tooltip} from 'antd';
 import '../App.css'
 import {Link} from 'react-router-dom';
 import Unavailable from '../assets/cover_nondispo.jpg'
-import { HeartOutlined, HeartFilled, CloseOutlined } from '@ant-design/icons';
+import { HeartFilled } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
 function BookCardHover(props) {
-    const { Meta } = Card;
+
 
     function titleCut (desc) {
         if (desc.length > 25){

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import logo from '../assets/bookin-transparent.png';
 import './Navbar.css';
@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
   NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
   // Ant Design
-import { Avatar } from 'antd';
+import { Avatar, Badge } from 'antd';
 import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
 
 function NavigationBar(props) {
@@ -19,6 +19,49 @@ function NavigationBar(props) {
   // Large menu
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const [countWL, setCountWL] = useState(0);
+  const [countLB, setCountLB] = useState(0);
+
+  useEffect(() => {
+    if (props.user!==null) {
+        var CheckWishList = async () => {
+            const data = await fetch(`/wishlist`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `token=${props.user.token}`
+            });
+            const body = await data.json();
+            console.log('bodyCheck', body)
+            console.log('dataCheck', data)
+            if (body.result===true && body.wishlist.length >0) {
+                setCountWL(body.wishlist.length);
+            } else if (body.result===true && body.wishlist.length === 0)
+            {
+                setCountWL(0);}
+        };
+        CheckWishList();
+
+        var CheckLibrary = async () => {
+          const data = await fetch(`/library`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `token=${props.user.token}`
+          });
+          const body = await data.json();
+          console.log('bodyCheck', body)
+          console.log('dataCheck', data)
+          if (body.result===true && body.library.length >0) {
+              setCountLB(body.library.length);
+          } else if (body.result===true && body.library.length === 0)
+          {
+              setCountLB(0);}
+      };
+      CheckLibrary();
+      
+
+      
+    }
+},[props.wishlist]);
 
   return(
     <div>
@@ -29,10 +72,11 @@ function NavigationBar(props) {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar className="right-menu">
           <Nav navbar>
+              
             <NavItem><Link to="/search" className="menu-nav-item"><SearchOutlined className="menu-nav-icon" /> Rechercher</Link></NavItem> 
             <NavItem><Link to="/main" className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
-            <NavItem><Link to={props.user ? "/library" : "/create-account"} className="menu-nav-item"><BookOutlined className="menu-nav-icon"/> Bibliothèque</Link></NavItem> 
-            <NavItem><Link to={props.user ? "/library" : "/create-account"} className="menu-nav-item"><HeartOutlined className="menu-nav-icon"/> A lire</Link></NavItem> 
+            <NavItem><Link to={props.user ? "/library" : "/create-account"} className="menu-nav-item"><Badge style={{marginRight:"-5px", backgroundColor:"#23396c"}} size="small" count={countLB}><BookOutlined className="menu-nav-icon"/></Badge> Bibliothèque</Link></NavItem> 
+            <NavItem><Link to={props.user ? "/library" : "/create-account"} className="menu-nav-item"><Badge style={{marginRight:"5px", backgroundColor:"#23396c"}} size="small" count={countWL}><HeartOutlined style={{marginRight:"10px", marginLeft:"10px"}} className="menu-nav-icon"/></Badge> A lire</Link></NavItem> 
             {props.user ? 
               <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav>
@@ -91,6 +135,6 @@ function mapDispatchToProps(dispatch) {
   }
 }
 function mapStateToProps(state) {
-  return { user: state.user }
+  return { user: state.user, wishlist: state.wishlist }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);

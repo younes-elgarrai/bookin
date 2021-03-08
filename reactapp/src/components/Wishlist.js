@@ -10,7 +10,7 @@ function Wishlist(props) {
     const [result, setResult] = useState([]);
 
     useEffect(() => {
-        if (props.user.token!==null) {
+        if (props.user!==null) {
             var CheckWishList = async () => {
                 const data = await fetch(`/wishlist`, {
                 method: 'POST',
