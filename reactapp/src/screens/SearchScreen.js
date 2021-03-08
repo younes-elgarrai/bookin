@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Menu, Dropdown, Input, Row, Col, Button, Pagination, Spin, AutoComplete} from 'antd';
 import { DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
@@ -8,9 +8,9 @@ import Unavailable from '../assets/cover_nondispo.jpg';
 import BookCard from '../components/BookCard';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-// Utiliser IdGoogle ?
+
 // insérer module dernières nouveautés lorsque pas de recherche encore faite
 
 
@@ -18,6 +18,7 @@ const { Search } = Input;
 const { Meta } = Card;
 
 function SearchScreen(props) {
+
     const history = useHistory();
     const [result, setResult] = useState([]);
     const [query, setQuery] = useState("");
@@ -198,13 +199,14 @@ function SearchScreen(props) {
         }
     };
 
+
     var handlePageClick = (pageNumber) => {
         const currentPage = pageNumber - 1;
         offset = currentPage * elementsPerPage;
         var bookSearchApi4 = async() => {
             setIsFetching(true);
         try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&startIndex=${offset}&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)     
             const body = await data.json();
             setIsFetching(false);
             if (body.totalItems !== 0) {
@@ -223,6 +225,7 @@ function SearchScreen(props) {
                 } else {
                 setResult([])
                 };
+            console.log(data);
             console.log(body);
         }
         catch(error) {
@@ -239,7 +242,7 @@ function SearchScreen(props) {
                 setOpen(true)
                 var searchSuggest = async() => {
                     try {
-                        const data = await fetch(`https://corsanywhere.herokuapp.com/https://google.com/complete/search?output=toolbar&&ds=bo&client=chrome&hl=fr&q=${value}`)
+                        const data = await fetch(`https://corsanywhere.herokuapp.com/https://google.com/complete/search?output=toolbar&&ds=bo&client=chrome&hl=fr&gl=fr&q=${value}`)
                         const body = await data.json();
                         var res = body[1].map(item => ({'value':item, 'label':item}));
                         setSuggestData(res);
