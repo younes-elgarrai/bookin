@@ -144,7 +144,18 @@ function BookScreen() {
                     if (datajson.totalItems!==0){
                         setDataBook(datajson.volumeInfo);
                         if (datajson.volumeInfo.industryIdentifiers) {
-                            setIsbn(datajson.volumeInfo.industryIdentifiers[0].identifier);
+                          console.log('isbn', datajson.volumeInfo.industryIdentifiers)
+                          var isbnArray = datajson.volumeInfo.industryIdentifiers;
+                          var filteredIsbn = [];
+
+                            for (let j = 0; j < isbnArray.length; j++) {
+                              var sorted =   isbnArray.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
+                                if (sorted[j].type === "ISBN_13") {
+                                  filteredIsbn.push(sorted[j].identifier);
+                                  console.log('filteredIsbn',filteredIsbn);
+                                }
+                            };
+                            setIsbn(filteredIsbn);
                         } else {
                             setIsbn('nc')
                         }
@@ -186,8 +197,6 @@ function BookScreen() {
         } else {
             coverImg=dataBook.imageLinks.thumbnail
         }
-
-        console.log('Cover', coverImg);
 
   return (
 

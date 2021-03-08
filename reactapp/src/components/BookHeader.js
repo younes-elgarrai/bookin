@@ -1,7 +1,7 @@
 import React , {useState, useEffect}  from 'react';
 import {Redirect} from 'react-router-dom';
 import { Modal, Button, Row, Col} from 'antd';
-import { StarFilled, CheckCircleFilled, Alert} from '@ant-design/icons';
+import { StarFilled, CheckCircleFilled} from '@ant-design/icons';
 import {  } from '@ant-design/icons';
 import '../App.css'
 import Background from '../assets/picto.png'
@@ -52,7 +52,6 @@ function BookHeader(props) {
 
   const handleClickWLAdd = async () => {
     if (props.token!==null) {
-      console.log('token', props.token)
       var addWishList = async () => {
         const data = await fetch(`/wishlist/add/${props.token}/${props.bookId}`, {
           method: 'POST',
@@ -60,7 +59,6 @@ function BookHeader(props) {
           body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
         });
         const body = await data.json();
-        console.log('bodyAdd', body);
   
         if (body.result===true) {
           setBoutonWLStyle(!boutonWLStyle);
@@ -101,7 +99,6 @@ function BookHeader(props) {
           body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
         });
         const body = await data.json();
-        console.log(body);
         if (body.result===true) {
           setIsModalLB(true);
           setBoutonLBStyle(!boutonLBStyle);
