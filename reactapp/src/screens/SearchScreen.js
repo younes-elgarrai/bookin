@@ -139,7 +139,7 @@ function SearchScreen(props) {
             var bookSearchApi2 = async() => {
                 setIsFetching(true);
             try {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&orderBy=newest&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
                 if (body.totalItems !== 0) {
@@ -170,7 +170,7 @@ function SearchScreen(props) {
             var bookSearchApi3 = async() => {
                 setIsFetching(true);
             try {
-                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${query}&orderBy=relevance&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
                 const body = await data.json();
                 setIsFetching(false);
                 if (body.totalItems !== 0) {
