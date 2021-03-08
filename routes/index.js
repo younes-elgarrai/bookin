@@ -53,6 +53,7 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
       if (userCheckTab.length === 0) { 
         var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {library: savedBookInLibrary._id}});
         console.log("user",user);
+        res.json({ result: true, message: "Livre n'est pas dans la bibliothèque" });
       } else {res.json({ result: false, message: "Livre déjà dans votre bibliothèque" });}
 
     } else {
@@ -449,6 +450,7 @@ router.post('/wishlist/add/:token/:bookid', async (req, res) => {
       if (userCheckTab.length === 0) { 
         var user = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: savedBookInWishlist._id}});
         console.log("user",user);
+        res.json({ result: true, message: "Livre n'est pas dans la wishlist" });
       } else {res.json({ result: false, message: "Livre déjà dans votre wishlist" });}
 
     } else {

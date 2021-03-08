@@ -1,7 +1,7 @@
 import React , {useState, useEffect}  from 'react';
 import {Redirect} from 'react-router-dom';
 import { Modal, Button, Row, Col} from 'antd';
-import { StarFilled, CheckCircleFilled} from '@ant-design/icons';
+import { StarFilled, CheckCircleFilled, Alert} from '@ant-design/icons';
 import {  } from '@ant-design/icons';
 import '../App.css'
 import Background from '../assets/picto.png'
@@ -29,7 +29,7 @@ function BookHeader(props) {
 
   // Const pour la modal du bouton ajout à ma wishlit
   const [isModalLB, setIsModalLB] = useState(false);
-  const [isModalVisibleWL, setIsModalVisibleWL] = useState(false);
+  const [isModalWL, setIsModalWL] = useState(false);
   const [boutonWLStyle, setBoutonWLStyle]= useState(false);
   const [boutonLBStyle, setBoutonLBStyle]= useState(false);
   const [ isLoggedIn, setIsLoggedIn ] = useState(false);
@@ -42,16 +42,17 @@ function BookHeader(props) {
     );
   
     var boutonWishListDefault = (
-    <Button onClick={() => handleClicWLAdd()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
+    <Button onClick={() => handleClickWLAdd()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
     );
 
       // Cancel WishLit
   const handleCancelWL = () => {
-    setIsModalVisibleWL(false);
+    setIsModalWL(false);
   };
 
-  const handleClicWLAdd = async () => {
+  const handleClickWLAdd = async () => {
     if (props.token!==null) {
+      console.log('token', props.token)
       var addWishList = async () => {
         const data = await fetch(`/wishlist/add/${props.token}/${props.bookId}`, {
           method: 'POST',
@@ -59,10 +60,11 @@ function BookHeader(props) {
           body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
         });
         const body = await data.json();
+        console.log('bodyAdd', body);
   
         if (body.result===true) {
           setBoutonWLStyle(!boutonWLStyle);
-          setIsModalVisibleWL(true);
+          setIsModalWL(true);
           props.addToWishList(props.bookId);
         }
   
@@ -96,13 +98,13 @@ function BookHeader(props) {
         const data = await fetch(`/library/add/${props.token}/${props.bookId}`, {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
-          // body: `cover=${props.bookCover}&title=${props.bookTitle}`
           body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
         });
         const body = await data.json();
+        console.log(body);
         if (body.result===true) {
-          setBoutonLBStyle(!boutonLBStyle);
           setIsModalLB(true);
+          setBoutonLBStyle(!boutonLBStyle);
           // props.addToWishList(props.bookId);
         }
   
@@ -123,7 +125,7 @@ function BookHeader(props) {
       const bodyDelete = await dataDelete.json();
 
       if (bodyDelete.result===true) {
-        setBoutonLBStyle(false);
+        setBoutonLBStyle(!boutonLBStyle);
         // props.DeleteToWishList(props.bookId);
       }
       
@@ -174,7 +176,7 @@ useEffect(() => {
 
 
 if (isLoggedIn) {
-  return(<Redirect to='/connection'/>)
+  return(<Redirect to='/connection'/>);
 } else {
 return (
     <div style={styles.container} className='font'>
@@ -220,10 +222,10 @@ return (
         </Modal>
         
           {boutonWLStyle ? boutonWishListSelected : boutonWishListDefault}
-          <Modal centered title="Félicitations" visible={isModalVisibleWL} footer={null} onCancel={handleCancelWL} style={{textAlign: "center"}}>
+          <Modal centered title="Félicitations" visible={isModalWL} footer={null} onCancel={handleCancelWL} style={{textAlign: "center"}}>
             <img style={{margin:'10px'}} width={70} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle} /> 
 
-            <div>
+            <div style={{textAlign: "center"}}>
               <CheckCircleFilled style={{ color:'#37a000', fontSize:'16px', textAlign:'right'}}/>
               <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre wishlist<br /><br /></p>
               <Link to='/library'><Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma wishlist</Button></Link>   
