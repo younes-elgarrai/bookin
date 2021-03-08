@@ -179,8 +179,6 @@ function BookScreen() {
 
       },[bookid])
 
-    console.log(dataBook);
-
     // Si la cover du livre n'existe pas alors => Afficher l'image par défaut
     var coverImg;
         if (dataBook.imageLinks===undefined) {
@@ -188,6 +186,8 @@ function BookScreen() {
         } else {
             coverImg=dataBook.imageLinks.thumbnail
         }
+
+        console.log('Cover', coverImg);
 
   return (
 
