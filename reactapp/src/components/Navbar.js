@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 
 // ReactStrap
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
-  NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+   UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
   // Ant Design
 import { Avatar } from 'antd';
 import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
