@@ -74,7 +74,7 @@ function BookHeader(props) {
     }
   };
 
-  const handleClickButtonDelete = async () => {
+  const handleClickWLDelete = async () => {
     if (props.user.token!==null) {
       const dataDelete = await fetch(`/wishlist/delete/${props.user.token}/${props.bookId}`, {
       method: 'DELETE'

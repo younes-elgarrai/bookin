@@ -111,10 +111,15 @@ router.delete('/library/delete/:token/:bookid', async (req, res) => {
   if (!token || !regex.test(bookid) ) {
     res.json({ result: false, message: "Aie, nous n'avons pas pu supprimer le livre de votre bibliothèque" });
   } else {
-    var bookToDelete = await BooksModel.findOne({bookid: bookid});
-    var user = await UsersModel.findOneAndUpdate({token: token},{ $pull: {library: bookToDelete._id}});
-    res.json({ result: true});
-  }
+            var bookToDelete = await BooksModel.findOne({bookid: bookid});
+            var userCheck = await UsersModel.findOne({token: token, library: bookToDelete._id})
+            if (userCheck !== null) {
+              var user = await UsersModel.findOneAndUpdate({token: token},{ $pull: {library: bookToDelete._id}});
+              res.json({ result: true});
+            } else {
+                res.json({ result: false, message: "livre déjà supprimé de votre bibliothèque" });
+              }
+          }
 });
 
 
@@ -413,6 +418,10 @@ router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
     var bookToDelete = await BooksModel.findOne({
       bookid: bookid
     });
+
+    var userCheck = await UsersModel.findOne({token: token, wishlist: bookToDelete._id})
+    if (userCheck !== null)
+    {
     var user = await UsersModel.findOneAndUpdate({
       token: token
     }, {
@@ -423,6 +432,9 @@ router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
     res.json({
       result: true
     });
+  } else {
+    res.json({ result: false, message: "livre déjà supprimé de votre wishlist" });
+  }
   }
 });
 

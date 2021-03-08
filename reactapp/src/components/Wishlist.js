@@ -18,16 +18,18 @@ function Wishlist(props) {
                 body: `token=${props.user.token}`
                 });
                 const body = await data.json();
-                console.log('bodyCheck', body.wishlist)
+                console.log('bodyCheck', body)
                 console.log('dataCheck', data)
                 if (body.result===true && body.wishlist.length >0) {
                     setDisplayWishlist(true);
                     setResult(body.wishlist);
-                }
+                } else if (body.result===true && body.wishlist.length === 0)
+                {
+                    setDisplayWishlist(false);}
             };
             CheckWishList();
         }
-    },[]);
+    },[props.wishlist]);
 
 
 return (

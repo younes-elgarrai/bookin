@@ -19,10 +19,12 @@ function BookCardHover(props) {
 
     const handleClickWLDelete = async () => {
         if (props.user.token!==null) {
-          const dataDelete = await fetch(`/library/delete/${props.user.token}/${props.bookId}`, {
+          const dataDelete = await fetch(`/wishlist/delete/${props.user.token}/${props.bookId}`, {
           method: 'DELETE'
           });
           const bodyDelete = await dataDelete.json();
+          console.log(dataDelete)
+          console.log(bodyDelete)
     
           if (bodyDelete.result===true) {
             props.DeleteToWishList(props.bookId);
