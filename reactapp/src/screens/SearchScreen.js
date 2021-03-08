@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Menu, Dropdown, Input, Row, Col, Button, Pagination, Spin, AutoComplete} from 'antd';
 import { DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
+import Footer from '../components/Footer';
 import '../App.css';
 import Background from '../assets/picto.png';
 import Unavailable from '../assets/cover_nondispo.jpg';
@@ -242,7 +243,7 @@ function SearchScreen(props) {
                 setOpen(true)
                 var searchSuggest = async() => {
                     try {
-                        const data = await fetch(`https://corsanywhere.herokuapp.com/https://google.com/complete/search?output=toolbar&&ds=bo&client=chrome&hl=fr&gl=fr&q=${value}`)
+                        const data = await fetch(`https://corsanywhere.herokuapp.com/https://google.com/complete/search?output=toolbar&hl=fr&ds=bo&client=chrome&gl=fr&q=${value}`)
                         const body = await data.json();
                         var res = body[1].map(item => ({'value':item, 'label':item}));
                         setSuggestData(res);
@@ -335,6 +336,7 @@ return (
                                             total={totalElementsCount}
                                             pageSize={elementsPerPage}
                                             showSizeChanger={false}
+                                            style={{marginBottom:"30px"}}
                                         />
                                     </div>
                             }
@@ -344,6 +346,7 @@ return (
             }
         </div>
     </div>
+    <Footer/>
 </div>
 )}
 

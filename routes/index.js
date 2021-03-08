@@ -324,6 +324,7 @@ router.post('/wishlist', async (req, res) => {
   } else {
   const user = await UsersModel.findOne({token: req.body.token}).populate('wishlist').exec()
   var userWishlist = user.wishlist
+  
   res.json({result: true, wishlist: userWishlist})
 }
 });
