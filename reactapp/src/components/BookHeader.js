@@ -25,32 +25,44 @@ function BookHeader(props) {
 
   // Création de l'url pour l'achat vers Amazon
   var urlAmazon = `https://www.amazon.fr/gp/search?ie=UTF8&tag=bookin0c-21&linkCode=ur2&linkId=ed069e44484efe7e5139cd6a95321518&camp=1642&creative=6746&index=books&keywords=${props.bookIsbn}`
-  console.log(urlAmazon);
+
 
   // Const pour la modal du bouton ajout à ma wishlit
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalVisibleWishList, setIsModalWishList] = useState(false);
-  const [addBook, setAddBook] = useState([]);
-  const [boutonStyle, setBoutonStyle]= useState(false);
+  const [isModalLB, setIsModalLB] = useState(false);
+  const [isModalVisibleWL, setIsModalVisibleWL] = useState(false);
+  const [boutonWLStyle, setBoutonWLStyle]= useState(false);
+  const [boutonLBStyle, setBoutonLBStyle]= useState(false);
   const [ isLoggedIn, setIsLoggedIn ] = useState(false);
 
 
   // Interroger la route pour ajouter wishList
-  const handleClickButton = async () => {
+    // Bouton pour ajout à la WishList
+    var boutonWishListSelected = (
+      <Button onClick={() => handleClickWLDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>❤ WISHLIST</Button>
+    );
+  
+    var boutonWishListDefault = (
+    <Button onClick={() => handleClicWLAdd()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
+    );
+
+      // Cancel WishLit
+  const handleCancelWL = () => {
+    setIsModalVisibleWL(false);
+  };
+
+  const handleClicWLAdd = async () => {
     if (props.token!==null) {
       var addWishList = async () => {
         const data = await fetch(`/wishlist/add/${props.token}/${props.bookId}`, {
           method: 'POST',
-          headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `cover=${props.bookCover}&title=${props.bookTitle}`
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
         });
         const body = await data.json();
-        console.log('body', body)
-        console.log('data', data)
   
         if (body.result===true) {
-          setBoutonStyle(!boutonStyle);
-          setIsModalWishList(true);
+          setBoutonWLStyle(!boutonWLStyle);
+          setIsModalVisibleWL(true);
           props.addToWishList(props.bookId);
         }
   
@@ -62,46 +74,77 @@ function BookHeader(props) {
     }
   };
 
-  const handleClickButtonDelete = async () => {
+  const handleClickWLDelete = async () => {
     if (props.token!==null) {
       const dataDelete = await fetch(`/wishlist/delete/${props.token}/${props.bookId}`, {
       method: 'DELETE'
       });
       const bodyDelete = await dataDelete.json();
-      console.log('data', dataDelete)
-      console.log('body', bodyDelete)
 
       if (bodyDelete.result===true) {
-        setBoutonStyle(!boutonStyle);
+        setBoutonWLStyle(false);
         props.DeleteToWishList(props.bookId);
       }
       
     }
   };
 
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
+  // Interroger la route pour ajouter à la biblitohèque
+  const handleClicLBAdd = async () => {
+    if (props.token!==null) {
+      var addLibrary= async () => {
+        const data = await fetch(`/library/add/${props.token}/${props.bookId}`, {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          // body: `cover=${props.bookCover}&title=${props.bookTitle}`
+          body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
+        });
+        const body = await data.json();
+        if (body.result===true) {
+          setBoutonLBStyle(!boutonLBStyle);
+          setIsModalLB(true);
+          // props.addToWishList(props.bookId);
+        }
+  
+      };
+      addLibrary();
+      
+    } else {
+      setIsLoggedIn(true);
+    }
   };
 
-  const showModal = () => {
-    setIsModalVisible(true);
+  // Interroger la route pour supprimer de la biblitohèque
+  const handleClickLBDelete = async () => {
+    if (props.token!==null) {
+      const dataDelete = await fetch(`/library/delete/${props.token}/${props.bookId}`, {
+      method: 'DELETE'
+      });
+      const bodyDelete = await dataDelete.json();
+
+      if (bodyDelete.result===true) {
+        setBoutonLBStyle(false);
+        // props.DeleteToWishList(props.bookId);
+      }
+      
+    }
   };
 
-  const handleCancel2 = () => {
-    setIsModalWishList(false);
+  // Cancel Library
+  const handleCancelLB = () => {
+    setIsModalLB(false);
   };
 
-  var boutonSelected = (
-    <Button onClick={() => handleClickButton()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>✔ DANS MA WISHLIST</Button>
-  );
 
-  var boutonDefault = (
-  <Button onClick={() => handleClickButton()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
-  );
+ // Bouton pour ajout à la Bibliothèque
+ var boutonLibrarySelected = (
+  <Button onClick={() => handleClickLBDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>✔ DEJA LU</Button>
+);
 
-console.log('Props WishList', props.wishlist);
-console.log('props.bookid',props.bookId);
+var boutonLibraryDefault = (
+  <Button onClick={() => handleClicLBAdd()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
+);
+
 
 useEffect(() => {
   if (props.token!==null) {
@@ -112,13 +155,11 @@ useEffect(() => {
         body: `token=${props.token}`
       });
       const body = await data.json();
-      console.log('bodyCheck', body.wishlist)
-      console.log('dataCheck', data)
 
       if (body.result===true) {
         for (let i = 0; i < body.wishlist.length; i++) {
           if (body.wishlist[i].bookid===props.bookId) {
-            setBoutonStyle(true);
+            setBoutonLBStyle(true);
           } 
         } 
       }
@@ -167,8 +208,8 @@ return (
     <Row style={styles.buyBloc}>
       <div>
         <Col xs={24}>
-        <Button  onClick={showModal} style={{margin:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
-        <Modal centered title="Félicitations" visible={isModalVisible} footer={null} onCancel={handleCancel} style={{textAlign: "center"}}>
+        {boutonLBStyle ? boutonLibrarySelected : boutonLibraryDefault}
+        <Modal centered title="Félicitations" visible={isModalLB} footer={null} onCancel={handleCancelLB} style={{textAlign: "center"}}>
           <img style={{margin:'10px'}} width={70} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle} /> 
 
           <div style={{textAlign: "center"}}>
@@ -178,8 +219,8 @@ return (
           </div>
         </Modal>
         
-          {boutonStyle ? boutonSelected : boutonDefault}
-          <Modal centered title="Félicitations" visible={isModalVisibleWishList} footer={null} onCancel={handleCancel2} style={{textAlign: "center"}}>
+          {boutonWLStyle ? boutonWishListSelected : boutonWishListDefault}
+          <Modal centered title="Félicitations" visible={isModalVisibleWL} footer={null} onCancel={handleCancelWL} style={{textAlign: "center"}}>
             <img style={{margin:'10px'}} width={70} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle} /> 
 
             <div>
