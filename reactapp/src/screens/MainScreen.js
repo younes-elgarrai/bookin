@@ -12,27 +12,31 @@ import Grid from '@material-ui/core/Grid';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Background from '../assets/picto.png'
 
+import MyLibrary from '../components/MyLibrary'
+
 import '../components/BookHeader'
 import '../App.css';
 
 import Nav from '../components/Navbar';
 import Review from '../components/Reviews';
 import BookList from '../components/BookList';
-import LibraryHeader from '../components/LibraryHeader';
+
 
 import subjects from '../assets/subjects';
 
 const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
-      width: '100%'
+      width: '100%',
+      paddingTop: "35px",
+      paddingBottom: "35px"
     },
     paper: {
       padding: theme.spacing(2),
       textAlign: 'center',
       width: '100%',
       color: theme.palette.text.secondary,
-    },
+    }
   }));  
 
 var catQueryMaker = (cat, styles)=>{
@@ -157,14 +161,25 @@ function MainScreen() {
 
     function BookSkeleton (){
         return(
+            <div>
             <Grid xs={12} container>
                 <Grid item xs={12}>
-                    <Skeleton variant="text" style={{width:"200px"}} />
+                    <Skeleton variant="text" style={{width:"200px", marginLeft:"50px"}} />
                 </Grid>
                 <Grid item xs={12} style={{width:'100%' , display:'flex', justifyContent:'center'}}>
                     <BookList skeleton={true} data={[]}/>
                 </Grid>
             </Grid>
+            <Grid xs={12} container>
+                <Grid item xs={12}>
+                    <Skeleton variant="text" style={{width:"200px", marginLeft:"50px"}} />
+                </Grid>
+                <Grid item xs={12} style={{width:'100%' , display:'flex', justifyContent:'center'}}>
+                    <BookList skeleton={true} data={[]}/>
+                </Grid>
+            </Grid>
+            </div>
+            
         );
     }
 
@@ -227,7 +242,7 @@ function MainScreen() {
             </Grid>
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
                 <TabPanel value={value} index={1}>
-                    Item Two
+                    <MyLibrary />
                 </TabPanel>
             </Grid>
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>

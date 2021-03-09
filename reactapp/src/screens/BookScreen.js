@@ -247,10 +247,15 @@ function BookScreen() {
                 <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
                 <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
                 </Row>
+                <Row>
+                  <BookList bookListTitle="Ouvrages associés..." data={associated}/>
+                </Row>
+                <Row>
+                  <BookList bookListTitle="Du même auteur..." data={authorBooks}/>
+                </Row>
             </div>
-            <BookList bookListTitle="Ouvrages associés..." data={associated}/>
-            <BookList bookListTitle="Du même auteur..." data={authorBooks}/>
-            <BookList bookListTitle="Nos recommandations" data={associated}/>
+
+
         
             <Reviews list={reviewsList}/>
             <NewReview book={bookid} />
