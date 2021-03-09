@@ -31,6 +31,9 @@
 .menu-nav-avatar:hover {
   background-color: #23396c;
 }
+.menu-nav-badge {
+  color:inherit;
+}
 .menu-nav-item-dropdown {
   color: #000000;
   font-size: 12px;
