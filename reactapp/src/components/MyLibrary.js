@@ -51,7 +51,7 @@ return (
             {!displayLibrary
                 ?
                 <Grid item xs={12} >
-                    <p>Aucun livre dans votre bibliothèque</p>  
+                    <p style={{textAlign:"center"}} >Aucun livre dans votre bibliothèque</p>  
                 </Grid> 
                 :library
             }

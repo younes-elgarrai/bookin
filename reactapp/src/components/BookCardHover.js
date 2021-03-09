@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Card, Badge, Tooltip} from 'antd';
+import {Col, Tooltip, message} from 'antd';
 import '../App.css'
 import {Link} from 'react-router-dom';
 import Unavailable from '../assets/cover_nondispo.jpg'
@@ -129,27 +129,53 @@ function BookCardHover(props) {
         };
     }, [props.library, props.wishlist]);
 
+    const key = 'libraryIconAdd';
+
+    const messageAddLB = () => {
+        message.success({ content: 'Ajouté à votre bibliothèque !', key, duration: 2 });
+    };
+
+    const messageAddWL = () => {
+      message.success({ content: 'Ajouté à votre wishlist !', key, duration: 2 });
+    };
+
+    const messageDeleteLB = () => {
+      message.success({ content: 'Retiré de votre bibliothèque !', key, duration: 2 });
+    };
+
+    const messageDeleteWL = () => {
+      message.success({ content: 'Retiré de votre wishlist !', key, duration: 2 });
+    };
+
     const libraryIconAdd = (
       <div style={{display:'flex', justifyContent:'space-around', width:"75px", borderRight:'1px solid #f0f0f0'}}>
-        <BookOutlined style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => handleClickLBAdd()}  />
+        <Tooltip placement="bottom" title="Ajoutez à votre bibliothèque">
+        <BookOutlined style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickLBAdd(); messageAddLB()}}  />
+        </Tooltip>
       </div>
     )
 
     const libraryIconDelete = (
       <div style={{display:'flex', justifyContent:'space-around', width:"75px", borderRight:'1px solid #f0f0f0'}}>
-        <BookFilled style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => handleClickLBDelete()}  />
+        <Tooltip placement="bottom" title="Retirez de votre bibliothèque">
+        <BookFilled style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickLBDelete(); messageDeleteLB()}}  />
+        </Tooltip>
       </div>
         )
 
     const wishlistIconAdd = (
       <div style={{display:'flex', justifyContent:'space-around', width:"75px"}}>
-        <HeartOutlined style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => handleClickWLAdd()}  />
+        <Tooltip placement="bottom" title="Ajoutez à votre wishlist">
+        <HeartOutlined style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickWLAdd(); messageAddWL()}}  />
+        </Tooltip>
       </div>
     )
 
     const wishlistIconDelete = (
       <div style={{display:'flex', justifyContent:'space-around', width:"75px"}}>
-          <HeartFilled style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => handleClickWLDelete()}  />
+          <Tooltip placement="bottom" title="Retirez de votre wishlist">
+          <HeartFilled style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickWLDelete(); messageDeleteWL()}}  />
+          </Tooltip>
       </div>
     )
 

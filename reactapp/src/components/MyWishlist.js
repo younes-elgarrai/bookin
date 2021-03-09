@@ -51,7 +51,7 @@ return (
             {!displayWishlist 
                 ?
                 <Grid item xs={12} >
-                    <p>Aucun livre dans votre wishlist</p>  
+                    <p style={{textAlign:"center"}}>Aucun livre dans votre wishlist</p>  
                 </Grid> 
                 :wishlist
             }
