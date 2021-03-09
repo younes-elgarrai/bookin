@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
-import { Layout, Row, Col} from 'antd';
 import { makeStyles } from '@material-ui/core/styles';
+import Footer from '../components/Footer';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -32,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
   
-
-
-const {Content} = Layout;
 
 
 var voidSubj = {'BD & Jeunesse': {
@@ -187,7 +184,7 @@ function MainScreen() {
         var bloc = [];
         for (const subcat in data[cat]){
             bloc.push(
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{width:'100%' , display:'flex', justifyContent:'center'}}>
                 <BookList bookListTitle={subcat} data={data[cat][subcat]} />
             </Grid>
             )
@@ -204,9 +201,9 @@ function MainScreen() {
 
     <div>
         <Nav />
-        <Grid container spacing={3} style={styles.container}>
-            <Grid item xs={12}>
-                <Paper className={classes.root}>
+        <Grid container spacing={0}   direction="column" justify="center" alignItems="center" style={styles.container}>
+            <Grid item xs={12} style={{width:'80%'}}>
+                <Paper elevation={0} className={classes.root}>
                         <Tabs
                             value={value}
                             onChange={handleChange}
@@ -220,25 +217,26 @@ function MainScreen() {
                         </Tabs>
                 </Paper>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
                 <TabPanel value={value} index={0}>
-                    <div style={styles.container}>
                         <div style={styles.libraryBloc}>
                             {suggest}
                         </div> 
                         <Review/> 
-                    </div>
                 </TabPanel>
             </Grid>
-            <Grid item xs={12}>
-            <TabPanel value={value} index={1}>
-                Item Two
-            </TabPanel>
+            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
+                <TabPanel value={value} index={1}>
+                    Item Two
+                </TabPanel>
             </Grid>
-            <TabPanel value={value} index={2}>
-                Item Three
-            </TabPanel>
+            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
+                <TabPanel value={value} index={2}>
+                    Item Three
+                </TabPanel>
+            </Grid>
         </Grid>
+        <Footer/>
         {cookies.survey===undefined&&<Redirect to="/survey" />}
     </div>
 
@@ -247,19 +245,11 @@ function MainScreen() {
 
 let styles = {
     container: {
-        display:'flex',
-        flexDirection:'column',
-        alignItems:'center',
-        width:'100%',
         backgroundColor:'#f3f5f7',
     },
 
     libraryBloc: {
-        width:'80%',
         backgroundColor: 'white',
-        paddingLeft:'30px',
-        paddingTight:'30px',
-        paddingTop: '30px', 
     },
 
 

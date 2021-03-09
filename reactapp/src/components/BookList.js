@@ -40,7 +40,7 @@ useEffect(() => {
         return (
             <div style={styles.bookcard}>
                 <Link to={{pathname:"/book/"+book.id}}><img width="100%" height="100%" src={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title}/></Link>
-                <p style={{color:"#333", width:"80%", textAlign:'center', fontSize:"12px", fontWeight:"400", paddingRight:"10px", marginBottom:'10px'}}> {titleCut(book.volumeInfo.title)} </p> 
+                {/* <p style={{color:"#333", width:"80%", textAlign:'center', fontSize:"12px", fontWeight:"400", paddingRight:"10px", marginBottom:'10px'}}> {titleCut(book.volumeInfo.title)} </p>  */}
             </div>
             );
     });
