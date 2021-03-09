@@ -4,10 +4,12 @@ import '../App.css'
 import BookCardHover from './BookCardHover'
 import { connect } from 'react-redux';
 
-function Wishlist(props) {
+function MyWishlist(props) {
 
     const [displayWishlist, setDisplayWishlist] = useState(false);
     const [result, setResult] = useState([]);
+    const [isInWishlist, setIsInWishlist] = useState(false);
+    const [isInLibrary, setIsInLibrary] = useState(false);
 
     useEffect(() => {
         if (props.user!==null) {
@@ -23,12 +25,34 @@ function Wishlist(props) {
                 if (body.result===true && body.wishlist.length >0) {
                     setDisplayWishlist(true);
                     setResult(body.wishlist);
-                } else if (body.result===true && body.wishlist.length === 0)
-                {
-                    setDisplayWishlist(false);}
+                    setIsInWishlist(true);
+                } else if (body.result===true && body.wishlist.length === 0) {
+                    setDisplayWishlist(false);
+                    setIsInWishlist(false);
+                } else {
+                    setIsInWishlist(false);
+                };
             };
             CheckWishList();
-        }
+            var CheckLibrary = async () => {
+                const data = await fetch(`/library`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `token=${props.user.token}`
+                });
+                const body = await data.json();
+                console.log('bodyCheck', body)
+                console.log('dataCheck', data)
+                if (body.result===true && body.library.length >0) {
+                    setIsInLibrary(true);
+                } else if (body.result===true && body.library.length === 0) {
+                    setIsInLibrary(false);
+                } else {
+                    setIsInLibrary(false);
+                }
+            };
+            CheckLibrary();
+        };
     },[props.wishlist, props.library]);
 
 
@@ -48,7 +72,7 @@ return (
                 :
                 <div style={{display:'flex', flexWrap:"wrap" ,justifyContent:"flex-start", marginTop:"0px"}}>
                 {result.map((book)=>(
-                    <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover}/>
+                    <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover} bookWishlist={isInWishlist} bookLibrary={isInLibrary}/>
                 ))}
                 </div>
             }
@@ -85,4 +109,4 @@ function mapStateToProps(state) {
     return { user: state.user, wishlist: state.wishlist, library: state.library }
   }
 
-  export default connect(mapStateToProps, null)(Wishlist);
+  export default connect(mapStateToProps, null)(MyWishlist);

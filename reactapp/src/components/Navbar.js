@@ -61,7 +61,7 @@ function NavigationBar(props) {
 
       
     }
-},[props.wishlist]);
+},[props.wishlist, props.library]);
 
   return(
     <div>
@@ -135,6 +135,6 @@ function mapDispatchToProps(dispatch) {
   }
 }
 function mapStateToProps(state) {
-  return { user: state.user, wishlist: state.wishlist }
+  return { user: state.user, wishlist: state.wishlist, library: state.library }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);
