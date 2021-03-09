@@ -13,9 +13,10 @@ import {useParams} from "react-router-dom";
 import Nav from '../components/Navbar';
 import BookHeader from '../components/BookHeader';
 import BookInfo from '../components/BookInfo';
-import Review from '../components/Reviews';
+import Reviews from '../components/Reviews';
 import BookList from '../components/BookList';
 import Footer from '../components/Footer';
+import NewReview from '../components/NewReview';
 
 const { Content } = Layout;
 
@@ -135,10 +136,11 @@ function BookScreen() {
     const [authorBooks, setAuthorBooks] = useState(bookArray);
     let {bookid} = useParams();
 
-
+    const [ reviewsList, setReviewsList ] = useState([]);
+    console.log('BookScreen > ReviewsList', reviewsList);
+    
     useEffect(() => {
-        if (bookid)
-            {
+        if (bookid) {
             const findBook = async() => {
                 const data = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}`)
                 const datajson = await data.json();
@@ -195,10 +197,18 @@ function BookScreen() {
               findBook2();
               window.scrollTo(0, 0)
         }
-
-
-
       },[bookid])
+
+      // REVIEWS //
+      useEffect(() => {
+        async function loadReviewsData() {
+            var rawResponse = await fetch(`/reviews/${bookid}`);
+            var response = await rawResponse.json();
+            console.log('response load reviews', response.reviews);
+            setReviewsList(response.reviews);
+        } 
+        loadReviewsData();
+        }, [bookid]); 
 
     // Si la cover du livre n'existe pas alors => Afficher l'image par défaut
     var coverImg;
@@ -236,7 +246,10 @@ function BookScreen() {
             </div>
             <BookList bookListTitle="Ouvrages associés..." data={associated}/>
             <BookList bookListTitle="Du même auteur..." data={authorBooks}/>
-            
+            <BookList bookListTitle="Nos recommandations" data={associated}/>
+        
+            <Reviews list={reviewsList}/>
+            <NewReview book={bookid} />
     </Content>
     <Footer/>
     </div>

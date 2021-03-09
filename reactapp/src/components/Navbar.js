@@ -6,14 +6,12 @@ import {connect} from 'react-redux';
 
 // ReactStrap
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
-  NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+   UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
   // Ant Design
 import { Avatar, Badge } from 'antd';
 import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
 
 function NavigationBar(props) {
-  console.log('NavBar > props.token', props.token);
-  console.log('NavBar > props.avatar', props.avatar);
   console.log('NavBar > props.user', props.user);
 
   // Large menu
@@ -81,9 +79,9 @@ function NavigationBar(props) {
               <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav>
                 {props.user.avatar ? 
-                <Avatar className="menu-nav-avatar" src={props.user.avatar}/>
+                <Avatar size="large" className="menu-nav-avatar" src={props.user.avatar}/>
                 :
-                <Avatar className="menu-nav-avatar" icon={<UserOutlined/>}/>}
+                <Avatar size="large" className="menu-nav-avatar" icon={<UserOutlined/>}/>}
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem><Link to='/update-account' className="menu-nav-item-dropdown">Modifier compte</Link></DropdownItem>
