@@ -17,7 +17,8 @@ const {Content} = Layout;
 
 
 var voidSubj = {'BD & Jeunesse': {
-                    'BD, Comics, Manga' : [],
+                    'BD, Comics': [],
+                    'Manga':[],
                     'Humour' : [],
                     'Livre jeunesse' : []
 },

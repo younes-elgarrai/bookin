@@ -118,7 +118,7 @@ router.post('/recos', async (req,res)=>{
 
   var handleSearch = async (q) => {
       try {
-            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=6&langRestrict=en&orderBy=relevance&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
             const body = await response.data;
             const books = await body.items.map((elem, index)=>{return elem});               
             return books ;
@@ -138,7 +138,9 @@ router.post('/recos', async (req,res)=>{
 
     var merged = [].concat.apply([], items);
 
-    return merged;
+    // return merged;
+
+    return items;
 
   }
 
