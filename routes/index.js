@@ -248,10 +248,12 @@ router.post('/log-in', async function (req, res, next) {
   } else {
   const user = await UsersModel.findOne({email: req.body.email});
   const password = req.body.password;
-  const userToken = user.token;
-  const userAvatar = user.avatar;
-  if (bcrypt.compareSync(password, user.password)) {
-    res.json({ login: true, userToken, userAvatar });
+  if (user) {
+    const userToken = user.token;
+    const userAvatar = user.avatar;
+    if (bcrypt.compareSync(password, user.password)) {
+      res.json({ login: true, userToken, userAvatar });
+  }
   } else { 
     res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }
 }});
@@ -341,33 +343,29 @@ router.post('/new-review', async (req, res) => {
   console.log('req', req.body);
   const user = await UsersModel.findOne({token: req.body.token});
   if (!user) {
-    res.json({
-      result: false,
-      message: "Veuillez vous identifier pour écrire un avis."
-    })
+    res.json({result: false, message: "Veuillez vous identifier pour écrire un avis."})
   } else {
     const review = new ReviewsModel({ 
-      bookid: req.body.isbn13,
+      bookid: req.body.book,
       userLibraryName: user.userLibraryName,
       avatar: user.avatar,
       rating: req.body.rating,
       comment: req.body.comment,
     })
-    // save.
-    res.json({
-      result: true,
-      review
-    });
+    const reviewSave = await review.save();
+    res.json({result: true, reviewSave});
   }
 });
 
 // Get reviews
 router.get('/reviews', async (req, res) => {
-  const reviews = await ReviewsModel.find(); // par book ISBN
-  res.json({
-    result: true,
-    reviews
-  });
+  const reviews = await ReviewsModel.find(); // par book id google
+  if (reviews) {
+    res.json({ result: true, reviews});
+  } else {
+    res.json({result: false, message:`Il n'y a pas encore d'avis.` })
+  }
+
 });
 
 /* Recherche sur Google Books API de livres

@@ -14,7 +14,6 @@ function LibraryScreen(props) {
                 <LibraryHeader />
                 <Wishlist />
                 <NewReview/>
-                <ReviewCard />
             </div>
             <Footer/>
         </div>

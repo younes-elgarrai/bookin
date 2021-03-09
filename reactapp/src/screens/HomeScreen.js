@@ -6,7 +6,7 @@ import '../components/Navbar.css'
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
 import {connect} from 'react-redux';
-import { Button, Avatar } from 'antd';
+import { Button } from 'antd';
 import library from '../assets/library.png';
 import account from '../assets/account.png';
 import reading from '../assets/reading.png';

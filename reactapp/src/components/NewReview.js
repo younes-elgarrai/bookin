@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import '../App.css';
 import { Input, Button, Form , Avatar} from 'antd';
-import Rating from './Rating';
 import {Link} from 'react-router-dom'; 
 import {connect} from 'react-redux';
-import { UserOutlined, BookOutlined, StarFilled } from '@ant-design/icons';
+import { BookOutlined, StarFilled } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
@@ -27,7 +26,7 @@ let displayStars = (nb) => {
     return stars;
   }
 
-  const tempBookId = "";
+  const tempBookId = "Récupérer l'ID google du livre dont on est sur la page";
 
 const saveNewReview = async () => {
     const response = await fetch('/new-review', {
@@ -47,7 +46,7 @@ return(
     <div style={{display:'flex'}}>{displayStars(rating)}</div>
     </Form.Item>
     <Form.Item label="Qu'avez-vous pensé de ce livre ?">
-        <TextArea rows={6} placeholder="Suspense de dingue, je l'ai lu en une soirée" prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setReview(e.target.value)} value={review}/>
+        <TextArea rows={6} placeholder="Quel suspens ! je l'ai lu en une soirée." prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setReview(e.target.value)} value={review}/>
     </Form.Item>
     <Form.Item>
         <Button style={styles.btn} onClick={()=> saveNewReview()} >Valider</Button>
