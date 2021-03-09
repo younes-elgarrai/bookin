@@ -116,10 +116,7 @@ const surveyStyle = {
                                                           :<Button onClick={()=>handleConfirmClick()} type="primary">Confirmer</Button>}
             </Col>
             {finished&&<Redirect to="/main" />}
-          </Row>
-
-            
-            
+          </Row>                 
         </div> 
 );
 }

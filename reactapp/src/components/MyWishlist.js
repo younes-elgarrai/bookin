@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Row, Col} from 'antd';
+import Grid from '@material-ui/core/Grid';
 import '../App.css'
 import BookCardHover from './BookCardHover'
 import { connect } from 'react-redux';
@@ -33,42 +34,36 @@ function MyWishlist(props) {
     },[props.wishlist, props.library]);
 
 
+
+var wishlist = result.map((book)=>{
+                    return(
+                    <Grid container xs={2} direction="row" justify="center" alignItems="center">
+                        <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover} context="library"/>
+                    </Grid>
+                    );
+                }
+                );
+
 return (
 <div style={styles.libraryBloc}  className='font'>
-    <Row>
-        <Col xs={24}>
-            <h3 style={styles.h3}>Ma Wishlist</h3>
-        </Col>
-    </Row>
-
-        <div>
-
+    <Grid container xs={12} direction="column" justify="flex-start" alignItems="center">
+        <Grid container xs={10} direction="row" justify="center" alignItems="center">
             {!displayWishlist 
                 ?
-                <div> Aucun livre dans votre wishlist </div> 
-                :
-                <div style={{display:'flex', flexWrap:"wrap" ,justifyContent:"flex-start", marginTop:"0px"}}>
-                {result.map((book)=>(
-                    <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover} context="wishlist"/>
-                ))}
-                </div>
+                <Grid item xs={12} >
+                    <p>Aucun livre dans votre wishlist</p>  
+                </Grid> 
+                :wishlist
             }
-        </div>
-
-
-
+        </Grid>
+    </Grid>
 </div>
 );
 }
 
 let styles = {
     libraryBloc: {
-        justifyContent: 'center',
-        width:'80%',
         backgroundColor: 'white',
-        paddingTop:'30px',
-        paddingLeft:'30px',
-        paddingRight:'30px',
     },
 
     h3: {
@@ -76,8 +71,15 @@ let styles = {
         fontSize: "16px",
         fontWeight: "500",
         margin: "0px",
-        paddingBottom:"10px"
+        paddingBottom:"10px",
+        paddingTop:"10px",
+        marginLeft:"50px"
       },
+      note: {
+        color:'#ffffff',
+        fontSize: '16px',
+        fontWeight: '200',
+    }
 
 }
 

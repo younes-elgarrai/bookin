@@ -39,7 +39,7 @@ function ConnectionScreen(props) {
 }
 
     if (isLoggedIn) {
-        return(<Redirect to='/search'/>)
+        return(<Redirect to='/main'/>)
     } else {
     return (
         <div className='font'>
