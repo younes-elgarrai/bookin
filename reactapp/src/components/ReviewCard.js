@@ -4,7 +4,7 @@ import '../App.css';
 import Rating from './Rating';
 import {Link} from 'react-router-dom'; 
 import {connect} from 'react-redux';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 const { Meta } = Card;
 

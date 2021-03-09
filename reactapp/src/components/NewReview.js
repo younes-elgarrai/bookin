@@ -8,6 +8,7 @@ import { BookOutlined, StarFilled } from '@ant-design/icons';
 const { TextArea } = Input;
 
 function NewReview(props) {
+  console.log('NewReview > bookid', props.book);
 
 const [ rating, setRating ] = useState(0);
 console.log('new review > rating', rating);
@@ -26,22 +27,20 @@ let displayStars = (nb) => {
     return stars;
   }
 
-  const tempBookId = "Récupérer l'ID google du livre dont on est sur la page";
-
 const saveNewReview = async () => {
     const response = await fetch('/new-review', {
         method: 'POST',
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: `book=${tempBookId}&token=${props.user.token}&rating=${rating}&comment=${review}`
+        body: `book=${props.book}&token=${props.user.token}&rating=${rating}&comment=${review}`
       });
       const dataResponse = await response.json();
       console.log('dataResponse',dataResponse); 
 }
 
 return(
-    <div style={{width:'60%'}}>
+    <div style={styles.reviewBloc}>
     <h3 style={styles.title}>Donnez votre avis</h3>
- <Form layout="vertical">
+ <Form layout="vertical" style={{width:'80%'}}>
     <Form.Item required tooltip="Ce champ est obligatoire" label="Note sur 5">
     <div style={{display:'flex'}}>{displayStars(rating)}</div>
     </Form.Item>
@@ -57,9 +56,16 @@ return(
 )
 }
 const styles = {
+  reviewBloc: {
+    width:"80%",
+    backgroundColor: "#ffffff",
+    paddingLeft:"30px",
+    paddingRight:"30px",
+    paddingTop: "30px",
+},
     title: {
         color:"#23396C",
-        fontSize: "24px",
+        fontSize: "16px",
         fontWeight: "500",
         marginTop: "20px",
         paddingBottom:"10px"

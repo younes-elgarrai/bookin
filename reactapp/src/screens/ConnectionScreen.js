@@ -9,7 +9,6 @@ import reading from '../assets/reading.png';
 import {connect} from 'react-redux';
 
 function ConnectionScreen(props) {
-    console.log('ConnectionScreen > props.user', props.user);
     const [ email, setEmail ] = useState();
     const [ password, setPassword ] = useState();
     const [ userMessage, setUserMessage ] = useState('');

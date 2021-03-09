@@ -220,24 +220,6 @@ router.get('/library/:token', function (req, res) {
   //Sorties : success, failure, [ISBN13]
 })
 
-
-// POST : Login/Signup step 0 : check email from user ("continuer")
-router.post('/check-email', async function (req, res, next) {
-  const checkExistingUserFromEmail = await UsersModel.findOne({
-    email: req.body.email
-  });
-  console.log('check', checkExistingUserFromEmail); // null 
-  if (checkExistingUserFromEmail) {
-    res.json({
-      result: true
-    });
-  } else {
-    res.json({
-      result: false
-    })
-  }
-});
-
 // POST : Login
 router.post('/log-in', async function (req, res, next) {
   if (!req.body.email || !req.body.password) {
@@ -338,9 +320,8 @@ router.post('/update', async (req, res) => {
 });
 
 
-// POST : book review
+// POST : write a new book review
 router.post('/new-review', async (req, res) => {
-  console.log('req', req.body);
   const user = await UsersModel.findOne({token: req.body.token});
   if (!user) {
     res.json({result: false, message: "Veuillez vous identifier pour écrire un avis."})
@@ -357,16 +338,16 @@ router.post('/new-review', async (req, res) => {
   }
 });
 
-// Get reviews
-router.get('/reviews', async (req, res) => {
-  const reviews = await ReviewsModel.find(); // par book id google
-  if (reviews) {
+// GET : get all reviews for a book
+router.get('/reviews/:bookid', async (req, res) => {
+  const reviews = await ReviewsModel.find({bookid: req.params.bookid}); 
     res.json({ result: true, reviews});
-  } else {
-    res.json({result: false, message:`Il n'y a pas encore d'avis.` })
-  }
-
 });
+
+// DELETE a review 
+router.delete('/reviews/delete/:token/:bookid', async (req, res) => {
+})
+
 
 /* Recherche sur Google Books API de livres
 API_key: "AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE"
