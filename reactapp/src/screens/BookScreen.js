@@ -143,8 +143,10 @@ function BookScreen() {
                 const data = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}`)
                 const datajson = await data.json();
                 const assoc = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}/associated`);
-                const assocjson = await assoc.json()
-                const inauthor = await fetch(`https://books.googleapis.com/books/v1/volumes?q=inauthor:"${await datajson.volumeInfo.authors[0]}"&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+                const assocjson = await assoc.json();
+                const author = (await datajson.volumeInfo.authors?datajson.volumeInfo.authors[0]:"")
+                console.log("author",author);
+                const inauthor = await fetch(`https://books.googleapis.com/books/v1/volumes?q=inauthor:"${author}"&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
                 const inauthorjson = await inauthor.json()
          
                 setAssociated(( await [assocjson.items] || bookArray));

@@ -1,7 +1,14 @@
 import React, {useState, useEffect} from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
 import { Layout, Row, Col} from 'antd';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 
 import '../components/BookHeader'
 import '../App.css';
@@ -11,6 +18,20 @@ import Review from '../components/Reviews';
 import BookList from '../components/BookList';
 
 import subjects from '../assets/subjects';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+      width: '100%'
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      width: '100%',
+      color: theme.palette.text.secondary,
+    },
+  }));
+  
 
 
 const {Content} = Layout;
@@ -80,11 +101,54 @@ var queryMaker = (styles) => {
                 r[cats[i]] = queries[i];}
             
             return r; };
+
+
+            function TabPanel(props) {
+                const { children, value, index, ...other } = props;
+              
+                return (
+                  <div
+                    role="tabpanel"
+                    hidden={value !== index}
+                    id={`simple-tabpanel-${index}`}
+                    aria-labelledby={`simple-tab-${index}`}
+                    {...other}
+                  >
+                    {value === index && (
+                      <Box p={3}>
+                        {children}
+                      </Box>
+                    )}
+                  </div>
+                );
+              }
+              
+              TabPanel.propTypes = {
+                children: PropTypes.node,
+                index: PropTypes.any.isRequired,
+                value: PropTypes.any.isRequired,
+              };
+
+
+              function a11yProps(index) {
+                return {
+                  id: `simple-tab-${index}`,
+                  'aria-controls': `simple-tabpanel-${index}`,
+                };
+              }
+              
                                     
 
 function MainScreen() {
 
-    
+
+    const classes = useStyles();
+
+    const [value, setValue] = useState(0);
+
+    const handleChange = (event, newValue) => {
+    setValue(newValue);
+    };
 
     const [cookies, setCookie] = useCookies(['survey']);
 
@@ -117,44 +181,64 @@ function MainScreen() {
   },[]);
 
 
-    console.log(data);
-
     const suggest = []
 
     for (const cat in data) {
-
         var bloc = [];
-
         for (const subcat in data[cat]){
             bloc.push(
-            <Row style={{width:'100%' , display:'flex', justifyContent:'center'}}>
+            <Grid item xs={12}>
                 <BookList bookListTitle={subcat} data={data[cat][subcat]} />
-            </Row>
+            </Grid>
             )
         }
-    
         suggest.push(
-            <Row>
-                <Col xs={24}>
+                <Grid item xs={12}>
                     <h3 style={styles.h3}>{cat}</h3>
-                </Col>
-            </Row>
+                </Grid>
             )
-
         suggest.push(bloc);
     }
-  
-    
+     
   return (
 
     <div>
         <Nav />
-        <Content style={styles.container}>
-            <div style={styles.libraryBloc}>
-                {suggest}
-            </div>      
-            <Review/>
-        </Content>
+        <Grid container spacing={3} style={styles.container}>
+            <Grid item xs={12}>
+                <Paper className={classes.root}>
+                        <Tabs
+                            value={value}
+                            onChange={handleChange}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            centered
+                        >
+                            <Tab label="Recos" {...a11yProps(0)} />
+                            <Tab label="Bibliothèque" {...a11yProps(1)} />
+                            <Tab label="Wishlist" {...a11yProps(2)} />
+                        </Tabs>
+                </Paper>
+            </Grid>
+            <Grid item xs={12}>
+                <TabPanel value={value} index={0}>
+                    <div style={styles.container}>
+                        <div style={styles.libraryBloc}>
+                            {suggest}
+                        </div> 
+                        <Review/> 
+                    </div>
+                </TabPanel>
+            </Grid>
+            <Grid item xs={12}>
+            <TabPanel value={value} index={1}>
+                Item Two
+            </TabPanel>
+            </Grid>
+            <TabPanel value={value} index={2}>
+                Item Three
+            </TabPanel>
+        </Grid>
         {cookies.survey===undefined&&<Redirect to="/survey" />}
     </div>
 

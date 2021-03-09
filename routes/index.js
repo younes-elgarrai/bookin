@@ -130,9 +130,13 @@ router.post('/recos', async (req,res)=>{
   //recherche par category (subjects) puis tri sur longueur et sur nouveautés
   //Sorties : objet suggestions , erreur ==> refaites le questionnarire
 
+  // AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE
+
+  // AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k
+
   var handleSearch = async (q) => {
       try {
-            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`);
             const body = await response.data;
             const books = await body.items.map((elem, index)=>{return elem});               
             return books ;

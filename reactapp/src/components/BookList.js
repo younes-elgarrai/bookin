@@ -26,7 +26,7 @@ function titleCut (desc) {
 useEffect(() => {
     const interval = setInterval(() => {
       setEpoch(epoch => epoch + 1);
-    }, 20000);
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
