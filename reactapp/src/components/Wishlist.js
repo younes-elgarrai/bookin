@@ -29,7 +29,7 @@ function Wishlist(props) {
             };
             CheckWishList();
         }
-    },[props.wishlist]);
+    },[props.wishlist, props.library]);
 
 
 return (
@@ -82,7 +82,7 @@ let styles = {
 
 function mapStateToProps(state) {
     console.log('state', state);
-    return { user: state.user, wishlist: state.wishlist }
+    return { user: state.user, wishlist: state.wishlist, library: state.library }
   }
 
   export default connect(mapStateToProps, null)(Wishlist);
