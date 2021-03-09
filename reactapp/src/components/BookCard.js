@@ -9,8 +9,8 @@ function BookCard(props) {
     const { Meta } = Card;
 
     function titleCut (desc) {
-        if (desc.length > 25){
-            return desc.substring(0,22)+"..."
+        if (desc.length > 24){
+            return desc.substring(0,20)+"..."
           } else {
               return desc
           };
