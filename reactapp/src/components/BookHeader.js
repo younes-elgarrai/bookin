@@ -104,7 +104,7 @@ function BookHeader(props) {
         if (body.result===true) {
           setIsModalLB(true);
           setBoutonLBStyle(!boutonLBStyle);
-          // props.addToWishList(props.bookId);
+          props.addToLibrary(props.bookId);
         }
   
       };
@@ -125,7 +125,7 @@ function BookHeader(props) {
 
       if (bodyDelete.result===true) {
         setBoutonLBStyle(!boutonLBStyle);
-        // props.DeleteToWishList(props.bookId);
+        props.DeleteToLibrary(props.bookId);
       }
       
     }
@@ -342,13 +342,19 @@ let styles = {
       }, 
       DeleteToWishList: function(bookId) {
         dispatch( {type: 'DeleteToWishList', bookId:bookId} )
-      }
+      },
+      addToLibrary: function(bookId) {
+        dispatch( {type: 'addToLibrary', bookId:bookId} )
+      }, 
+      DeleteToLibrary: function(bookId) {
+      dispatch( {type: 'DeleteToLibrary', bookId:bookId} )
+      },
     }
   }
 
   function mapStateToProps(state) {
     console.log('state', state);
-    return { user:state.user, wishlist: state.wishlist }
+    return { user:state.user, wishlist: state.wishlist, library:state.library }
   }
 
   export default connect(mapStateToProps, mapDispatchToProps)(BookHeader);
