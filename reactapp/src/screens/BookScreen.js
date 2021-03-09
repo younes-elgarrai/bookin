@@ -15,6 +15,7 @@ import BookHeader from '../components/BookHeader';
 import BookInfo from '../components/BookInfo';
 import Review from '../components/Reviews';
 import BookList from '../components/BookList';
+import BookCard2 from '../components/BookCard2';
 import Footer from '../components/Footer';
 
 const { Content } = Layout;
@@ -131,6 +132,7 @@ var bookArray = [[{
 function BookScreen() {
     const [dataBook, setDataBook] = useState ([]);
     const [isbn, setIsbn] = useState();
+    const [readerLink, setReaderLink] = useState();
     const [associated, setAssociated]= useState(bookArray);
     const [authorBooks, setAuthorBooks] = useState(bookArray);
     let {bookid} = useParams();
@@ -151,8 +153,10 @@ function BookScreen() {
                 setAuthorBooks((await [inauthorjson.items] || bookArray));
                     if (datajson.totalItems!==0){
                         setDataBook(datajson.volumeInfo);
+                        setReaderLink(datajson.accessInfo.webReaderLink);
+                        console.log('URL', readerLink);
+
                         if (datajson.volumeInfo.industryIdentifiers) {
-                          console.log('isbn', datajson.volumeInfo.industryIdentifiers)
                           var isbnArray = datajson.volumeInfo.industryIdentifiers;
                           var filteredIsbn = [];
 
@@ -160,7 +164,6 @@ function BookScreen() {
                               var sorted =   isbnArray.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
                                 if (sorted[j].type === "ISBN_13") {
                                   filteredIsbn.push(sorted[j].identifier);
-                                  console.log('filteredIsbn',filteredIsbn);
                                 }
                             };
                             setIsbn(filteredIsbn);
@@ -212,7 +215,8 @@ function BookScreen() {
         <Nav/>
         <Content style={styles.container}  >
                 <BookHeader bookTitle={dataBook.title} bookAuthor={dataBook.authors} 
-                bookCover={coverImg} bookCat={dataBook.categories} bookIsbn={isbn} bookId={bookid}/>
+                bookCover={coverImg} bookCat={dataBook.categories} bookIsbn={isbn} bookId={bookid}
+                bookPage={readerLink}/>
 
                 <BookInfo bookTitle={dataBook.title} bookDesc={dataBook.description} publishedDate={dataBook.publishedDate}
                 bookPublisher={dataBook.publisher} bookPageCount={dataBook.pageCount} bookIsbn={isbn}/>
@@ -234,6 +238,11 @@ function BookScreen() {
             </div>
             <BookList bookListTitle="Ouvrages associés..." data={associated}/>
             <BookList bookListTitle="Du même auteur..." data={authorBooks}/>
+
+            <div style={styles.libraryBloc}>
+</div>
+
+
             
     </Content>
     <Footer/>

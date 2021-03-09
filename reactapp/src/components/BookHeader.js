@@ -11,6 +11,39 @@ import {connect} from 'react-redux';
 
 
 function BookHeader(props) {
+
+// Traduction catégorie
+var translateCat = {
+  "Juvenile Fiction":"Roman pour enfant",
+  "Biography & Autobiography":"Biographie",
+  "Young Adult Nonfiction":"BD & Jeunesse",
+  "Comics & Graphic Novels":"BD & Jeunesse",
+  "Social Science":"Essai",
+  "Literary Criticism":"Essai",
+  'Comics Graphic Novels':'BD & Jeunesse',
+  'Humor':'BD & Jeunesse',
+  'Juvenile Fiction':'BD & Jeunesse',
+  'Young Adult Fiction':'BD & Jeunesse',
+  'Fiction':'Littérature & Fiction',
+  'Poetry':'Littérature & Fiction',
+  'COOKING':'Vie Pratique',
+  'SELF-HELP':'Vie Pratique',
+  "HEALTH & FITNESS":'Santé, Bien être',
+  "CRAFTS HOBBIES":'Loisirs Créatifs',
+  'BUSINESS ECONOMICS':'Art, Culture & Société',
+  'ART':'Art, Culture & Société',
+  'BIOGRAPHY AUTOBIOGRAPHY':'Art, Culture & Société',
+  'HISTORY':'Art, Culture & Société',
+  'RELIGION':'Art, Culture & Société',
+  'SOCIAL SCIENCE':'Art, Culture & Société',
+  'NATURE':'Nature & Loisirs',
+  'SPORTS RECREATION':'Nature & Loisirs',
+  'TRAVEL':'Nature & Loisirs',
+  'BUSINESS ECONOMICS':'Savoirs',
+  'Computers':'Savoirs',
+  'Science':'Savoirs',
+}
+
   // Récupération du tableau d'auteurs et les séparer par une virgule
   var authors;
   if (props.bookAuthor){
@@ -21,9 +54,20 @@ function BookHeader(props) {
     }
   }
 
+  // Récupération de la 1ère catégorie du livre
+  var styleBook=null;
+  if (props.bookCat) {
+    if (props.bookCat.length!=0) {
+      styleBook=props.bookCat[0].split('/')[0].trim();
+      console.log('styleBook',styleBook);
+      styleBook=translateCat[styleBook];
+    } 
+  }
+ 
   // Création de l'url pour l'achat vers Amazon
   var urlAmazon = `https://www.amazon.fr/gp/search?ie=UTF8&tag=bookin0c-21&linkCode=ur2&linkId=ed069e44484efe7e5139cd6a95321518&camp=1642&creative=6746&index=books&keywords=${props.bookIsbn}`
-
+  
+console.log('RL', props.readerLink);
 
   // Const pour la modal du bouton ajout à ma wishlit
   const [isModalLB, setIsModalLB] = useState(false);
@@ -189,7 +233,7 @@ useEffect(() => {
     
   };
 
-},[])
+},[props.bookId])
 
 
 if (isLoggedIn) {
@@ -216,10 +260,10 @@ return (
 
           <p style={styles.note} >Note 3,5/5 | 12 avis</p>
           </div>
-      {/* 
+      
         <div>
-          <Button style={{marginRight:'10px',  backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{props.bookCat[0]}</Button>
-        </div> */}
+          <Button style={{backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{styleBook}</Button>
+        </div>
 
         </Col>
     </Row>
@@ -252,6 +296,11 @@ return (
         {props.bookIsbn === 'nc' ? null : 
         <a href={urlAmazon} target="_blank">
         <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button>
+        </a>}
+        
+        {props.bookPage === 'nc' ? null :
+        <a href={props.bookPage} target="_blank">
+        <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>JE FEUILLETTE</Button>
         </a>}
 
         </Col>
