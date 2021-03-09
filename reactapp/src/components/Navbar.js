@@ -6,14 +6,12 @@ import {connect} from 'react-redux';
 
 // ReactStrap
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
-  NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+   UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
   // Ant Design
 import { Avatar, Badge } from 'antd';
 import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
 
 function NavigationBar(props) {
-  console.log('NavBar > props.token', props.token);
-  console.log('NavBar > props.avatar', props.avatar);
   console.log('NavBar > props.user', props.user);
 
   // Large menu
@@ -31,8 +29,6 @@ function NavigationBar(props) {
             body: `token=${props.user.token}`
             });
             const body = await data.json();
-            console.log('bodyCheck', body)
-            console.log('dataCheck', data)
             if (body.result===true && body.wishlist.length >0) {
                 setCountWL(body.wishlist.length);
             } else if (body.result===true && body.wishlist.length === 0)
@@ -48,8 +44,6 @@ function NavigationBar(props) {
           body: `token=${props.user.token}`
           });
           const body = await data.json();
-          console.log('bodyCheck', body)
-          console.log('dataCheck', data)
           if (body.result===true && body.library.length >0) {
               setCountLB(body.library.length);
           } else if (body.result===true && body.library.length === 0)
@@ -61,7 +55,7 @@ function NavigationBar(props) {
 
       
     }
-},[props.wishlist]);
+},[props.wishlist, props.library]);
 
   return(
     <div>
@@ -81,9 +75,9 @@ function NavigationBar(props) {
               <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav>
                 {props.user.avatar ? 
-                <Avatar className="menu-nav-avatar" src={props.user.avatar}/>
+                <Avatar size="large" className="menu-nav-avatar" src={props.user.avatar}/>
                 :
-                <Avatar className="menu-nav-avatar" icon={<UserOutlined/>}/>}
+                <Avatar size="large" className="menu-nav-avatar" icon={<UserOutlined/>}/>}
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem><Link to='/update-account' className="menu-nav-item-dropdown">Modifier compte</Link></DropdownItem>
@@ -135,6 +129,6 @@ function mapDispatchToProps(dispatch) {
   }
 }
 function mapStateToProps(state) {
-  return { user: state.user, wishlist: state.wishlist }
+  return { user: state.user, wishlist: state.wishlist, library: state.library }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);

@@ -1,10 +1,30 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Avatar, Row, Col} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import '../App.css'
+import '../App.css';
+import ReviewCard from './ReviewCard';
 
 
-function Reviews() {
+function Reviews(props) {
+    console.log('reviews > props.list', props.list);
+
+    const displayReviewsResult = (list) => {
+        if (list === undefined || list.length == 0) {
+            return(
+                <Col xs={24}><p style={{fontSize:'14px', color:'#000000'}}>Pas encore d'avis sur ce livre. Soyez le premier en remplissant le formulaire !</p></Col>
+            )
+        } else {
+            return(
+                list.map(review => {
+                    return(
+                        <Col xs={24} >
+                        <ReviewCard data={review} />
+                        </Col>
+                    )
+                })  
+            )
+        }
+    }
 
 return (
     <div style={styles.reviewBloc}>
@@ -13,40 +33,9 @@ return (
                 <h3 style={styles.h3}>Les derniers avis</h3>
             </Col>
         </Row>
-
-        <Row style={{marginBottom:'10px'}}>
-            <Col xs={24} md={2} xl={2}>
-                <Avatar size={64} icon={<UserOutlined />} />
-            </Col>
-
-            <Col xs={24} md={22} xl={22}>
-                <p style={{fontWeight:"500", marginBottom:"0px", color:"#23396C"}}>Nom de l'utilisateur</p>
-                <p style={{color:"#333", fontSize:"14px", fontWeight:"300"}}>We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.</p>
-            </Col>
-        </Row>
-
-        <Row style={{marginBottom:'10px'}}>
-            <Col xs={24} md={2} xl={2}>
-                <Avatar size={64} icon={<UserOutlined />} />
-            </Col>
-
-            <Col xs={24} md={22} xl={22}>
-                <p style={{fontWeight:"500", marginBottom:"0px", color:"#23396C"}}>Nom de l'utilisateur</p>
-                <p style={{color:"#333", fontSize:"14px", fontWeight:"300"}}>We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.</p>
-            </Col>
-        </Row>
-
         <Row >
-            <Col xs={24} md={2} xl={2}>
-                <Avatar size={64} icon={<UserOutlined />} />
-            </Col>
-
-            <Col xs={24} md={22} xl={22}>
-                <p style={{fontWeight:"500", marginBottom:"0px", color:"#23396C"}}>Nom de l'utilisateur</p>
-                <p style={{color:"#333", fontSize:"14px", fontWeight:"300"}}>We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.</p>
-            </Col>
+        {displayReviewsResult(props.list)}
         </Row>
-
 </div>
 );
 }

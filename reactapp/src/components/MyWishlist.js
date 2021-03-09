@@ -4,7 +4,7 @@ import '../App.css'
 import BookCardHover from './BookCardHover'
 import { connect } from 'react-redux';
 
-function Wishlist(props) {
+function MyWishlist(props) {
 
     const [displayWishlist, setDisplayWishlist] = useState(false);
     const [result, setResult] = useState([]);
@@ -23,12 +23,13 @@ function Wishlist(props) {
                 if (body.result===true && body.wishlist.length >0) {
                     setDisplayWishlist(true);
                     setResult(body.wishlist);
-                } else if (body.result===true && body.wishlist.length === 0)
-                {
-                    setDisplayWishlist(false);}
+                } else if (body.result===true && body.wishlist.length === 0) {
+                    setDisplayWishlist(false);
+                }; 
             };
             CheckWishList();
-        }
+
+        };
     },[props.wishlist, props.library]);
 
 
@@ -48,7 +49,7 @@ return (
                 :
                 <div style={{display:'flex', flexWrap:"wrap" ,justifyContent:"flex-start", marginTop:"0px"}}>
                 {result.map((book)=>(
-                    <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover}/>
+                    <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover} context="wishlist"/>
                 ))}
                 </div>
             }
@@ -85,4 +86,4 @@ function mapStateToProps(state) {
     return { user: state.user, wishlist: state.wishlist, library: state.library }
   }
 
-  export default connect(mapStateToProps, null)(Wishlist);
+  export default connect(mapStateToProps, null)(MyWishlist);
