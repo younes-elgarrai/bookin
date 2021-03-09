@@ -156,7 +156,7 @@ function BookCardHover(props) {
 
 return (
  
-        <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ display:'flex', flexDirection:'column', justifyContent:'space-evenly', alignItems:'center', margin:'5px', marginBottom:"15px", flexWrap:"wrap"}} >
+        <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ display:'flex', flexDirection:'column', justifyContent:'space-evenly', alignItems:'center', margin:'5px', marginBottom:"15px", flexWrap:"nowrap"}} >
             <div style={{borderRight:'1px solid #f0f0f0', borderLeft:'1px solid #f0f0f0', borderTop:'1px solid #f0f0f0', width:"151px"}}>
             <Link to={{pathname:"/book/"+props.bookId}}><FittedImg fit="cover" width={150} height={220}  src={!props.bookCover ? Unavailable : props.bookCover} alt={props.bookTitle} /></Link>
             <div style={{color:"#333", fontSize:"12px", fontWeight:"400", width:"150px", padding:"5px", textAlign:"center", verticalAlign:""}}> {titleCut(props.bookTitle)} </div>

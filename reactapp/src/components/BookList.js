@@ -66,7 +66,7 @@ var size = props.data.length;
         setTimeout(() => {
             setEpoch(epoch => epoch + 1);
             setAnimate(true);
-          }, 500);
+          }, 800);
     }
 
 return (
@@ -81,7 +81,7 @@ return (
                             </IconButton>
                         </Grid>
                     </Grid>
-                <Grid xs={12}>
+                <Grid item xs={12}>
                     <AliceCarousel
                                     mouseTracking
                                     items={array}

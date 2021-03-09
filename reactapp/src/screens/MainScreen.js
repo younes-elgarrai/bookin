@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
@@ -13,6 +14,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Background from '../assets/picto.png'
 
 import MyLibrary from '../components/MyLibrary'
+import MyWishlist from '../components/MyWishlist'
 
 import '../components/BookHeader'
 import '../App.css';
@@ -98,15 +100,13 @@ var queryMaker = (styles) => {
               }
               
                                     
-function MainScreen() {
+function MainScreen(props) {
 
 
     const classes = useStyles();
 
-    const [value, setValue] = useState(0);
-
     const handleChange = (event, newValue) => {
-    setValue(newValue);
+    props.onTabClick(newValue);
     };
 
     const [cookies, setCookie] = useCookies(['survey']);
@@ -198,7 +198,7 @@ function MainScreen() {
                                             backgroundRepeat: 'no-repeat',
                                         backgroundPosition: 'right bottom',}}>
                     <Grid container xs={2} direction="column" justify="center" alignItems="center" >
-                        <img style={styles.images} width={120} height={120} src={'http://books.google.com/books/content?id=4fX_DwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api'} alt={'bookpicture'}/> 
+                        <img style={styles.images} width={120} height={120} src={props.user?props.user.avatar:Background} alt={'bookpicture'}/> 
                     </Grid>
                     <Grid container xs={4} width="100%" direction="column" justify="center" alignItems="flex-start">
                         <Grid container xs={6} direction="row" justify="space-between" alignItems="center">
@@ -220,7 +220,7 @@ function MainScreen() {
             <Grid item xs={12} style={{width:'80%'}}>
                 <Paper elevation={0} className={classes.root}>
                         <Tabs
-                            value={value}
+                            value={props.value}
                             onChange={handleChange}
                             indicatorColor="primary"
                             textColor="primary"
@@ -233,7 +233,7 @@ function MainScreen() {
                 </Paper>
             </Grid>
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
-                <TabPanel value={value} index={0}>
+                <TabPanel value={props.value} index={0}>
                         <div style={styles.libraryBloc}>
                             {data?suggest:<BookSkeleton />}
                         </div> 
@@ -241,13 +241,13 @@ function MainScreen() {
                 </TabPanel>
             </Grid>
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
-                <TabPanel value={value} index={1}>
+                <TabPanel value={props.value} index={1}>
                     <MyLibrary />
                 </TabPanel>
             </Grid>
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
-                <TabPanel value={value} index={2}>
-                    Item Three
+                <TabPanel value={props.value} index={2}>
+                    <MyWishlist />
                 </TabPanel>
             </Grid>
         </Grid>
@@ -310,4 +310,19 @@ let styles = {
     }
 }
 
-export default MainScreen;
+
+function mapStateToProps(state) {
+    return { value: state.mainTab,
+             user: state.user}
+  }
+
+  function mapDispatchToProps(dispatch) {
+    return {
+      onTabClick: function(value) {
+        dispatch( {type:'setTab', value} )
+    }
+    }
+  }
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(MainScreen);

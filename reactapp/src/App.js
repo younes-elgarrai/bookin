@@ -32,8 +32,9 @@ import { CookiesProvider } from 'react-cookie';
 import {Provider} from 'react-redux';
 
 import {createStore, combineReducers}  from 'redux';
+import mainReducer from './reducers/main.reducer';
 
-const store = createStore(combineReducers({survey: surveyReducer, avatar: avatarReducer, user: userReducer , category: categoryReducer, wishlist:wishListReducer, library:libraryReducer }));
+const store = createStore(combineReducers({survey: surveyReducer, avatar: avatarReducer, user: userReducer , category: categoryReducer, wishlist:wishListReducer, library:libraryReducer, mainTab: mainReducer }));
 
 
 
