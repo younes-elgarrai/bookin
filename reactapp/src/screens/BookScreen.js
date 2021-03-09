@@ -1,8 +1,10 @@
 import React , {useState, useEffect}  from 'react';
 import { Avatar, Layout, Row, Col} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+
 import '../components/BookHeader'
 import '../App.css';
+
 
 import Cover from '../assets/cover.jpg'
 
@@ -17,7 +19,7 @@ import Footer from '../components/Footer';
 
 const { Content } = Layout;
 
-var bookArray = [{
+var bookArray = [[{
   "kind": "books#volume",
   "id": "4fX_DwAAQBAJ",
   "etag": "IqrkRgWuA4M",
@@ -124,14 +126,16 @@ var bookArray = [{
   "searchInfo": {
     "textSnippet": "Le Joker, Double-Face, Man-Bat, le Professeur Milo."
   }
-}]
+}]]
 
 function BookScreen() {
     const [dataBook, setDataBook] = useState ([]);
     const [isbn, setIsbn] = useState();
     const [associated, setAssociated]= useState(bookArray);
+    const [authorBooks, setAuthorBooks] = useState(bookArray);
     let {bookid} = useParams();
-    
+
+
     useEffect(() => {
         if (bookid)
             {
@@ -140,7 +144,11 @@ function BookScreen() {
                 const datajson = await data.json();
                 const assoc = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}/associated`);
                 const assocjson = await assoc.json()
-                setAssociated(( await assocjson.items || bookArray));
+                const inauthor = await fetch(`https://books.googleapis.com/books/v1/volumes?q=inauthor:"${await datajson.volumeInfo.authors[0]}"&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+                const inauthorjson = await inauthor.json()
+         
+                setAssociated(( await [assocjson.items] || bookArray));
+                setAuthorBooks((await [inauthorjson.items] || bookArray));
                     if (datajson.totalItems!==0){
                         setDataBook(datajson.volumeInfo);
                         if (datajson.volumeInfo.industryIdentifiers) {
@@ -224,9 +232,9 @@ function BookScreen() {
                 <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
                 </Row>
             </div>
-            <BookList bookListTitle="Nos recommandations" data={associated}/>
-        
-            <Review/>
+            <BookList bookListTitle="Ouvrages associés..." data={associated}/>
+            <BookList bookListTitle="Du même auteur..." data={authorBooks}/>
+            
     </Content>
     <Footer/>
     </div>
