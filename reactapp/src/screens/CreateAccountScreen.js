@@ -11,7 +11,6 @@ import AvatarUpload from '../components/AvatarUpload';
 import {connect} from 'react-redux';
 
 function CreateAccountScreen(props) {
-  console.log('CreateAccountScreen > props.user', props.user);
 
     const [cookies, setCookie] = useCookies(['survey']);
     console.log('cookies survey', cookies.survey);

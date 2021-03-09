@@ -10,7 +10,6 @@ import AvatarUpload from '../components/AvatarUpload';
 import {connect} from 'react-redux';
 
 function UpdateAccountScreen(props) {
-  console.log('UpdateAccountScreen > props.user', props.user);
 
     const [cookies, setCookie] = useCookies(['survey']);
     console.log('cookies survey', cookies.survey);

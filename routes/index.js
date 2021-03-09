@@ -130,9 +130,13 @@ router.post('/recos', async (req,res)=>{
   //recherche par category (subjects) puis tri sur longueur et sur nouveautés
   //Sorties : objet suggestions , erreur ==> refaites le questionnarire
 
+  // AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE
+
+  // AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k
+
   var handleSearch = async (q) => {
       try {
-            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`);
             const body = await response.data;
             const books = await body.items.map((elem, index)=>{return elem});               
             return books ;
@@ -227,24 +231,6 @@ router.get('/library/:token', function (req, res) {
   //Sorties : success, failure, [ISBN13]
 })
 
-
-// POST : Login/Signup step 0 : check email from user ("continuer")
-router.post('/check-email', async function (req, res, next) {
-  const checkExistingUserFromEmail = await UsersModel.findOne({
-    email: req.body.email
-  });
-  console.log('check', checkExistingUserFromEmail); // null 
-  if (checkExistingUserFromEmail) {
-    res.json({
-      result: true
-    });
-  } else {
-    res.json({
-      result: false
-    })
-  }
-});
-
 // POST : Login
 router.post('/log-in', async function (req, res, next) {
   if (!req.body.email || !req.body.password) {
@@ -255,10 +241,12 @@ router.post('/log-in', async function (req, res, next) {
   } else {
   const user = await UsersModel.findOne({email: req.body.email});
   const password = req.body.password;
-  const userToken = user.token;
-  const userAvatar = user.avatar;
-  if (bcrypt.compareSync(password, user.password)) {
-    res.json({ login: true, userToken, userAvatar });
+  if (user) {
+    const userToken = user.token;
+    const userAvatar = user.avatar;
+    if (bcrypt.compareSync(password, user.password)) {
+      res.json({ login: true, userToken, userAvatar });
+  }
   } else { 
     res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }
 }});
@@ -342,30 +330,35 @@ router.post('/update', async (req, res) => {
   });
 });
 
-// Post review
-router.post('/new-review', (req, res) => {
-  const review = new ReviewsModel({ // voir sur le cours
-    isbn13: req.body.isbn13,
-    userLibraryName: req.body.userLibraryName,
-    avatar: req.body.avatar,
-    rating: req.body.rating,
-    comment: req.body.comment,
-  })
-  // save.
-  res.json({
-    result: true,
-    review
-  });
+
+// POST : write a new book review
+router.post('/new-review', async (req, res) => {
+  const user = await UsersModel.findOne({token: req.body.token});
+  if (!user) {
+    res.json({result: false, message: "Veuillez vous identifier pour écrire un avis."})
+  } else {
+    const review = new ReviewsModel({ 
+      bookid: req.body.book,
+      userLibraryName: user.userLibraryName,
+      avatar: user.avatar,
+      rating: req.body.rating,
+      comment: req.body.comment,
+    })
+    const reviewSave = await review.save();
+    res.json({result: true, reviewSave});
+  }
 });
 
-// Get reviews
-router.get('/reviews', async (req, res) => {
-  const reviews = await ReviewsModel.find(); // par book ISBN
-  res.json({
-    result: true,
-    reviews
-  });
+// GET : get all reviews for a book
+router.get('/reviews/:bookid', async (req, res) => {
+  const reviews = await ReviewsModel.find({bookid: req.params.bookid}); 
+    res.json({ result: true, reviews});
 });
+
+// DELETE a review 
+router.delete('/reviews/delete/:token/:bookid', async (req, res) => {
+})
+
 
 /* Recherche sur Google Books API de livres
 API_key: "AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE"
