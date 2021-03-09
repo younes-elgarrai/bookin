@@ -31,8 +31,6 @@ function NavigationBar(props) {
             body: `token=${props.user.token}`
             });
             const body = await data.json();
-            console.log('bodyCheck', body)
-            console.log('dataCheck', data)
             if (body.result===true && body.wishlist.length >0) {
                 setCountWL(body.wishlist.length);
             } else if (body.result===true && body.wishlist.length === 0)
@@ -48,8 +46,6 @@ function NavigationBar(props) {
           body: `token=${props.user.token}`
           });
           const body = await data.json();
-          console.log('bodyCheck', body)
-          console.log('dataCheck', data)
           if (body.result===true && body.library.length >0) {
               setCountLB(body.library.length);
           } else if (body.result===true && body.library.length === 0)

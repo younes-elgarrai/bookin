@@ -8,8 +8,7 @@ function MyLibrary(props) {
 
     const [displayLibrary, setDisplayLibrary] = useState(false);
     const [result, setResult] = useState([]);
-    const [isInLibrary, setIsInLibrary] = useState(false);
-    const [isInWishlist, setIsInWishlist] = useState(false);
+
 
     useEffect(() => {
         if (props.user!==null) {
@@ -25,35 +24,16 @@ function MyLibrary(props) {
                 if (body.result===true && body.library.length >0) {
                     setDisplayLibrary(true);
                     setResult(body.library);
-                    setIsInLibrary(true);
                 } else if (body.result===true && body.library.length === 0) {
                     setDisplayLibrary(false);
-                    setIsInLibrary(false);
-                } else {
-                    setIsInLibrary(false);
-                }
-            };
-            CheckLibrary();
-            var CheckWishList = async () => {
-                const data = await fetch(`/wishlist`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `token=${props.user.token}`
-                });
-                const body = await data.json();
-                console.log('bodyCheck', body)
-                console.log('dataCheck', data)
-                if (body.result===true && body.wishlist.length >0) {
-                    setIsInWishlist(true);
-                } else if (body.result===true && body.wishlist.length === 0) {
-                    setIsInWishlist(false);
-                } else {
-                    setIsInWishlist(false);
                 };
             };
-            CheckWishList();
+            CheckLibrary();
+
         };
     },[props.wishlist, props.library]);
+
+
 
 
 return (
@@ -72,7 +52,7 @@ return (
                 :
                 <div style={{display:'flex', flexWrap:"wrap" ,justifyContent:"flex-start", marginTop:"0px"}}>
                 {result.map((book)=>(
-                    <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover} bookLibrary={isInLibrary} bookWishlist={isInWishlist}/>
+                    <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover} context="library"/>
                 ))}
                 </div>
             }
