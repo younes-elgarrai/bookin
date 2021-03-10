@@ -239,18 +239,18 @@ useEffect(() => {
       const body = await data.json();
 
       if (body.result===true) {
+        setBoutonWLStyle(false);
+        props.setWishlist(body.wishlist);
         for (let i = 0; i < body.wishlist.length; i++) {
           if (body.wishlist[i].bookid===props.bookId) {
             setBoutonWLStyle(true);
-          } else {
-            setBoutonWLStyle(false);
-          }
-        } 
+          }; 
+        };
       }
     };
     CheckWishList();
 
-    var CheckWishList = async () => {
+    var CheckLibrary = async () => {
       const data = await fetch(`/library`, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded' },
@@ -259,17 +259,16 @@ useEffect(() => {
       const body = await data.json();
 
       if (body.result===true) {
+        props.setLibrary(body.library);
+        setBoutonLBStyle(false);
         for (let i = 0; i < body.library.length; i++) {
           if (body.library[i].bookid===props.bookId) {
             setBoutonLBStyle(true);
-          } else {
-            setBoutonLBStyle(false);
           }
-        } 
-      }
+        }; 
+      };
     };
-    CheckWishList();
-    
+    CheckLibrary();
   };
 
 },[props.bookId])
@@ -424,6 +423,12 @@ let styles = {
 
   function mapDispatchToProps(dispatch) {
     return {
+      setWishlist: function(wishlist) {
+        dispatch( {type: 'setWishlist', wishlist:wishlist} )
+      }, 
+      setLibrary: function(library) {
+        dispatch( {type: 'setLibrary', library:library} )
+      }, 
       addToWishList: function(bookId) {
           dispatch( {type: 'addToWishList', bookId:bookId} )
       }, 
