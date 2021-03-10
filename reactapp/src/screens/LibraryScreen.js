@@ -12,7 +12,7 @@ function LibraryScreen(props) {
             <Nav/>
             <div style={styles.container}>
                 <LibraryHeader />
-                <Wishlist />
+                <MyWishlist />
             </div>
             <Footer/>
         </div>

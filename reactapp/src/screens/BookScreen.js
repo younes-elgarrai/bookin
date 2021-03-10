@@ -210,15 +210,15 @@ function BookScreen() {
       },[bookid])
 
       // REVIEWS //
+      const loadReviewsData = async () => {
+        var rawResponse = await fetch(`/reviews/${bookid}`);
+        var response = await rawResponse.json();
+        console.log('response load reviews', response.reviews);
+        setReviewsList(response.reviews);
+      }
       useEffect(() => {
-        async function loadReviewsData() {
-            var rawResponse = await fetch(`/reviews/${bookid}`);
-            var response = await rawResponse.json();
-            console.log('response load reviews', response.reviews);
-            setReviewsList(response.reviews);
-        } 
         loadReviewsData();
-        }, [bookid, reviewsList]); 
+        }, [bookid]); 
 
     // Si la cover du livre n'existe pas alors => Afficher l'image par défaut
     var coverImg;
@@ -269,7 +269,7 @@ function BookScreen() {
 
         
             <Reviews list={reviewsList}/>
-            <NewReview book={bookid} />
+            <NewReview book={bookid} list={reviewsList} loadReviewsData={()=>loadReviewsData()} />
     </Content>
     <Footer/>
     </div>

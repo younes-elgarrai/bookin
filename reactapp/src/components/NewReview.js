@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import {Link} from 'react-router-dom';
 import '../App.css';
 import { Input, Button, Form , Modal} from 'antd';
 import {connect} from 'react-redux';
-import { BookOutlined, StarFilled } from '@ant-design/icons';
+import { StarFilled } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
 
 function NewReview(props) {
-
+  console.log('list in newreview', props.list);
+  
   const [ rating, setRating ] = useState(0);
   const [ review, setReview ] = useState('');
   const [ userMessage , setUserMessage ] = useState('');
@@ -21,7 +23,7 @@ function NewReview(props) {
     setRating(0);
   };
 
-let displayStars = (nb) => {
+const displayStars = (nb) => {
     let stars = [];
     for (let i = 0 ; i < 5 ; i++) {
       let starStyle = { fontSize: '20px', color: "#e1e1e1", marginRight:'2px'};
@@ -33,36 +35,52 @@ let displayStars = (nb) => {
     return stars;
   }
 
+const loadData = () => { props.loadReviewsData() }  
 const saveNewReview = async () => {
-    const response = await fetch('/new-review', {
+    if (rating === 0) {
+      setUserMessage('Veuillez noter ce livre pour valider votre avis !')
+    } else if (review === '') {
+      setUserMessage('Veuillez saisir au moins 5 caractères pour valider votre avis.')
+    } else {
+      const response = await fetch('/new-review', {
         method: 'POST',
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
         body: `book=${props.book}&token=${props.user.token}&rating=${rating}&comment=${review}`
       });
       const dataResponse = await response.json();
-      if (dataResponse) {
+      if (dataResponse.result) {
         showModal();
+        loadData();
+      } else {
+        setUserMessage(dataResponse.message);
       }
+    }
 }
 
 return(
     <div style={styles.reviewBloc}>
     <h3 style={styles.title}>Donnez votre avis</h3>
- <Form layout="vertical" style={{width:'80%', paddingLeft:'20px'}}>
-    <Form.Item required tooltip="Ce champ est obligatoire" label="Note sur 5">
-    <div style={{display:'flex'}}>{displayStars(rating)}</div>
-    </Form.Item>
-    <Form.Item label="Qu'avez-vous pensé de ce livre ?">
-        <TextArea rows={6} placeholder="Quel suspens ! je l'ai lu en une soirée." prefix={<BookOutlined className="site-form-item-icon" />}  onChange={(e)=> setReview(e.target.value)} value={review}/>
-    </Form.Item>
-    <Form.Item>
-        <Button style={styles.btn} onClick={()=> saveNewReview()} >Valider</Button>
-        <Modal centered title="Félicitations !" visible={isModalVisible} footer={null} onCancel={handleCancel} style={{textAlign: "center"}}>
-        <p style={styles.userMsg}>Votre avis a bien été ajouté.</p>
-      </Modal>
-        <p style={styles.userMsg}>{userMessage}</p>
-    </Form.Item>
-    </Form>
+    {props.user ? 
+     <Form layout="vertical" style={{width:'80%', paddingLeft:'20px'}}>
+     <Form.Item required tooltip="Ce champ est obligatoire" label="Note sur 5">
+     <div style={{display:'flex'}}>{displayStars(rating)}</div>
+     </Form.Item>
+     <Form.Item required tooltip="Ce champ est obligatoire (au moins 5 caractères)" label="Qu'avez-vous pensé de ce livre ?">
+         <TextArea rows={6} placeholder="Quel suspens ! je l'ai lu en une soirée." allowClear={true}  onChange={(e)=> setReview(e.target.value)} value={review}/>
+     </Form.Item>
+     <Form.Item>
+         <Button style={styles.btn} onClick={()=> saveNewReview()} >Valider</Button>
+         <Modal centered title="Félicitations !" visible={isModalVisible} footer={null} onCancel={handleCancel} style={{textAlign: "center"}}>
+         <p style={styles.userMsg}>Votre avis a bien été ajouté.</p>
+       </Modal>
+         <p style={styles.userMsg}>{userMessage}</p>
+     </Form.Item>
+     </Form>
+    :
+    <div>
+      <p style={styles.labelInline}><Button type='link' style={styles.smallBtn}><Link to='/connection'>Connectez-vous</Link></Button> pour écrire un avis !</p> 
+    </div>
+    }
     </div>
 )
 }
@@ -83,8 +101,8 @@ const styles = {
         paddingBottom:"10px"
     },
     userMsg: {
-        color:"#23396C",
-        fontSize:'12px',
+      color:"#fca311",
+        fontSize:'14px',
         fontWeight:'bold',
       },
       btn: {
@@ -94,7 +112,22 @@ const styles = {
           color:'#23396c', 
           borderColor:'#fca311', 
           borderRadius:'5px',
-      }
+      },
+      smallBtn:{
+        color:'#23396c',
+        fontSize:'14px',
+        padding:0,
+        fontWeight:'bold',
+        marginTop:'5px',
+        marginBottom:'10px',
+    },
+    labelInline: {
+        display:'inline',
+        color:'#000000',
+        fontSize:'14px',
+        marginTop:'20px',
+        marginBottom:'10px'
+      }, 
 }
 function mapStateToProps(state) {
     return { user: state.user}

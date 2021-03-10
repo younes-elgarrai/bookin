@@ -105,8 +105,8 @@ const styles = {
         marginBottom:'10px'
       },
     userMsg: {
-        color:"#23396C",
-        fontSize:'12px',
+        color:"#fca311",
+        fontSize:'14px',
         fontWeight:'bold',
       },
     btn: {
