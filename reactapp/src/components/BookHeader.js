@@ -269,8 +269,14 @@ if (isLoggedIn) {
 return (
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
-        <Col xs={24} md={8} xl={5} >
+        <Col xs={24} md={8} xl={5} style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
           <img style={styles.images} width={150} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
+
+            {props.bookPage === 'nc' ? null :
+            <a href={props.bookPage} target="_blank">
+            <p style={{marginBottom:'0', fontWeight:'100', color:'white', textDecoration:'underline'}}> Je feuillette</p>
+            </a>}
+
         </Col>
 
         <Col xs={24} md={12} xl={12} >
@@ -289,7 +295,7 @@ return (
           </div>
       
         <div>
-          <Button style={{backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{styleBook}</Button>
+          <Button style={{pointerEvents:'none', backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{styleBook}</Button>
         </div>
 
         </Col>
@@ -305,7 +311,7 @@ return (
           <div style={{textAlign: "center"}}>
             <CheckCircleFilled style={{ color:'#37a000', fontSize:'16px', textAlign:'right'}}/>
             <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre bibliothèque<br /><br /></p>
-            <Link to='/library'><Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma bibliothèque</Button></Link>   
+            <Link to='/main'><Button onClick={()=>props.onTabClick(1)} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma bibliothèque</Button></Link>   
           </div>
         </Modal>
         
@@ -316,18 +322,13 @@ return (
             <div style={{textAlign: "center"}}>
               <CheckCircleFilled style={{ color:'#37a000', fontSize:'16px', textAlign:'right'}}/>
               <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre wishlist<br /><br /></p>
-              <Link to='/library'><Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma wishlist</Button></Link>   
+              <Link to='/main'><Button onClick={()=>props.onTabClick(2)} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma wishlist</Button></Link>   
             </div>
           </Modal>
 
         {props.bookIsbn === 'nc' ? null : 
         <a href={urlAmazon} target="_blank">
         <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button>
-        </a>}
-        
-        {props.bookPage === 'nc' ? null :
-        <a href={props.bookPage} target="_blank">
-        <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>JE FEUILLETTE</Button>
         </a>}
 
         </Col>
@@ -405,7 +406,7 @@ let styles = {
 
     images: {
       borderRadius:5,
-      boxShadow: "1px 1px 1px #e1e1e1"
+      boxShadow: "1px 1px 1px #e1e1e1",
     }
   }
 
@@ -423,6 +424,9 @@ let styles = {
       DeleteToLibrary: function(bookId) {
       dispatch( {type: 'DeleteToLibrary', bookId:bookId} )
       },
+      onTabClick: function(value) {
+        dispatch( {type:'setTab', value} )
+    },
     }
   }
 
