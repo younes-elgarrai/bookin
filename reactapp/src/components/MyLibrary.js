@@ -25,10 +25,10 @@ function MyLibrary(props) {
                 if (body.result===true && body.library.length >0) {
                     setDisplayLibrary(true);
                     setResult(body.library);
-                    props.setLibrary(body.library);
+                    // props.setLibrary(body.library);
                 } else if (body.result===true && body.library.length === 0) {
                     setDisplayLibrary(false);
-                    props.setLibrary(body.library);
+                    // props.setLibrary(body.library);
                 };
             };
             CheckLibrary();

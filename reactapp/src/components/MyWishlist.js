@@ -23,10 +23,10 @@ function MyWishlist(props) {
                 if (body.result===true && body.wishlist.length >0) {
                     setDisplayWishlist(true);
                     setResult(body.wishlist);
-                    props.setWishlist(body.wishlist);
+                    // props.setWishlist(body.wishlist);
                 } else if (body.result===true && body.wishlist.length === 0) {
                     setDisplayWishlist(false);
-                    props.setWishlist(body.wishlist);
+                    // props.setWishlist(body.wishlist);
                 }; 
             };
             CheckWishList();

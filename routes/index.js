@@ -36,7 +36,7 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
   try {
 
     var bookToCheck = await BooksModel.findOne({bookid: bookid});
-    console.log("bookToCheck",bookToCheck);
+    console.log("bookToCheck", bookToCheck);
 
     if (bookToCheck === null) { 
       const newBookInLibrary =  new BooksModel({
@@ -50,7 +50,7 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
       var userCheck = await UsersModel.findOne({token: token});
       var userCheckTab = [];
       for (let i = 0; i < userCheck.library.length; i++) {
-        console.log("userCheck.library[i]",userCheck.library[i])
+        console.log("userCheck.library"+i,userCheck.library[i])
         if (JSON.stringify(userCheck.library[i]) === JSON.stringify(savedBookInLibrary._id)) {
           userCheckTab.push(userCheck)
         }
@@ -82,11 +82,12 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
 
     }
     var result = true;
+    res.json({result})
   }
   catch (error) {
     var result = false
+    res.json({result})
   }
-  res.json({result})
  }});
 
 
@@ -97,7 +98,7 @@ router.post('/library', async (req, res) => {
     res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
   } else {
   const user = await UsersModel.findOne({token: req.body.token}).populate('library').exec()
-  var userLibrary = user.library
+  var userLibrary = (user.library || null)
   res.json({result: true, library: userLibrary})
 }
 });
@@ -266,9 +267,9 @@ router.post('/sign-up', async function (req, res, next) {
     console.log('usersave', userSave);
     const userToken = userSave.token;
     const userAvatar = userSave.avatar;
-    const userLength = user.favoriteBookLength;
-    const userPeriod = user.favoriteBookPeriod;
-    const userStyles = user.favoriteBookStyles;
+    const userLength = userSave.favoriteBookLength;
+    const userPeriod = userSave.favoriteBookPeriod;
+    const userStyles = userSave.favoriteBookStyles;
     res.json({result:true, userToken, userAvatar, userLength, userPeriod, userStyles});
   }
 });
@@ -324,6 +325,7 @@ router.post('/update-survey', async (req, res) => {
     var user = await UsersModel.findOneAndUpdate({token: token},{ favoriteBookPeriod : [req.body.period],
                                                                   favoriteBookLength : [req.body.length],
                                                                   favoriteBookStyles : JSON.parse(req.body.styles)},{new:true});
+    console.log(user);
     res.json({ result: true, newuser: user});
   } else {
       res.json({ result: false, message: "la mise à jour a échoué" });
@@ -394,7 +396,7 @@ router.post('/wishlist', async (req, res) => {
     const user = await UsersModel.findOne({
       token: req.body.token
     }).populate('wishlist').exec()
-    var userWishlist = user.wishlist
+    var userWishlist = (user.wishlist || null)
     res.json({
       result: true,
       wishlist: userWishlist
@@ -468,7 +470,7 @@ router.post('/wishlist/add/:token/:bookid', async (req, res) => {
         });
         var userCheckTab = [];
         for (let i = 0; i < userCheck.wishlist.length; i++) {
-          console.log("userCheck.wishlist[i]", userCheck.wishlist[i])
+          console.log("userCheck.wishlist["+i+"]", userCheck.wishlist[i])
           if (JSON.stringify(userCheck.wishlist[i]) === JSON.stringify(savedBookInWishlist._id)) {
             userCheckTab.push(userCheck)
           }

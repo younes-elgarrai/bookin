@@ -12,7 +12,7 @@ import subjects from '../assets/subjects'
 
 function SurveyScreen(props) {
 
-const [cookies, setCookie] = useCookies(['survey','token']);
+const [cookies, setCookie , removeCookie] = useCookies(['survey','token']);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -85,10 +85,9 @@ var handleConfirmClick = ()=>{
 }
 
 var handleFinishClick = ()=>{
-  setCookie('survey', JSON.stringify(props.survey), {path: '/'})
-  console.log("survey avant sauvegarde",props.survey)
-  console.log('token?',cookies.token);
-  cookies.token&&updateSurvey(cookies.survey)
+  setCookie('survey', JSON.stringify(props.survey), {path: '/'});
+  console.log("survey avant sauvegarde",props.survey);
+  cookies.token&&updateSurvey(props.survey);
   setFinished(true);
 }
 

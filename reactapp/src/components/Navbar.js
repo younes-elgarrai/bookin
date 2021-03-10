@@ -15,6 +15,7 @@ import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LogoutOutlin
 function NavigationBar(props) {
 
   const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar']);
+
   // Large menu
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
@@ -22,15 +23,17 @@ function NavigationBar(props) {
   const [countLB, setCountLB] = useState(0);
 
   useEffect(() => {
-    if (props.user!==null) {
+    cookies.token&&props.onLoad({token: cookies.token, avatar: cookies.avatar})
+    if (cookies.token!==undefined) {
         var CheckWishList = async () => {
             const data = await fetch(`/wishlist`, {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `token=${props.user.token}`
+            body: `token=${cookies.token}`
             });
             const body = await data.json();
             if (body.result===true && body.wishlist.length >0) {
+                props.setWishlist(body.wishlist);
                 setCountWL(body.wishlist.length);
             } else if (body.result===true && body.wishlist.length === 0)
             {
@@ -42,21 +45,25 @@ function NavigationBar(props) {
           const data = await fetch(`/library`, {
           method: 'POST',
           headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `token=${props.user.token}`
+          body: `token=${cookies.token}`
           });
           const body = await data.json();
           if (body.result===true && body.library.length >0) {
+              props.setLibrary(body.library);
               setCountLB(body.library.length);
           } else if (body.result===true && body.library.length === 0)
           {
               setCountLB(0);}
       };
       CheckLibrary();
-      
-
-      
     }
-},[props.wishlist, props.library]);
+},[cookies.token]);
+
+  const onLogOut = ()=>{
+    removeCookie('token');
+    removeCookie('avatar');
+    removeCookie('survey');
+    props.onLogoutClick(props.user);}
 
   return(
     <div>
@@ -81,7 +88,7 @@ function NavigationBar(props) {
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem><Link to='/update-account' className="menu-nav-item-dropdown">Modifier compte</Link></DropdownItem>
-                <DropdownItem><Link to='/' className="menu-nav-item-dropdown" onClick={()=>props.onLogoutClick(props.token)}>Déconnexion</Link></DropdownItem>
+                <DropdownItem><Link to='/' className="menu-nav-item-dropdown" onClick={()=>onLogOut()}>Déconnexion</Link></DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
             :
@@ -108,7 +115,7 @@ function NavigationBar(props) {
             {props.user ? 
             <div>
              <DropdownItem href="/update-account" className="menu-nav-item-xs"><SettingOutlined className="menu-nav-icon-xs" /> Modifier compte</DropdownItem>
-             <DropdownItem href="/" className="menu-nav-item-xs" onClick={()=>{cookies.remove("token");props.onLogoutClick(props.user);}}><LogoutOutlined className="menu-nav-icon-xs" /> Déconnexion</DropdownItem>
+             <DropdownItem href="/" className="menu-nav-item-xs" onClick={onLogOut}><LogoutOutlined className="menu-nav-icon-xs" /> Déconnexion</DropdownItem>
             </div>
             :
             <DropdownItem href="/connection" className="menu-nav-item-xs"><HomeOutlined className="menu-nav-icon-xs"/> Mon compte</DropdownItem>
@@ -128,7 +135,16 @@ function mapDispatchToProps(dispatch) {
     } ,
     onTabClick: function(value) {
       dispatch( {type:'setTab', value} )
-  }
+    },
+    onLoad : function(user) {
+      dispatch( {type:'saveUser', user} )
+    },
+    setLibrary: function(library) {
+      dispatch( {type: 'setLibrary', library:library} )
+    },
+    setWishlist: function(wishlist) {
+      dispatch( {type: 'setWishlist', wishlist:wishlist} )
+   }
   }
 }
 function mapStateToProps(state) {

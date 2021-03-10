@@ -206,13 +206,13 @@ function MainScreen(props) {
                                 <h2 style={styles.note}>Livres à lire</h2>
                             </Grid>
                             <Grid item>
-                                <h2 style={styles.h2}>XXX</h2>
+                                <h2 style={styles.h2}>{props.wishlist.length}</h2>
                             </Grid>
                             <Grid item>
-                                <h2 style={styles.note}>Livres dans ma biliothèque</h2>
+                                <h2 style={styles.note}>Livres dans la biliothèque</h2>
                             </Grid>
                             <Grid item>
-                                <h2 style={styles.h2}>XXX</h2>
+                                <h2 style={styles.h2}>{props.library.length}</h2>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -311,8 +311,7 @@ let styles = {
 
 
 function mapStateToProps(state) {
-    return { value: state.mainTab,
-             user: state.user}
+    return { value: state.mainTab, user: state.user, wishlist: state.wishlist, library: state.library }
   }
 
   function mapDispatchToProps(dispatch) {

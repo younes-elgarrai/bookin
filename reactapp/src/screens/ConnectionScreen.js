@@ -3,7 +3,6 @@ import {Redirect, Link} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import '../App.css';
 import { Input,  Button} from 'antd';
-import { useCookies } from 'react-cookie';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -11,11 +10,15 @@ import reading from '../assets/reading.png';
 import {connect} from 'react-redux';
 
 function ConnectionScreen(props) {
+
+
     const [ email, setEmail ] = useState();
     const [ password, setPassword ] = useState();
     const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar']);
     const [ userMessage, setUserMessage ] = useState('');
     const [ isLoggedIn, setIsLoggedIn ] = useState(false);
+
+    console.log('cookies', cookies);
 
     const checkEmailFormat = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
