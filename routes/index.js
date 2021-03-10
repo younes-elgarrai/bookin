@@ -337,16 +337,23 @@ router.post('/new-review', async (req, res) => {
   if (!user) {
     res.json({result: false, message: "Veuillez vous identifier pour écrire un avis."})
   } else {
-    const review = new ReviewsModel({ 
-      bookid: req.body.book,
-      userLibraryName: user.userLibraryName,
-      avatar: user.avatar,
-      rating: req.body.rating,
-      comment: req.body.comment,
-    })
-    const reviewSave = await review.save();
-    res.json({result: true, reviewSave});
-  }
+    const reviews = await ReviewsModel.findOne({bookid: req.body.book, userLibraryName: user.userLibraryName});
+    if (!reviews) {
+      const review = new ReviewsModel({ 
+        bookid: req.body.book,
+        userLibraryName: user.userLibraryName,
+        avatar: user.avatar,
+        rating: req.body.rating,
+        comment: req.body.comment,
+      })
+      const reviewSave = await review.save();
+      res.json({result: true, reviewSave});
+    } else {
+      res.json({result: false, message: "Vous avez déjà écrit un avis sur ce livre."})
+    }
+    }
+
+
 });
 
 // GET : get all reviews for a book

@@ -200,6 +200,7 @@ function SearchScreen(props) {
         }
     };
 
+
     var handlePageClick = (pageNumber) => {
         const currentPage = pageNumber - 1;
         offset = currentPage * elementsPerPage;

@@ -113,7 +113,6 @@ const styles = {
           color:"#23396C",
           fontSize: "24px",
           fontWeight: "500",
-          marginTop: "20px",
           paddingBottom:"10px"
       },
       label: {
@@ -134,8 +133,8 @@ const styles = {
         marginBottom:'40px'
       },
       userMsg: {
-        color:"#23396C",
-        fontSize:'12px',
+        color:"#fca311",
+        fontSize:'14px',
         fontWeight:'bold',
       },
       btn: {

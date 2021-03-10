@@ -7,7 +7,7 @@ import ReviewCard from './ReviewCard';
 function Reviews(props) {
 
     const displayReviewsResult = (list) => {
-        if (list === undefined || list.length == 0) {
+        if (list === undefined || list.length === 0) {
             return(
                 <Col xs={24}><p style={{fontSize:'14px', color:"#333"}}>Pas encore d'avis sur ce livre. Soyez le premier en remplissant le formulaire !</p></Col>
             )

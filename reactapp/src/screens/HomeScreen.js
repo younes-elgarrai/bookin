@@ -20,7 +20,6 @@ function HomeScreen(props) {
   const [cookies, setCookie] = useCookies(['survey']);
   console.log('cookie survey', cookies.survey);
   
-
   return (
     <div className="font">
       <Nav/>

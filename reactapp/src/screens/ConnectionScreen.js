@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Redirect, Link} from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import '../App.css';
 import { Input,  Button} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined } from '@ant-design/icons';
@@ -89,7 +90,6 @@ const styles = {
         color:"#23396C",
         fontSize: "24px",
         fontWeight: "500",
-        marginTop: "20px",
         paddingBottom:"10px"
     },
     label: {
@@ -105,8 +105,8 @@ const styles = {
         marginBottom:'10px'
       },
     userMsg: {
-        color:"#23396C",
-        fontSize:'12px',
+        color:"#fca311",
+        fontSize:'14px',
         fontWeight:'bold',
       },
     btn: {

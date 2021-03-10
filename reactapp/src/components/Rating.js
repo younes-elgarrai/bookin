@@ -1,11 +1,9 @@
-import React , {useState}  from 'react';
+import React from 'react';
 import {StarFilled} from '@ant-design/icons';
 import '../App.css';
 
 function Rating(props){
-  const [ rating, setRating ] = useState(0);
-  // console.log('Rating Component > rating', rating);
-  // console.log('Rating Component > props rating', props.rate);
+  const rating = 0;
 
     let displayStars = (nb) => {
         let stars = [];

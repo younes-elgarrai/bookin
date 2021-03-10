@@ -14,34 +14,61 @@ function BookHeader(props) {
 
 // Traduction catégorie
 var translateCat = {
-  "Juvenile Fiction":"Roman pour enfant",
-  "Biography & Autobiography":"Biographie",
-  "Young Adult Nonfiction":"BD & Jeunesse",
-  "Comics & Graphic Novels":"BD & Jeunesse",
-  "Social Science":"Essai",
-  "Literary Criticism":"Essai",
-  'Comics Graphic Novels':'BD & Jeunesse',
-  'Humor':'BD & Jeunesse',
-  'Juvenile Fiction':'BD & Jeunesse',
-  'Young Adult Fiction':'BD & Jeunesse',
-  'Fiction':'Littérature & Fiction',
-  'Poetry':'Littérature & Fiction',
-  'COOKING':'Vie Pratique',
-  'SELF-HELP':'Vie Pratique',
-  "HEALTH & FITNESS":'Santé, Bien être',
-  "CRAFTS HOBBIES":'Loisirs Créatifs',
-  'BUSINESS ECONOMICS':'Art, Culture & Société',
-  'ART':'Art, Culture & Société',
-  'BIOGRAPHY AUTOBIOGRAPHY':'Art, Culture & Société',
-  'HISTORY':'Art, Culture & Société',
-  'RELIGION':'Art, Culture & Société',
-  'SOCIAL SCIENCE':'Art, Culture & Société',
-  'NATURE':'Nature & Loisirs',
-  'SPORTS RECREATION':'Nature & Loisirs',
-  'TRAVEL':'Nature & Loisirs',
-  'BUSINESS ECONOMICS':'Savoirs',
-  'Computers':'Savoirs',
-  'Science':'Savoirs',
+"Antiques & Collectibles":"Antiques et à Collectionner",
+"Architecture":"Architecture",
+"Art":"Art",
+"Bibles":"Bibles",
+"Biography & Autobiography":"Biographies et Autobiographies",
+"Body, Mind & Spirit":"Corps et Esprit",
+"Business & Economics":"Entreprises et Économie",
+"Comics & Graphic Novels":"Bandes Dessinées et Romans Graphiques",
+"Computers":"Informatique",
+"Cooking":"Cuisine",
+"Crafts & Hobbies":"Artisanat et Passe-Temps",
+"Design":"Désign",
+"Drama":"Art Dramatique",
+"Education":"Éducation",
+"Family & Relationships":"Famille et Relations Humaines",
+"Fiction":"Fiction",
+"Foreign Language Study":"Étude de langues étrangères",
+"Games & Activities":"Jeux et activités",
+"Gardening":"Jardinage",
+"Health & Fitness":"Santé et Mise en Forme",
+"History":"Histoire",
+"House & Home":"Maison",
+"Humor":"Humour",
+"Juvenile Fiction":"Livre pour enfant",
+"Juvenile Nonfiction":"Livre pour enfant",
+"Language Arts & Disciplines":"Arts des langus et Disciplines",
+"Law":"Loi",
+"Literary Collections":"Collections Litéraires",
+"Literary Criticism":"Critiques Litéraires",
+"Mathematics":"Mathématiques",
+"Medical":"Médecine",
+"Music":"Musique",
+"Nature":"Nature",
+"Performing Arts":"Arts de la Scène",
+"Pets":"Animaux de Compagnie",
+"Philosophy":"Philosophie",
+"Photography":"Photographie",
+"Poetry":"Poésie",
+"Political Science":"Science Politique",
+"Psychology":"Psychologie",
+"Reference":"Référence",
+"Religion":"Religion",
+"Science":"Science",
+"Self-Help":"Développement Personnel",
+"Social Science":"Sciences Sociales",
+"Sports & Recreation":"Sports et Loisirs",
+"Study Aids":"Aide à l’étude",
+"Technology & Engineering":"Technologie et Ingénérie",
+"Transportation":"Transport",
+"Travel":"Voyages",
+"True Crime":"Criminalité",
+"Young Adult Fiction":"Adolescent-Fiction",
+"Young Adult Nonfiction":"Adolescent-NonFiction",
+
+
 }
 
   // Récupération du tableau d'auteurs et les séparer par une virgule
@@ -254,8 +281,14 @@ if (isLoggedIn) {
 return (
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
-        <Col xs={24} md={8} xl={5} >
+        <Col xs={24} md={8} xl={5} style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
           <img style={styles.images} width={150} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
+
+            {props.bookPage === 'nc' ? null :
+            <a href={props.bookPage} target="_blank">
+            <p style={{marginBottom:'0', fontWeight:'100', color:'white', textDecoration:'underline'}}> Je feuillette</p>
+            </a>}
+
         </Col>
 
         <Col xs={24} md={12} xl={12} >
@@ -274,7 +307,7 @@ return (
           </div>
       
         <div>
-          <Button style={{backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{styleBook}</Button>
+          <Button style={{pointerEvents:'none', backgroundColor:'white', color:'#fca311',borderColor:'#fca311', borderRadius:'15px'}}>{styleBook}</Button>
         </div>
 
         </Col>
@@ -290,7 +323,7 @@ return (
           <div style={{textAlign: "center"}}>
             <CheckCircleFilled style={{ color:'#37a000', fontSize:'16px', textAlign:'right'}}/>
             <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre bibliothèque<br /><br /></p>
-            <Link to='/library'><Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma bibliothèque</Button></Link>   
+            <Link to='/main'><Button onClick={()=>props.onTabClick(1)} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma bibliothèque</Button></Link>   
           </div>
         </Modal>
         
@@ -301,18 +334,13 @@ return (
             <div style={{textAlign: "center"}}>
               <CheckCircleFilled style={{ color:'#37a000', fontSize:'16px', textAlign:'right'}}/>
               <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre wishlist<br /><br /></p>
-              <Link to='/library'><Button style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma wishlist</Button></Link>   
+              <Link to='/main'><Button onClick={()=>props.onTabClick(2)} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma wishlist</Button></Link>   
             </div>
           </Modal>
 
         {props.bookIsbn === 'nc' ? null : 
         <a href={urlAmazon} target="_blank">
         <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button>
-        </a>}
-        
-        {props.bookPage === 'nc' ? null :
-        <a href={props.bookPage} target="_blank">
-        <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>JE FEUILLETTE</Button>
         </a>}
 
         </Col>
@@ -390,7 +418,7 @@ let styles = {
 
     images: {
       borderRadius:5,
-      boxShadow: "1px 1px 1px #e1e1e1"
+      boxShadow: "1px 1px 1px #e1e1e1",
     }
   }
 
@@ -408,6 +436,9 @@ let styles = {
       DeleteToLibrary: function(bookId, index) {
       dispatch( {type: 'DeleteToLibrary', bookId:bookId, index:index} )
       },
+      onTabClick: function(value) {
+        dispatch( {type:'setTab', value} )
+    },
     }
   }
 
