@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { Input, Button, Form , Avatar} from 'antd';
-import {Link} from 'react-router-dom'; 
+import { Input, Button, Form , Modal} from 'antd';
 import {connect} from 'react-redux';
 import { BookOutlined, StarFilled } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
-function NewReview(props) {
-  console.log('NewReview > bookid', props.book);
 
-const [ rating, setRating ] = useState(0);
-console.log('new review > rating', rating);
-const [ review, setReview ] = useState('');
-const [ userMessage , setUserMessage ] = useState('');
+function NewReview(props) {
+
+  const [ rating, setRating ] = useState(0);
+  const [ review, setReview ] = useState('');
+  const [ userMessage , setUserMessage ] = useState('');
+  // modal
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const showModal = () => { setIsModalVisible(true);};
+  const handleCancel = () => { 
+    setIsModalVisible(false);
+    setReview('');
+    setRating(0);
+  };
 
 let displayStars = (nb) => {
     let stars = [];
@@ -34,13 +40,15 @@ const saveNewReview = async () => {
         body: `book=${props.book}&token=${props.user.token}&rating=${rating}&comment=${review}`
       });
       const dataResponse = await response.json();
-      console.log('dataResponse',dataResponse); 
+      if (dataResponse) {
+        showModal();
+      }
 }
 
 return(
     <div style={styles.reviewBloc}>
     <h3 style={styles.title}>Donnez votre avis</h3>
- <Form layout="vertical" style={{width:'80%'}}>
+ <Form layout="vertical" style={{width:'80%', paddingLeft:'20px'}}>
     <Form.Item required tooltip="Ce champ est obligatoire" label="Note sur 5">
     <div style={{display:'flex'}}>{displayStars(rating)}</div>
     </Form.Item>
@@ -49,12 +57,16 @@ return(
     </Form.Item>
     <Form.Item>
         <Button style={styles.btn} onClick={()=> saveNewReview()} >Valider</Button>
+        <Modal centered title="Félicitations !" visible={isModalVisible} footer={null} onCancel={handleCancel} style={{textAlign: "center"}}>
+        <p style={styles.userMsg}>Votre avis a bien été ajouté.</p>
+      </Modal>
         <p style={styles.userMsg}>{userMessage}</p>
     </Form.Item>
     </Form>
     </div>
 )
 }
+
 const styles = {
   reviewBloc: {
     width:"80%",
@@ -82,7 +94,7 @@ const styles = {
           color:'#23396c', 
           borderColor:'#fca311', 
           borderRadius:'5px',
-      },
+      }
 }
 function mapStateToProps(state) {
     return { user: state.user}

@@ -6,7 +6,15 @@ import '../components/BookHeader'
 import '../App.css';
 
 
-import Cover from '../assets/cover.jpg'
+import Cover from '../assets/cover.jpg';
+import Faces_01 from '../assets/faces_01.jpg';
+import Faces_02 from '../assets/faces_02.jpg';
+import Faces_03 from '../assets/faces_03.jpg';
+import Faces_04 from '../assets/faces_04.jpg';
+import Faces_05 from '../assets/faces_05.jpg';
+import Faces_06 from '../assets/faces_06.jpg';
+import Faces_07 from '../assets/faces_07.png';
+import Faces_08 from '../assets/faces_08.png';
 
 import {useParams} from "react-router-dom";
 
@@ -139,7 +147,6 @@ function BookScreen() {
     let {bookid} = useParams();
 
     const [ reviewsList, setReviewsList ] = useState([]);
-    console.log('BookScreen > ReviewsList', reviewsList);
     
     useEffect(() => {
         if (bookid) {
@@ -211,7 +218,7 @@ function BookScreen() {
             setReviewsList(response.reviews);
         } 
         loadReviewsData();
-        }, [bookid]); 
+        }, [bookid, reviewsList]); 
 
     // Si la cover du livre n'existe pas alors => Afficher l'image par défaut
     var coverImg;
@@ -242,10 +249,14 @@ function BookScreen() {
                 </Row>
                 <Row>
                 {/* xs={24} sm={12} md={8} lg={6} xl={4} */}
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} icon={<UserOutlined />} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_01} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_02} /></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_03}/></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_04}/></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_05}/></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_06}/></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_07}/></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_08}/></Col>
                 </Row>
                 <Row>
                   <BookList bookListTitle="Ouvrages associés..." data={associated}/>

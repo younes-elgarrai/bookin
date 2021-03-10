@@ -355,11 +355,6 @@ router.get('/reviews/:bookid', async (req, res) => {
     res.json({ result: true, reviews});
 });
 
-// DELETE a review 
-router.delete('/reviews/delete/:token/:bookid', async (req, res) => {
-})
-
-
 /* Recherche sur Google Books API de livres
 API_key: "AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE"
 */
