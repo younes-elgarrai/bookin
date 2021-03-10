@@ -237,7 +237,6 @@ function MainScreen(props) {
                         <div style={styles.libraryBloc}>
                             {data?suggest:<BookSkeleton />}
                         </div> 
-                        <Review/> 
                 </TabPanel>
             </Grid>
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'100%', backgroundColor:"white"}}>
