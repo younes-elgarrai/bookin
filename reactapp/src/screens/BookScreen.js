@@ -5,7 +5,6 @@ import { UserOutlined } from '@ant-design/icons';
 import '../components/BookHeader'
 import '../App.css';
 
-
 import Cover from '../assets/cover.jpg'
 
 import {useParams} from "react-router-dom";
@@ -15,7 +14,6 @@ import BookHeader from '../components/BookHeader';
 import BookInfo from '../components/BookInfo';
 import Reviews from '../components/Reviews';
 import BookList from '../components/BookList';
-import BookCard2 from '../components/BookCard2';
 import Footer from '../components/Footer';
 import NewReview from '../components/NewReview';
 
