@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 function MyLibrary(props) {
 
-    const [displayLibrary, setDisplayLibrary] = useState(null);
+    const [displayLibrary, setDisplayLibrary] = useState(true);
     const [result, setResult] = useState([]);
 
 

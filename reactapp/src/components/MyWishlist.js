@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 function MyWishlist(props) {
 
-    const [displayWishlist, setDisplayWishlist] = useState(null);
+    const [displayWishlist, setDisplayWishlist] = useState(true);
     const [result, setResult] = useState([]);
 
     useEffect(() => {
