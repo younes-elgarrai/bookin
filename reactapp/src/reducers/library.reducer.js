@@ -1,9 +1,9 @@
 export default function(library = [], action) {
-    if(action.type == 'addToLibrary'){
+    if(action.type === 'addToLibrary'){
     var libraryCopy = [...library];        
     var findBook = false;          
         for(let i=0;i<libraryCopy.length;i++){             
-                if(libraryCopy[i].bookId == action.bookId){                 
+                if(libraryCopy[i].bookId === action.bookId){                 
                     findBook = true             
                 };         
         }          
@@ -12,19 +12,12 @@ export default function(library = [], action) {
         }                  
         return libraryCopy
     } 
-    else if (action.type == 'DeleteToLibrary') {
+    else if (action.type === 'DeleteToLibrary') {
         var libraryCopy = [...library];
-        var position;  
-
-        for(let i=0;i<libraryCopy.length;i++){             
-            if(libraryCopy[i].bookId == action.bookId){                 
-                position = i            
-            };         
-        }     
-        if (!position) {
-            libraryCopy.splice(position,1)     
-        }
+            libraryCopy.splice(action.index,1)     
         return libraryCopy
+    } else if (action.type === 'setLibrary') {
+        return action.library
     }
     else {
         return library

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 function MyLibrary(props) {
 
-    const [displayLibrary, setDisplayLibrary] = useState(false);
+    const [displayLibrary, setDisplayLibrary] = useState(null);
     const [result, setResult] = useState([]);
 
 
@@ -25,17 +25,19 @@ function MyLibrary(props) {
                 if (body.result===true && body.library.length >0) {
                     setDisplayLibrary(true);
                     setResult(body.library);
+                    props.setLibrary(body.library);
                 } else if (body.result===true && body.library.length === 0) {
                     setDisplayLibrary(false);
+                    props.setLibrary(body.library);
                 };
             };
             CheckLibrary();
 
         };
-    },[props.wishlist, props.library]);
+    },[]);
 
 
-var library = result.map((book)=>{
+var library = props.library.map((book)=>{
                     return(
                     <Grid container xs={2} direction="row" justify="center" alignItems="center">
                         <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover} context="library"/>
@@ -83,9 +85,18 @@ let styles = {
 
 }
 
+function mapDispatchToProps(dispatch) {
+    return {
+      setLibrary: function(library) {
+          dispatch( {type: 'setLibrary', library:library} )
+      }, 
+    }
+};
+
+
 function mapStateToProps(state) {
     console.log('state', state);
     return { user: state.user, wishlist: state.wishlist, library: state.library }
   }
 
-  export default connect(mapStateToProps, null)(MyLibrary);
+  export default connect(mapStateToProps, mapDispatchToProps)(MyLibrary);

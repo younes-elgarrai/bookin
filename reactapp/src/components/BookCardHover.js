@@ -13,13 +13,13 @@ function BookCardHover(props) {
     const [WLCardVisible, setWLCardVisible] = useState(false);
 
 
-    function titleCut (desc) {
-        if (desc.length > 21){
-            return desc.substring(0,21)+"..."
-          } else {
-              return desc
-          };
-    };
+    var titleCutDone = function titleCut () {
+      if (props.bookTitle > 21){
+          return props.bookTitle.substring(0,21)+"..."
+        } else {
+            return props.bookTitle
+        };
+  };
 
     const handleClickWLDelete = async () => {
         if (props.user!==null) {
@@ -30,7 +30,13 @@ function BookCardHover(props) {
 
     
           if (bodyDelete.result===true) {
-            props.DeleteToWishList(props.bookId);
+            var index;
+            for (let i = 0; i < props.wishlist.length; i++) {
+              if (props.wishlist[i].bookid === props.bookId) {
+                index = i;
+              }
+            }
+            props.DeleteToWishList(props.bookId, index);
           }
         }
       };
@@ -44,7 +50,13 @@ function BookCardHover(props) {
 
     
           if (bodyDelete.result===true) {
-            props.DeleteToLibrary(props.bookId);
+            var index;
+            for (let i = 0; i < props.library.length; i++) {
+              if (props.library[i].bookid === props.bookId) {
+                index = i;
+              }
+            }
+            props.DeleteToLibrary(props.bookId, index);
           }
         }
       };
@@ -112,8 +124,6 @@ function BookCardHover(props) {
                 body: `token=${props.user.token}`
                 });
                 const body = await data.json();
-                console.log("body.wishlist",body.wishlist);
-                console.log("props.bookId",props.bookId)
                 if (body.result===true) {
                     setWLCardVisible(false);
                     for (let i = 0; i < body.wishlist.length; i++) {
@@ -124,8 +134,6 @@ function BookCardHover(props) {
                 };
             };
             CheckWishList();
-            console.log("LBCardVisible",LBCardVisible);
-            console.log("WLCardVisible",WLCardVisible);
         };
     }, [props.library, props.wishlist]);
 
@@ -185,7 +193,7 @@ return (
         <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ display:'flex', flexDirection:'column', justifyContent:'space-evenly', alignItems:'center', margin:'5px', marginBottom:"15px", flexWrap:"nowrap"}} >
             <div style={{borderRight:'1px solid #f0f0f0', borderLeft:'1px solid #f0f0f0', borderTop:'1px solid #f0f0f0', width:"151px"}}>
             <Link to={{pathname:"/book/"+props.bookId}}><FittedImg fit="cover" width={150} height={220}  src={!props.bookCover ? Unavailable : props.bookCover} alt={props.bookTitle} /></Link>
-            <div style={{color:"#333", fontSize:"12px", fontWeight:"400", width:"150px", padding:"5px", textAlign:"center", verticalAlign:""}}> {titleCut(props.bookTitle)} </div>
+            <div style={{color:"#333", fontSize:"12px", fontWeight:"400", width:"150px", padding:"5px", textAlign:"center", verticalAlign:""}}> {titleCutDone} </div>
             </div>
             {props.context === "library" 
             ?
@@ -210,14 +218,14 @@ function mapDispatchToProps(dispatch) {
         addToWishList: function(bookId) {
             dispatch( {type: 'addToWishList', bookId:bookId} )
         }, 
-      DeleteToWishList: function(bookId) {
-        dispatch( {type: 'DeleteToWishList', bookId:bookId} )
+      DeleteToWishList: function(bookId, index) {
+        dispatch( {type: 'DeleteToWishList', bookId:bookId, index:index} )
       },
       addToLibrary: function(bookId) {
         dispatch( {type: 'addToLibrary', bookId:bookId} )
       }, 
-      DeleteToLibrary: function(bookId) {
-        dispatch( {type: 'DeleteToLibrary', bookId:bookId} )
+      DeleteToLibrary: function(bookId, index) {
+        dispatch( {type: 'DeleteToLibrary', bookId:bookId, index:index} )
       },
     };
   };

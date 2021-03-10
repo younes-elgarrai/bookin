@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {Row, Col} from 'antd';
 import Grid from '@material-ui/core/Grid';
 import '../App.css'
 import BookCardHover from './BookCardHover'
@@ -7,7 +6,7 @@ import { connect } from 'react-redux';
 
 function MyWishlist(props) {
 
-    const [displayWishlist, setDisplayWishlist] = useState(false);
+    const [displayWishlist, setDisplayWishlist] = useState(null);
     const [result, setResult] = useState([]);
 
     useEffect(() => {
@@ -24,18 +23,20 @@ function MyWishlist(props) {
                 if (body.result===true && body.wishlist.length >0) {
                     setDisplayWishlist(true);
                     setResult(body.wishlist);
+                    props.setWishlist(body.wishlist);
                 } else if (body.result===true && body.wishlist.length === 0) {
                     setDisplayWishlist(false);
+                    props.setWishlist(body.wishlist);
                 }; 
             };
             CheckWishList();
 
         };
-    },[props.wishlist, props.library]);
+    },[]);
 
 
 
-var wishlist = result.map((book)=>{
+var wishlist = props.wishlist.map((book)=>{
                     return(
                     <Grid container xs={2} direction="row" justify="center" alignItems="center">
                         <BookCardHover  bookId={book.bookid} bookTitle={book.title} bookCover={book.cover} context="library"/>
@@ -83,9 +84,17 @@ let styles = {
 
 }
 
+function mapDispatchToProps(dispatch) {
+    return {
+      setWishlist: function(wishlist) {
+          dispatch( {type: 'setWishlist', wishlist:wishlist} )
+      }, 
+    }
+};
+
 function mapStateToProps(state) {
     console.log('state', state);
     return { user: state.user, wishlist: state.wishlist, library: state.library }
   }
 
-  export default connect(mapStateToProps, null)(MyWishlist);
+  export default connect(mapStateToProps, mapDispatchToProps)(MyWishlist);

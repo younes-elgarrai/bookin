@@ -127,7 +127,13 @@ console.log('RL', props.readerLink);
 
       if (bodyDelete.result===true) {
         setBoutonWLStyle(false);
-        props.DeleteToWishList(props.bookId);
+        var index;
+        for (let i = 0; i < props.wishlist.length; i++) {
+          if (props.wishlist[i].bookid === props.bookId) {
+            index = i;
+          }
+        }
+        props.DeleteToWishList(props.bookId, index);
       }
       
     }
@@ -166,8 +172,14 @@ console.log('RL', props.readerLink);
       const bodyDelete = await dataDelete.json();
 
       if (bodyDelete.result===true) {
+        var index;
+        for (let i = 0; i < props.library.length; i++) {
+          if (props.library[i].bookid === props.bookId) {
+            index = i;
+          }
+        }
+        props.DeleteToLibrary(props.bookId, index);
         setBoutonLBStyle(!boutonLBStyle);
-        props.DeleteToLibrary(props.bookId);
       }
       
     }
@@ -387,14 +399,14 @@ let styles = {
       addToWishList: function(bookId) {
           dispatch( {type: 'addToWishList', bookId:bookId} )
       }, 
-      DeleteToWishList: function(bookId) {
-        dispatch( {type: 'DeleteToWishList', bookId:bookId} )
+      DeleteToWishList: function(bookId, index) {
+        dispatch( {type: 'DeleteToWishList', bookId:bookId, index:index} )
       },
       addToLibrary: function(bookId) {
         dispatch( {type: 'addToLibrary', bookId:bookId} )
       }, 
-      DeleteToLibrary: function(bookId) {
-      dispatch( {type: 'DeleteToLibrary', bookId:bookId} )
+      DeleteToLibrary: function(bookId, index) {
+      dispatch( {type: 'DeleteToLibrary', bookId:bookId, index:index} )
       },
     }
   }

@@ -1,9 +1,9 @@
 export default function(wishList = [], action) {
-    if(action.type == 'addToWishList'){
+    if(action.type === 'addToWishList'){
     var wishListCopy = [...wishList];        
     var findBook = false;          
         for(let i=0;i<wishListCopy.length;i++){             
-                if(wishListCopy[i].bookId == action.bookId){                 
+                if(wishListCopy[i].bookId === action.bookId){                 
                     findBook = true             
                 };         
         }          
@@ -11,22 +11,13 @@ export default function(wishList = [], action) {
                 wishListCopy.push(action.bookId)         
         }                  
         return wishListCopy
-    } 
-    else if (action.type == 'DeleteToWishList') {
+    } else if (action.type === 'DeleteToWishList') {
         var wishListCopy = [...wishList];
-        var position;  
-
-        for(let i=0;i<wishListCopy.length;i++){             
-            if(wishListCopy[i].bookId == action.bookId){                 
-                position = i            
-            };         
-        }     
-        if (!position) {
-            wishListCopy.splice(position,1)     
-        }
+        wishListCopy.splice(action.index,1)     
         return wishListCopy
-    }
-    else {
+    } else if (action.type === 'setWishlist') {
+        return action.wishlist   
+    } else {
         return wishList
     } 
 }

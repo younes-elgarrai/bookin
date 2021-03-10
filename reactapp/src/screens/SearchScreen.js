@@ -33,7 +33,7 @@ function SearchScreen(props) {
     const [error, setError] = useState(false); 
     const [totalItems, setTotalItems] = useState(0);
     const [cookies, setCookie] = useCookies(['searchQuery']);
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(null);
     const [suggestData, setSuggestData] = useState([]);
     const [open, setOpen] = useState(false);
 
@@ -267,7 +267,7 @@ return (
             <Col xs={24} md={12} >
                 <h1 style={styles.h1}>Rechercher votre prochain livre</h1>
                 <AutoComplete  options={suggestData} style={{ width: "100%" }}open={open}>
-                <Search size="large" placeholder="Chercher un auteur, titre, ISBN, ..." onChange={(e) => handleInputChange(e.target.value)} onSearch={(q) => {handleSearch(q); setOpen(false)}} value={value}  />
+                <Search size="large" placeholder={value ? value :"Chercher un auteur, titre, ISBN, ..."} onChange={(e) => handleInputChange(e.target.value)} onSearch={(q) => {handleSearch(q); setOpen(false)}} value={value}  />
                 </AutoComplete>
             </Col>
         </Row>
