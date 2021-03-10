@@ -27,7 +27,7 @@ function CreateAccountScreen(props) {
     }
 
     const createUserAccount = async () => {
-    // Voir avec Younes : if (!cookie) message: 'refaire le questionnaire' ?
+
       if (!checkEmailFormat(userEmail)) {
         setUserMessage('veuillez saisir un email valide.');
     } else {

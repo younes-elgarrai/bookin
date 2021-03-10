@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Redirect, Link} from 'react-router-dom';
 import '../App.css';
 import { Input,  Button} from 'antd';
+import { useCookies } from 'react-cookie';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined } from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -11,6 +12,7 @@ import {connect} from 'react-redux';
 function ConnectionScreen(props) {
     const [ email, setEmail ] = useState();
     const [ password, setPassword ] = useState();
+    const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar']);
     const [ userMessage, setUserMessage ] = useState('');
     const [ isLoggedIn, setIsLoggedIn ] = useState(false);
 
@@ -28,9 +30,13 @@ function ConnectionScreen(props) {
             body: `email=${email}&password=${password}`
         });
         const dataResponse = await response.json(); // {login: true, userToken: "N9mwAoACDrKevTGj7aV8zZqKbLhRC2Qs"}
-        console.log("login dataresponse", dataResponse);
+
         if (dataResponse.login) {
             props.onCheckAccountClick({token : dataResponse.userToken, avatar: dataResponse.userAvatar});
+            setCookie('survey', JSON.stringify({'Length':dataResponse.userLength, 'Period': dataResponse.userPeriod, 'Styles':dataResponse.userStyles}), {path: '/'});
+            setCookie('token', dataResponse.userToken, {path: '/'});
+            setCookie('avatar', dataResponse.userAvatar, {path: '/'});
+
             setIsLoggedIn(true);
         } else {
             setUserMessage(dataResponse.message);
