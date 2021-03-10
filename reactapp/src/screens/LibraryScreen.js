@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
 import LibraryHeader from '../components/LibraryHeader';
-import Wishlist from '../components/Wishlist';
+import MyWishlist from '../components/MyWishlist';
+import MyLibrary from '../components/MyLibrary';
 import ReviewCard from '../components/ReviewCard';
-import NewReview from '../components/NewReview';
 
 function LibraryScreen(props) {
     return(
@@ -13,7 +13,6 @@ function LibraryScreen(props) {
             <div style={styles.container}>
                 <LibraryHeader />
                 <Wishlist />
-                <NewReview/>
             </div>
             <Footer/>
         </div>

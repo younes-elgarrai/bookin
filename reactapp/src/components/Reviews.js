@@ -1,17 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import { Avatar, Row, Col} from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import React from 'react';
+import { Row, Col} from 'antd';
 import '../App.css';
 import ReviewCard from './ReviewCard';
 
 
 function Reviews(props) {
-    console.log('reviews > props.list', props.list);
 
     const displayReviewsResult = (list) => {
         if (list === undefined || list.length == 0) {
             return(
-                <Col xs={24}><p style={{fontSize:'14px', color:'#000000'}}>Pas encore d'avis sur ce livre. Soyez le premier en remplissant le formulaire !</p></Col>
+                <Col xs={24}><p style={{fontSize:'14px', color:"#333"}}>Pas encore d'avis sur ce livre. Soyez le premier en remplissant le formulaire !</p></Col>
             )
         } else {
             return(
@@ -33,7 +31,7 @@ return (
                 <h3 style={styles.h3}>Les derniers avis</h3>
             </Col>
         </Row>
-        <Row >
+        <Row>
         {displayReviewsResult(props.list)}
         </Row>
 </div>
@@ -62,6 +60,6 @@ let styles = {
         fontWeight: "500",
         margin: "0px",
         paddingBottom:"10px"
-      }
+      },
   }
 export default Reviews;

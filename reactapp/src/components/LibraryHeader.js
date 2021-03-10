@@ -1,7 +1,9 @@
 import React from 'react';
+import '../App.css'
 
-export default function LibraryHeader() {
-return(
-    <div></div>
-)
+
+export default function LibraryHeader(props) {
+
+    return(<div></div>);
+   
 }

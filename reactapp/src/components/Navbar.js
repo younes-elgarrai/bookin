@@ -29,8 +29,6 @@ function NavigationBar(props) {
             body: `token=${props.user.token}`
             });
             const body = await data.json();
-            console.log('bodyCheck', body)
-            console.log('dataCheck', data)
             if (body.result===true && body.wishlist.length >0) {
                 setCountWL(body.wishlist.length);
             } else if (body.result===true && body.wishlist.length === 0)
@@ -46,8 +44,6 @@ function NavigationBar(props) {
           body: `token=${props.user.token}`
           });
           const body = await data.json();
-          console.log('bodyCheck', body)
-          console.log('dataCheck', data)
           if (body.result===true && body.library.length >0) {
               setCountLB(body.library.length);
           } else if (body.result===true && body.library.length === 0)
@@ -59,7 +55,7 @@ function NavigationBar(props) {
 
       
     }
-},[props.wishlist]);
+},[props.wishlist, props.library]);
 
   return(
     <div>
@@ -72,9 +68,9 @@ function NavigationBar(props) {
           <Nav navbar>
               
             <NavItem><Link to="/search" className="menu-nav-item"><SearchOutlined className="menu-nav-icon" /> Rechercher</Link></NavItem> 
-            <NavItem><Link to="/main" className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
-            <NavItem><Link to={props.user ? "/library" : "/create-account"} className="menu-nav-item"><Badge className="menu-nav-badge" style={{marginRight:"-5px", backgroundColor:"#23396c"}} size="small" count={countLB}><BookOutlined className="menu-nav-icon"/></Badge> Bibliothèque</Link></NavItem> 
-            <NavItem><Link to={props.user ? "/library" : "/create-account"} className="menu-nav-item"><Badge className="menu-nav-badge" style={{marginRight:"5px", backgroundColor:"#23396c"}} size="small" count={countWL}><HeartOutlined style={{marginRight:"10px", marginLeft:"10px"}} className="menu-nav-icon"/></Badge> A lire</Link></NavItem> 
+            <NavItem onClick={()=>props.onTabClick(0)} ><Link to="/main" className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
+            <NavItem onClick={()=>props.onTabClick(1)}><Link to={props.user ? "/main" : "/create-account"} className="menu-nav-item"><Badge className="menu-nav-badge" style={{marginRight:"-5px", backgroundColor:"#23396c"}} size="small" count={countLB}><BookOutlined className="menu-nav-icon"/></Badge> Bibliothèque</Link></NavItem> 
+            <NavItem onClick={()=>props.onTabClick(2)}><Link to={props.user ? "/main" : "/create-account"} className="menu-nav-item"><Badge className="menu-nav-badge" style={{marginRight:"5px", backgroundColor:"#23396c"}} size="small" count={countWL}><HeartOutlined style={{marginRight:"10px", marginLeft:"10px"}} className="menu-nav-icon"/></Badge> A lire</Link></NavItem> 
             {props.user ? 
               <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav>
@@ -107,7 +103,7 @@ function NavigationBar(props) {
               </Navbar>
           <DropdownMenu>
             <DropdownItem><Link to="/main" className="menu-nav-item-xs"><BulbOutlined className="menu-nav-icon-xs"/> Suggestions</Link></DropdownItem>
-            <DropdownItem><Link to={props.user ? "/library" : "/create-account"}  className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
+            <DropdownItem><Link to={props.user ? "/main" : "/create-account"}  className="menu-nav-item-xs"><BookOutlined className="menu-nav-icon-xs" /> Bibliothèque</Link></DropdownItem>
             <DropdownItem><Link to={props.user ? "/library" : "/create-account"}  className="menu-nav-item-xs"><HeartOutlined className="menu-nav-icon-xs" /> A lire</Link></DropdownItem>
             {props.user ? 
             <div>
@@ -129,10 +125,13 @@ function mapDispatchToProps(dispatch) {
   return {
     onLogoutClick: function(user) {
         dispatch( {type:'deleteUser', user} )
-    } 
+    } ,
+    onTabClick: function(value) {
+      dispatch( {type:'setTab', value} )
+  }
   }
 }
 function mapStateToProps(state) {
-  return { user: state.user, wishlist: state.wishlist }
+  return { user: state.user, wishlist: state.wishlist, library: state.library }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);
