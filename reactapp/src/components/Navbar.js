@@ -9,10 +9,9 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
    UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
   // Ant Design
 import { Avatar, Badge } from 'antd';
-import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
+import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined, HomeOutlined } from '@ant-design/icons';
 
 function NavigationBar(props) {
-  console.log('NavBar > props.user', props.user);
 
   // Large menu
   const [isOpen, setIsOpen] = useState(false);
