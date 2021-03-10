@@ -4,7 +4,6 @@ import Footer from '../components/Footer';
 import LibraryHeader from '../components/LibraryHeader';
 import Wishlist from '../components/Wishlist';
 import ReviewCard from '../components/ReviewCard';
-import NewReview from '../components/NewReview';
 
 function LibraryScreen(props) {
     return(
@@ -13,7 +12,6 @@ function LibraryScreen(props) {
             <div style={styles.container}>
                 <LibraryHeader />
                 <Wishlist />
-                <NewReview/>
             </div>
             <Footer/>
         </div>

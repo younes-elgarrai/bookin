@@ -222,7 +222,6 @@ function MainScreen() {
                         <div style={styles.libraryBloc}>
                             {suggest}
                         </div> 
-                        <Review/> 
                 </TabPanel>
             </Grid>
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
