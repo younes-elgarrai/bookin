@@ -146,14 +146,11 @@ router.post('/recos', async (req,res)=>{
 
 
   var handleSubcatQueriesSearch = async (queries) => {
-
     const pArray = queries.map(async (query) => {
       const response = handleSearch(query);
       return response;
     })
-
     const items = await Promise.all(pArray);
-
     var merged = [].concat.apply([], items);
 
     // return merged;
@@ -164,17 +161,12 @@ router.post('/recos', async (req,res)=>{
 
 
   var handleSubCatSearchv2 = async (q) => {
-
     var qArray = Object.values(q);
-
     var subcats = Object.keys(q);
-
     const pArray = qArray.map(async (queries) => {
       return handleSubcatQueriesSearch(queries);
     });
-
     const resultArray = await Promise.all(pArray);
-
     var result = {};
 
     subcats.forEach((key, i) => result[key] = resultArray[i]);
@@ -184,43 +176,29 @@ router.post('/recos', async (req,res)=>{
   }
 
   var handleSurveySearch = async (q) => {
-
     var results = {};
-
     var cats = Object.keys(q);
 
     for (var i = 0; i < cats.length; i++) {
-
       const cat = cats[i];
-
       results[cat] = [];
-
       var catItems = await handleSubCatSearchv2(q[cat]);
-
       results[cat] = catItems
-
     };
 
     return results;
   }
 
-
   try {
-
     const response = await handleSurveySearch(req.body)
-
     res.json({
       result: response
     });
-
   } catch (error) {
-
     res.json({
       result: error
     })
-
   }
-
 })
 
 
@@ -244,8 +222,11 @@ router.post('/log-in', async function (req, res, next) {
   if (user) {
     const userToken = user.token;
     const userAvatar = user.avatar;
+    const userLength = user.favoriteBookLength;
+    const userPeriod = user.favoriteBookPeriod;
+    const userStyles = user.favoriteBookStyles;
     if (bcrypt.compareSync(password, user.password)) {
-      res.json({ login: true, userToken, userAvatar });
+      res.json({ login: true, userToken, userAvatar , userLength, userPeriod, userStyles});
   }
   } else { 
     res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }
@@ -285,7 +266,10 @@ router.post('/sign-up', async function (req, res, next) {
     console.log('usersave', userSave);
     const userToken = userSave.token;
     const userAvatar = userSave.avatar;
-    res.json({result:true, userToken, userAvatar});
+    const userLength = user.favoriteBookLength;
+    const userPeriod = user.favoriteBookPeriod;
+    const userStyles = user.favoriteBookStyles;
+    res.json({result:true, userToken, userAvatar, userLength, userPeriod, userStyles});
   }
 });
 async function saveNewUser(req) {
@@ -328,6 +312,23 @@ router.post('/update', async (req, res) => {
     result: true,
     userSave
   });
+});
+
+router.post('/update-survey', async (req, res) => {
+  let token = req.body.token;
+  if (!token) {
+    res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
+  } else {
+  const userCheck = await UsersModel.findOne({token: req.body.token});
+  if (userCheck !== null) {
+    var user = await UsersModel.findOneAndUpdate({token: token},{ favoriteBookPeriod : [req.body.period],
+                                                                  favoriteBookLength : [req.body.length],
+                                                                  favoriteBookStyles : JSON.parse(req.body.styles)},{new:true});
+    res.json({ result: true, newuser: user});
+  } else {
+      res.json({ result: false, message: "la mise à jour a échoué" });
+    }
+}
 });
 
 

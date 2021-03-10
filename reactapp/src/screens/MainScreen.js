@@ -53,8 +53,8 @@ var catQueryMaker = (cat, styles)=>{
 
 var queryMaker = (styles) => {
 
-            var cats = Object.keys(styles).filter(e=>e!=='void');
-
+            var cats = Object.keys(styles).filter(e=>e!=='void').filter(e=>e!=='_id').filter(e=>styles[e][0]);
+            
             var queries = cats.map( cat => {
                 return catQueryMaker(cat, styles);
             })
@@ -198,7 +198,7 @@ function MainScreen(props) {
                                             backgroundRepeat: 'no-repeat',
                                         backgroundPosition: 'right bottom',}}>
                     <Grid container xs={2} direction="column" justify="center" alignItems="center" >
-                        <img style={styles.images} width={120} height={120} src={props.user?props.user.avatar:Background} alt={'bookpicture'}/> 
+                        <img style={styles.images} width={120} height={120} src={cookies.token?cookies.avatar:Background} alt={'bookpicture'}/> 
                     </Grid>
                     <Grid container xs={4} width="100%" direction="column" justify="center" alignItems="flex-start">
                         <Grid container xs={6} direction="row" justify="space-between" alignItems="center">

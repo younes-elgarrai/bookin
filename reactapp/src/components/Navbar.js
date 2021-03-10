@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import logo from '../assets/bookin-transparent.png';
 import './Navbar.css';
 import {connect} from 'react-redux';
+import { useCookies } from 'react-cookie';
 
 // ReactStrap
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
@@ -13,6 +14,7 @@ import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LogoutOutlin
 
 function NavigationBar(props) {
 
+  const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar']);
   // Large menu
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
@@ -106,7 +108,7 @@ function NavigationBar(props) {
             {props.user ? 
             <div>
              <DropdownItem href="/update-account" className="menu-nav-item-xs"><SettingOutlined className="menu-nav-icon-xs" /> Modifier compte</DropdownItem>
-             <DropdownItem href="/" className="menu-nav-item-xs" onClick={()=>props.onLogoutClick(props.user)}><LogoutOutlined className="menu-nav-icon-xs" /> Déconnexion</DropdownItem>
+             <DropdownItem href="/" className="menu-nav-item-xs" onClick={()=>{cookies.remove("token");props.onLogoutClick(props.user);}}><LogoutOutlined className="menu-nav-icon-xs" /> Déconnexion</DropdownItem>
             </div>
             :
             <DropdownItem href="/connection" className="menu-nav-item-xs"><HomeOutlined className="menu-nav-icon-xs"/> Mon compte</DropdownItem>
