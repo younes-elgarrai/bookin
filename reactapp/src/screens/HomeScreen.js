@@ -27,7 +27,7 @@ function HomeScreen(props) {
         <div className="row pt-2 pr-5 pl-5">
           <div className="order-2 order-md-1 col-12 col-md-6">
             <h3 style={styles.title}>bookin trouve vos prochains livres préférés et vous permet de gérer votre bibliothèque.</h3>
-            <Button style={styles.btn}><Link to={cookies.survey ? '/main' : '/survey'}>Commencer</Link></Button>
+            <Button style={styles.btn}>{cookies.survey ? <Link to='/survey'>Commencer</Link> :<Link to='/main'>Voir mes suggestions</Link>}</Button>
             <div>
             <p style={styles.labelInline}>Vous avez déjà un compte ? </p> 
             <Button type='link' style={styles.smallBtn}><Link to='/connection/'>Connectez-vous</Link></Button>
