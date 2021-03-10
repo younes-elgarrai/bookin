@@ -61,7 +61,7 @@ function NavigationBar(props) {
     {/* Large Menu */}
     <div className="d-none d-sm-none d-md-inline">
       <Navbar expand="md" className="menu-nav">
-        <NavbarBrand href='/'><img src={logo} alt="logo Bookin" width={90}/></NavbarBrand>
+        <NavbarBrand><Link to='/'><img src={logo} alt="logo Bookin" width={90}/></Link></NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar className="right-menu">
           <Nav navbar>
