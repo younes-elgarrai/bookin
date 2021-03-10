@@ -14,8 +14,8 @@ function BookCardHover(props) {
 
 
     function titleCut (desc) {
-        if (desc.length > 25){
-            return desc.substring(0,22)+"..."
+        if (desc.length > 21){
+            return desc.substring(0,21)+"..."
           } else {
               return desc
           };

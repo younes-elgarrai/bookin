@@ -115,6 +115,7 @@ const styles = {
       fontWeight:'bold',
       marginTop:'5px',
       marginBottom:'10px',
+      padding:'5px'
   },
    features:{
      display:'flex',
