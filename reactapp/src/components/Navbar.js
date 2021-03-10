@@ -9,7 +9,7 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
    UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
   // Ant Design
 import { Avatar, Badge } from 'antd';
-import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LoginOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined, HomeOutlined } from '@ant-design/icons';
+import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined, HomeOutlined } from '@ant-design/icons';
 
 function NavigationBar(props) {
 
@@ -65,16 +65,15 @@ function NavigationBar(props) {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar className="right-menu">
           <Nav navbar>
-              
             <NavItem><Link to="/search" className="menu-nav-item"><SearchOutlined className="menu-nav-icon" /> Rechercher</Link></NavItem> 
             <NavItem onClick={()=>props.onTabClick(0)} ><Link to="/main" className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
             <NavItem onClick={()=>props.onTabClick(1)}><Link to={props.user ? "/main" : "/create-account"} className="menu-nav-item"><Badge className="menu-nav-badge" style={{marginRight:"-5px", backgroundColor:"#23396c"}} size="small" count={countLB}><BookOutlined className="menu-nav-icon"/></Badge> Bibliothèque</Link></NavItem> 
             <NavItem onClick={()=>props.onTabClick(2)}><Link to={props.user ? "/main" : "/create-account"} className="menu-nav-item"><Badge className="menu-nav-badge" style={{marginRight:"5px", backgroundColor:"#23396c"}} size="small" count={countWL}><HeartOutlined style={{marginRight:"10px", marginLeft:"10px"}} className="menu-nav-icon"/></Badge> A lire</Link></NavItem> 
             {props.user ? 
               <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav>
+              <DropdownToggle nav className="menu-nav-drop" >
                 {props.user.avatar ? 
-                <Avatar size="large" className="menu-nav-avatar" src={props.user.avatar}/>
+                <Avatar className="menu-nav-avatar" src={props.user.avatar}/>
                 :
                 <Avatar size="large" className="menu-nav-avatar" icon={<UserOutlined/>}/>}
               </DropdownToggle>
@@ -84,7 +83,7 @@ function NavigationBar(props) {
               </DropdownMenu>
             </UncontrolledDropdown>
             :
-            <NavItem><Link to="/connection" className="menu-nav-item"><LoginOutlined className="menu-nav-icon"/> Connexion</Link></NavItem>
+            <NavItem><Link to="/connection" className="menu-nav-item"><HomeOutlined className="menu-nav-icon"/> Mon Compte</Link></NavItem>
             }
           </Nav>
         </Collapse>
@@ -110,7 +109,7 @@ function NavigationBar(props) {
              <DropdownItem href="/" className="menu-nav-item-xs" onClick={()=>props.onLogoutClick(props.user)}><LogoutOutlined className="menu-nav-icon-xs" /> Déconnexion</DropdownItem>
             </div>
             :
-            <DropdownItem href="/connection" className="menu-nav-item-xs"><LoginOutlined className="menu-nav-icon-xs"/> Connexion</DropdownItem>
+            <DropdownItem href="/connection" className="menu-nav-item-xs"><HomeOutlined className="menu-nav-icon-xs"/> Mon compte</DropdownItem>
             }
           </DropdownMenu>
         </UncontrolledDropdown>
