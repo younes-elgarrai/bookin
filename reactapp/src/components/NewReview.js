@@ -9,7 +9,6 @@ const { TextArea } = Input;
 
 
 function NewReview(props) {
-  console.log('list in newreview', props.list);
   
   const [ rating, setRating ] = useState(0);
   const [ review, setReview ] = useState('');

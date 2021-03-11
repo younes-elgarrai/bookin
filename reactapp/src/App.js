@@ -26,6 +26,7 @@ import userReducer from './reducers/user.reducer';
 import categoryReducer from './reducers/category.reducer';
 import wishListReducer from './reducers/wishlist.reducer';
 import libraryReducer from './reducers/library.reducer';
+import previousLocationReducer from './reducers/previousLocation.reducer';
 
 import { CookiesProvider } from 'react-cookie';
 
@@ -34,7 +35,7 @@ import {Provider} from 'react-redux';
 import {createStore, combineReducers}  from 'redux';
 import mainReducer from './reducers/main.reducer';
 
-const store = createStore(combineReducers({survey: surveyReducer, avatar: avatarReducer, user: userReducer , category: categoryReducer, wishlist:wishListReducer, library:libraryReducer, mainTab: mainReducer }));
+const store = createStore(combineReducers({survey: surveyReducer, avatar: avatarReducer, user: userReducer , category: categoryReducer, wishlist:wishListReducer, library:libraryReducer, mainTab: mainReducer, previousLocation: previousLocationReducer }));
 
 
 

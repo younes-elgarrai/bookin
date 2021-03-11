@@ -39,7 +39,7 @@ function ConnectionScreen(props) {
             setCookie('survey', JSON.stringify({'Length':dataResponse.userLength, 'Period': dataResponse.userPeriod, 'Styles':dataResponse.userStyles}), {path: '/'});
             setCookie('token', dataResponse.userToken, {path: '/'});
             setCookie('avatar', dataResponse.userAvatar, {path: '/'});
-            setCookie('library',JSON.stringify(dataResponse.userLibrary),{path: '/'});
+            setCookie('library',JSON.stringify(await dataResponse.userLibrary),{path: '/'});
             setCookie('wishlist',JSON.stringify(dataResponse.userWishlist),{path: '/'});
 
             setIsLoggedIn(true);
@@ -49,15 +49,25 @@ function ConnectionScreen(props) {
     }       
 }
 
+
+
+
     if (isLoggedIn) {
-        return(<Redirect to='/main'/>)
+        return (
+            <div>
+                {!props.previousLocation
+                    ? <Redirect to='/main'/> 
+                    : <Redirect to={props.previousLocation.slice(0,props.previousLocation.length - 5)}/>
+                }
+            </div>
+            )
     } else {
     return (
         <div className='font'>
         <Nav/>
         <div style={styles.container}>
               <h3 style={styles.title}>Connexion</h3>
-              <p style={styles.label}>Connectez-vous pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
+              <p style={styles.label}>En étant membre de la communauté Bookin, vous pouvez sauvegarder des livres dans votre bibliothèque et dans votre liste d'envies.</p>
               <div>
                   <p style={styles.labelInline}>Vous n'avez pas encore de compte ?  </p> 
                   <Button type='link' style={styles.smallBtn}><Link to='/create-account'>Créez un compte</Link></Button>
@@ -154,6 +164,7 @@ function mapDispatchToProps(dispatch) {
     }
   }
   function mapStateToProps(state) {
-    return { user: state.user }
+    console.log("state", state)
+    return { user: state.user, previousLocation: state.previousLocation }
   }
   export default connect(mapStateToProps, mapDispatchToProps)(ConnectionScreen);

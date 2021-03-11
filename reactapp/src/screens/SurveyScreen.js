@@ -2,11 +2,14 @@ import React, {useState} from 'react';
 import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
 import { Progress, Button, Row, Col, Modal} from 'antd';
+
 import '../App.css';
+import Nav from '../components/Navbar';
+import Footer from '../components/Footer';
 
 import {connect} from 'react-redux';
 
-import SurveyContainer from '../components/SurveyContainer';
+import SurveyContainer from '../components/SurveyContainerv2';
 
 import subjects from '../assets/subjects'
 
@@ -92,58 +95,119 @@ var handleFinishClick = ()=>{
 }
 
 
-const containerStyle = {
-  alignItems:'center',
-  width:'100%',
-  height: '100vh',
-  backgroundColor:'#f3f5f7',
-  
-}
-
-const surveyStyle = {
-  display:'flex',
-  flexDirection:'column',
-  alignItems:'center',
-  width:'100%',
-  backgroundColor:'#f3f5f7',
-}
-
   return (
-        <div style={containerStyle}>
+        <div style={styles.containerStyle} className='font'>
+          <Nav />
           <Row justify='center'>
             <Col span={8} >
-              <Progress percent={(step-1)*50} status="active" trailColor="#eeeeee"/>
+              <Progress percent={(step-1)*50} status="active" trailColor="#eeeeee" strokeColor='#fca311'/>
             </Col>
           </Row>
           <Row justify='center'>
             <Col span={10}>
-              <h2>Recevez des suggestions de lecture ({step}/3)</h2>
+            <h1 style={styles.h1}>Recevez des suggestions de lecture ({step}/3)</h1>
             </Col>
           </Row>
+          
+          <Row justify='center'>
+            <Col span={10} flex={1} style={styles.blocButtonTop}>
+            {step!==1?<Button onClick={()=>handleBackClick()} type="primary" style={styles.btnBack}>Précédent</Button>:null}
+            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>)
+                                                          :<Button onClick={()=>handleConfirmClick()} type="primary" style={styles.btnOK}>Confirmer</Button>}
+            </Col>
+            {finished&&<Redirect to="/main" />}
+          </Row>   
+
           <Row justify='center'>
             <Col span={10}>
-              <SurveyContainer style={surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
+              <SurveyContainer style={styles.surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
             </Col>
           </Row>
           <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
             <Col span={10}>
-              <SurveyContainer style={surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
+              <SurveyContainer style={styles.surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
             </Col>
           </Modal>
           <Row justify='center'>
-            <Col span={10} flex={1}>
-            {step!==1?<Button onClick={()=>handleBackClick()} type="primary">Précédent</Button>:null}
-            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary">Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" danger>Terminer</Button>)
-                                                          :<Button onClick={()=>handleConfirmClick()} type="primary">Confirmer</Button>}
+            <Col span={10} flex={1} style={styles.blocButton}>
+            {step!==1?<Button onClick={()=>handleBackClick()} type="primary" style={styles.btnBack}>Précédent</Button>:null}
+            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>)
+                                                          :<Button onClick={()=>handleConfirmClick()} type="primary" style={styles.btnOK}>Confirmer</Button>}
             </Col>
             {finished&&<Redirect to="/main" />}
-          </Row>                 
+          </Row>   
+          <Footer />
         </div> 
 );
 }
+const styles = {
+  containerStyle: {
+    alignItems:'center',
+    width:'100%',
+    backgroundColor:'#f3f5f7',
+  },
+  
+  // surveyStyle: {
+  //   display:'flex',
+  //   flexDirection:'column',
+  //   alignItems:'center',
+  //   width:'100%',
+  //   backgroundColor:'red',
+  // },
+
+  blocButton: {
+    display:'flex', 
+    justifyContent:'center', 
+    marginBottom:'50px',
+    marginTop:'10px',
+  },
+
+  blocButtonTop: {
+    display:'flex', 
+    justifyContent:'center', 
+    marginBottom:'10px',
+  },
+
+  btnOK: {
+    marginRight:'10px',
+    backgroundColor:'#fca311', 
+    fontWeight:'500', 
+    color:'#23396c', 
+    borderColor:'#fca311', 
+    borderRadius:'5px',
+},
+
+btnNext: {
+  marginRight:'10px',
+  backgroundColor:'#fca311', 
+  fontWeight:'500', 
+  color:'#23396c', 
+  borderColor:'#fca311', 
+  borderRadius:'5px',
+},
+
+btnBack: {
+  marginRight:'10px',
+  backgroundColor:'white', 
+  fontWeight:'500', 
+  color:'#fca311', 
+  borderColor:'#fca311', 
+  borderRadius:'5px',
+},
+
+h1: {
+  color:'#23396c',
+  textAlign:'center',
+  fontSize: '22px',
+  fontWeight: '700',
+  margin: '0px',
+  paddingTop:'20px',
+  paddingBottom:'10px',
+},
+
+}
 
 function mapDispatchToProps(dispatch) {
-
   return {
       setCategory: function(e) {
           dispatch({type: 'setCategory', element: e})
@@ -151,12 +215,9 @@ function mapDispatchToProps(dispatch) {
 
   }
 }
-
 function mapStateToProps(state) {
-
     return {survey: state.survey, category: state.category, user: state.user};
   }
-
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyScreen);
 
 

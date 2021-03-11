@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import '../App.css'
 import BookCardHover from './BookCardHover'
 import { connect } from 'react-redux';
+import account from '../assets/account.png';
 
 function MyLibrary(props) {
 
@@ -50,11 +51,12 @@ var library = props.library.map((book)=>{
 return (
 <div style={styles.libraryBloc}  className='font'>
     <Grid container xs={12} direction="column" justify="flex-start" alignItems="center">
-        <Grid container xs={10} direction="row" justify="center" alignItems="center">
+        <Grid container spacing={5} xs={10} direction="row" justify="center" alignItems="center">
             {!displayLibrary
                 ?
-                <Grid item xs={12} >
-                    <p style={{textAlign:"center"}} >Aucun livre dans votre bibliothèque</p>  
+                <Grid item xs={12} style={{display:'flex', flexDirection:'column', alignItems:'center'}} >
+                    <p style={{textAlign:"center"}} >Aucun livre dans votre bibliothèque</p> 
+                    <img src={account} alt='Illustration by Olha Khomich from Icons8' style={{height:'200px'}}/> 
                 </Grid> 
                 :library
             }

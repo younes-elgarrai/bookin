@@ -144,7 +144,7 @@ function BookCardHover(props) {
     };
 
     const messageAddWL = () => {
-      message.success({ content: 'Ajouté à votre wishlist !', key, duration: 2 });
+      message.success({ content: "Ajouté à votre liste d'envies !", key, duration: 2 });
     };
 
     const messageDeleteLB = () => {
@@ -152,11 +152,11 @@ function BookCardHover(props) {
     };
 
     const messageDeleteWL = () => {
-      message.success({ content: 'Retiré de votre wishlist !', key, duration: 2 });
+      message.success({ content: "Retiré de votre liste d'envies !", key, duration: 2 });
     };
 
     const libraryIconAdd = (
-      <div style={{display:'flex', justifyContent:'space-around', width:"75px", borderRight:'1px solid #f0f0f0'}}>
+      <div style={{display:'flex', justifyContent:'space-around', width:"65px", borderRight:'1px solid #f0f0f0'}}>
         <Tooltip placement="bottom" title="Ajoutez à votre bibliothèque">
         <BookOutlined style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickLBAdd(); messageAddLB()}}  />
         </Tooltip>
@@ -164,7 +164,7 @@ function BookCardHover(props) {
     )
 
     const libraryIconDelete = (
-      <div style={{display:'flex', justifyContent:'space-around', width:"75px", borderRight:'1px solid #f0f0f0'}}>
+      <div style={{display:'flex', justifyContent:'space-around', width:"65px", borderRight:'1px solid #f0f0f0'}}>
         <Tooltip placement="bottom" title="Retirez de votre bibliothèque">
         <BookFilled style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickLBDelete(); messageDeleteLB()}}  />
         </Tooltip>
@@ -172,16 +172,16 @@ function BookCardHover(props) {
         )
 
     const wishlistIconAdd = (
-      <div style={{display:'flex', justifyContent:'space-around', width:"75px"}}>
-        <Tooltip placement="bottom" title="Ajoutez à votre wishlist">
+      <div style={{display:'flex', justifyContent:'space-around', width:"65px"}}>
+        <Tooltip placement="bottom" title="Ajoutez à votre liste d'envies">
         <HeartOutlined style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickWLAdd(); messageAddWL()}}  />
         </Tooltip>
       </div>
     )
 
     const wishlistIconDelete = (
-      <div style={{display:'flex', justifyContent:'space-around', width:"75px"}}>
-          <Tooltip placement="bottom" title="Retirez de votre wishlist">
+      <div style={{display:'flex', justifyContent:'space-around', width:"65px"}}>
+          <Tooltip placement="bottom" title="Retirez de votre liste d'envies">
           <HeartFilled style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickWLDelete(); messageDeleteWL()}}  />
           </Tooltip>
       </div>
@@ -191,18 +191,18 @@ function BookCardHover(props) {
 return (
  
         <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ display:'flex', flexDirection:'column', justifyContent:'space-evenly', alignItems:'center', margin:'5px', marginBottom:"15px", flexWrap:"nowrap"}} >
-            <div style={{borderRight:'1px solid #f0f0f0', borderLeft:'1px solid #f0f0f0', borderTop:'1px solid #f0f0f0', width:"151px"}}>
-            <Link to={{pathname:"/book/"+props.bookId}}><FittedImg fit="cover" width={150} height={220}  src={!props.bookCover ? Unavailable : props.bookCover} alt={props.bookTitle} /></Link>
-            <div style={{color:"#333", fontSize:"12px", fontWeight:"400", width:"150px", padding:"5px", textAlign:"center", verticalAlign:""}}> {titleCutDone} </div>
+            <div style={{borderRight:'1px solid #f0f0f0', borderLeft:'1px solid #f0f0f0', borderTop:'1px solid #f0f0f0', width:"131px"}}>
+            <Link to={{pathname:"/book/"+props.bookId}}><FittedImg fit="cover" width={130} height={210}  src={!props.bookCover ? Unavailable : props.bookCover} alt={props.bookTitle} /></Link>
+            {/* <div style={{color:"#333", fontSize:"12px", fontWeight:"400", width:"130px", padding:"5px", textAlign:"center", verticalAlign:""}}> {titleCutDone} </div> */}
             </div>
             {props.context === "library" 
             ?
-            <div style={{border:'1px solid #f0f0f0', display:'flex', justifyContent:'space-around', width:"150px", height:"30px", alignItems:"center"}}>
+            <div style={{border:'1px solid #f0f0f0', display:'flex', justifyContent:'space-around', width:"130px", height:"30px", alignItems:"center"}}>
             {LBCardVisible ? libraryIconDelete : libraryIconAdd}
             {WLCardVisible ? wishlistIconDelete : wishlistIconAdd}
             </div>
             :
-            <div style={{border:'1px solid #f0f0f0', display:'flex', justifyContent:'space-around', width:"150px", height:"30px", alignItems:"center"}}>
+            <div style={{border:'1px solid #f0f0f0', display:'flex', justifyContent:'space-around', width:"130px", height:"30px", alignItems:"center"}}>
             {LBCardVisible ? libraryIconDelete : libraryIconAdd}
             {WLCardVisible ? wishlistIconDelete : wishlistIconAdd}
             </div>

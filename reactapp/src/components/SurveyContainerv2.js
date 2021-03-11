@@ -1,12 +1,70 @@
 import React from 'react';
 import {Card} from 'antd';
-
-
 import {connect} from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+}));
+
+
 
 var width = '';
 
 function Response(props){
+
+    const classes = useStyles();
+
+    var background = props.isSelected?'#23396C':null;
+    var color = props.isSelected?'#E1E1E1':null;
+    var weight = props.isSelected?'bold':null;
+
+
+    const dynamicStyle = {
+        width: width,
+        textAlign: 'center',
+        backgroundColor: background,
+        color: color,
+        fontWeight: weight
+      };
+
+
+    var handleClick = ()=>{
+
+    !props.isSelected&&props.handleClickAddParent();
+     props.isSelected&&props.handleClickRemoveParent();
+
+    }
+    return (<Accordion style={dynamicStyle} onClick={()=>handleClick()}>
+        <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+        >
+        <Typography className={classes.heading}>{props.txt}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+        <Typography>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+            sit amet blandit leo lobortis eget.
+        </Typography>
+        </AccordionDetails>
+    </Accordion>);
+
+}
+
+function SubResponse(props){
 
     var background = props.isSelected?'#23396C':null;
     var color = props.isSelected?'#E1E1E1':null;
@@ -55,9 +113,12 @@ function SurveyContainer(props){
         justifyContent: 'center',
     }
 
+    const classes = useStyles();
+
     return(
+        
         <div className='survey'>
-            <Card  title={<span className='font' style={{display:'flex', justifyContent:'center', color:'#fca311'}}>{props.question}</span>} style={cardStyle} >
+            <Card  title={<span className="font">{props.question}</span>} style={cardStyle} >
                 {props.array.map((elem, index)=>{
                     return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd({category: props.category, subcategory: elem},props.type)}
                                                             handleClickRemoveParent={()=>handleClickRemove({category: props.category, subcategory: elem},props.type)}                
@@ -67,6 +128,7 @@ function SurveyContainer(props){
                     })}
             </Card>
         </div>
+        
 
 
     );

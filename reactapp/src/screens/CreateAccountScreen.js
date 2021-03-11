@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Redirect, Link} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import '../App.css';
-import { Input, Button, Form } from 'antd';
+import { Input, Button, Form, Avatar } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -27,8 +27,7 @@ function CreateAccountScreen(props) {
     }
 
     const createUserAccount = async () => {
-
-      if (!checkEmailFormat(userEmail)) {
+    if (!checkEmailFormat(userEmail)) {
         setUserMessage('veuillez saisir un email valide.');
     } else {
       const style = encodeURIComponent(JSON.stringify(cookies.survey.Styles));
@@ -40,7 +39,6 @@ function CreateAccountScreen(props) {
         body: `avatar=${props.avatar}&name=${userLibraryName}&email=${userEmail}&password=${userPassword}&styles=${style}&length=${length}&period=${period}`
       });
       const dataResponse = await response.json();
-      console.log('dataResponse',dataResponse); 
       if (dataResponse.userToken) {
         props.onCreateAccountClick({token: dataResponse.userToken, avatar: dataResponse.userAvatar});
         setIsSignedUp(true);
@@ -51,11 +49,17 @@ function CreateAccountScreen(props) {
       }
     }
 
+
     
     if (isSignedUp) {
-      return(
-        <Redirect to='/search'/>
-      )
+      return (
+        <div>
+            {!props.previousLocation
+                ? <Redirect to='/main'/> 
+                : <Redirect to={props.previousLocation.slice(0,props.previousLocation.length - 5)}/>
+            }
+        </div>
+        )
     } else {
     return (
         <div className='font'>
@@ -82,7 +86,7 @@ function CreateAccountScreen(props) {
                     <Input.Password placeholder="Fantine123" prefix={<LockOutlined className="site-form-item-icon" />} onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} style={{width:'90%'}}/>
                 </Form.Item>
                 <Form.Item>
-                    <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer compte</Button>
+                    <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer mon compte</Button>
                     <p style={styles.userMsg}>{userMessage}</p>
                 </Form.Item>
             </Form>
@@ -94,6 +98,7 @@ function CreateAccountScreen(props) {
         </div>
         </div>
         <Footer/>
+        {cookies.survey===undefined&&<Redirect to="/survey" />}
         </div>
       );
     }    
@@ -173,6 +178,6 @@ const styles = {
     }
   }
   function mapStateToProps(state) {
-    return { user: state.user, avatar: state.avatar}
+    return { user: state.user, avatar: state.avatar, previousLocation: state.previousLocation}
   }
   export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountScreen);

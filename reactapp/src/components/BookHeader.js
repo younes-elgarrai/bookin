@@ -8,9 +8,11 @@ import Background from '../assets/picto.png'
 import Cover from '../assets/cover.jpg'
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
+import FittedImg from 'react-fitted-img';
 
 
 function BookHeader(props) {
+
 
 // Traduction catégorie
 var translateCat = {
@@ -86,7 +88,6 @@ var translateCat = {
   if (props.bookCat) {
     if (props.bookCat.length!=0) {
       styleBook=props.bookCat[0].split('/')[0].trim();
-      console.log('styleBook',styleBook);
       styleBook=translateCat[styleBook];
     } 
   }
@@ -126,8 +127,6 @@ var translateCat = {
           body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
         });
         const body = await data.json();
-
-        console.log('bodyAddWL', body);
   
         if (body.result===true) {
           setBoutonWLStyle(!boutonWLStyle);
@@ -140,6 +139,7 @@ var translateCat = {
       
     } else {
       setIsLoggedIn(true);
+          props.beforeLogin("/book/"+props.bookId+"AddLB");
     }
   };
 
@@ -149,7 +149,7 @@ var translateCat = {
       method: 'DELETE'
       });
       const bodyDelete = await dataDelete.json();
-      console.log('bodyDeleteWL', bodyDelete);
+
 
       if (bodyDelete.result===true) {
         setBoutonWLStyle(false);
@@ -165,6 +165,46 @@ var translateCat = {
     }
   };
 
+  // Interroger la route pour ajouter à la biblitohèque et à la wishlist en cas de retour depuis login
+  useEffect(() => {
+    if (props.user && props.previousLocation) {
+        if (props.previousLocation.slice(props.previousLocation.length - 5) === "AddLB") {
+            var addLibrary= async () => {
+              const data = await fetch(`/library/add/${props.user.token}/${props.bookId}`, {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
+              });
+              const body = await data.json();
+              if (body.result===true) {        
+                setIsModalLB(true);
+                setBoutonLBStyle(!boutonLBStyle);
+                props.addToLibrary(props.bookId);
+              };
+            };
+          addLibrary();
+            
+        } else if (props.previousLocation.slice(props.previousLocation.length - 5) === "AddWL") {
+          var addWishList = async () => {
+            const data = await fetch(`/wishlist/add/${props.user.token}/${props.bookId}`, {
+              method: 'POST',
+              headers: {'Content-Type':'application/json'},
+              body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
+            });
+            const body = await data.json();
+            if (body.result===true) {
+              setBoutonWLStyle(!boutonWLStyle);
+              setIsModalWL(true);
+              props.addToWishList(props.bookId);
+            } else {
+            }
+          };
+          addWishList();
+      }; 
+    } else {
+    }
+  }, [props.user, props.previousLocation, props.bookTitle])
+
   // Interroger la route pour ajouter à la biblitohèque
   const handleClicLBAdd = async () => {
     if (props.user!==null) {
@@ -175,18 +215,16 @@ var translateCat = {
           body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
         });
         const body = await data.json();
-        console.log('bodyAddLB', body)
         if (body.result===true) {
           setIsModalLB(true);
           setBoutonLBStyle(!boutonLBStyle);
           props.addToLibrary(props.bookId);
         }
-  
       };
       addLibrary();
-      
     } else {
       setIsLoggedIn(true);
+      props.beforeLogin("/book/"+props.bookId+"AddLB");
     }
   };
 
@@ -197,7 +235,6 @@ var translateCat = {
       method: 'DELETE'
       });
       const bodyDelete = await dataDelete.json();
-      console.log('bodyDeleteLB', bodyDelete)
 
       if (bodyDelete.result===true) {
         var index;
@@ -282,7 +319,7 @@ return (
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-          <img style={styles.images} width={150} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
+          <FittedImg fit="fill" style={styles.images} width={128} height={210} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
 
             {props.bookPage === 'nc' ? null :
             <a href={props.bookPage} target="_blank">
@@ -433,6 +470,9 @@ let styles = {
 
   function mapDispatchToProps(dispatch) {
     return {
+      beforeLogin: function(previousLocation) {
+        dispatch( {type: 'beforeLogin', previousLocation:previousLocation} )
+      }, 
       setWishlist: function(wishlist) {
         dispatch( {type: 'setWishlist', wishlist:wishlist} )
       }, 
@@ -459,7 +499,7 @@ let styles = {
 
   function mapStateToProps(state) {
     console.log('state', state);
-    return { user:state.user, wishlist: state.wishlist, library:state.library }
+    return { user:state.user, wishlist: state.wishlist, library:state.library, previousLocation:state.previousLocation }
   }
 
   export default connect(mapStateToProps, mapDispatchToProps)(BookHeader);

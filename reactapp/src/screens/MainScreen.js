@@ -26,21 +26,6 @@ import BookList from '../components/BookList';
 
 import subjects from '../assets/subjects';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-      width: '100%',
-      paddingTop: "35px",
-      paddingBottom: "35px"
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      width: '100%',
-      color: theme.palette.text.secondary,
-    }
-  }));  
-
 var catQueryMaker = (cat, styles)=>{
   
             var r = {};
@@ -231,7 +216,7 @@ function MainScreen(props) {
     <div>
         <Nav />
         <Grid container spacing={0}   direction="column" justify="center" alignItems="center" style={styles.container} className='font'>
-            <Grid container xs={12} style={{width:'80%', 
+        {cookies.token?<Grid container xs={12} style={{width:'80%', 
                                             backgroundColor:'#23396C', 
                                             borderTopRightRadius:"10px",
                                             borderTopLeftRadius:"10px", 
@@ -239,7 +224,7 @@ function MainScreen(props) {
                                             backgroundSize: '15%',
                                             backgroundRepeat: 'no-repeat',
                                         backgroundPosition: 'right bottom',}}>
-                    <Grid container xs={2} direction="column" justify="center" alignItems="center" >
+                    <Grid container xs={2} direction="column" justify="center" alignItems="center">
                         <img style={styles.images} width={120} height={120} src={cookies.token?cookies.avatar:Background} alt={'bookpicture'}/> 
                     </Grid>
                     <Grid container xs={4} width="100%" direction="column" justify="center" alignItems="flex-start">
@@ -258,7 +243,7 @@ function MainScreen(props) {
                             </Grid>
                         </Grid>
                     </Grid>
-            </Grid>
+            </Grid>:null}
             <Grid item xs={12} style={{width:'80%'}}>
                 <Paper elevation={0} className={classes.root}>
                         <Tabs
@@ -268,9 +253,9 @@ function MainScreen(props) {
                             textColor="primary"
                             centered
                         >
-                            <Tab label="Recos" {...a11yProps(0)} />
-                            <Tab label="Bibliothèque" {...a11yProps(1)} />
-                            <Tab label="Wishlist" {...a11yProps(2)} />
+                            <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Suggestions</span>} {...a11yProps(0)} />
+                            <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Bibliothèque</span>}  {...a11yProps(1)} />
+                            <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Liste d'envies</span>} {...a11yProps(2)} />
                         </Tabs>
                 </Paper>
             </Grid>
@@ -291,14 +276,16 @@ function MainScreen(props) {
                         </div>    
                 </TabPanel>
             </Grid>
-            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'100%', backgroundColor:"white"}}>
+            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
                 <TabPanel value={props.value} index={1}>
                     <MyLibrary />
+                    {cookies.token?null:<Redirect to="/create-account" />}
                 </TabPanel>
             </Grid>
-            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'100%', backgroundColor:"white"}}>
+            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
                 <TabPanel value={props.value} index={2}>
                     <MyWishlist />
+                    {cookies.token?null:<Redirect to="/create-account" />}
                 </TabPanel>
             </Grid>
         </Grid>
@@ -312,6 +299,8 @@ function MainScreen(props) {
 let styles = {
     container: {
         backgroundColor:'#f3f5f7',
+        paddingTop: '10px',
+        paddingBottom: '50px',
     },
 
     libraryBloc: {
@@ -360,6 +349,28 @@ let styles = {
         fontWeight: '200',
     }
 }
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      margin: 'auto',
+      maxWidth: 500,
+    },
+    image: {
+      width: 128,
+      height: 128,
+    },
+    img: {
+      margin: 'auto',
+      display: 'block',
+      maxWidth: '100%',
+      maxHeight: '100%',
+    },
+  }));
 
 
 function mapStateToProps(state) {
