@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 
 import {connect} from 'react-redux';
 
-import SurveyContainer from '../components/SurveyContainer';
+import SurveyContainer from '../components/SurveyContainerv2';
 
 import subjects from '../assets/subjects'
 

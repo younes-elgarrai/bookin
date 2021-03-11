@@ -51,7 +51,7 @@ var library = props.library.map((book)=>{
 return (
 <div style={styles.libraryBloc}  className='font'>
     <Grid container xs={12} direction="column" justify="flex-start" alignItems="center">
-        <Grid container xs={10} direction="row" justify="center" alignItems="center">
+        <Grid container spacing={5} xs={10} direction="row" justify="center" alignItems="center">
             {!displayLibrary
                 ?
                 <Grid item xs={12} style={{display:'flex', flexDirection:'column', alignItems:'center'}} >
