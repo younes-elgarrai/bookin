@@ -14,11 +14,10 @@ function ConnectionScreen(props) {
 
     const [ email, setEmail ] = useState();
     const [ password, setPassword ] = useState();
-    const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar']);
+    const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar', 'library', 'wishlist']);
     const [ userMessage, setUserMessage ] = useState('');
     const [ isLoggedIn, setIsLoggedIn ] = useState(false);
 
-    console.log('cookies', cookies);
 
     const checkEmailFormat = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -40,6 +39,8 @@ function ConnectionScreen(props) {
             setCookie('survey', JSON.stringify({'Length':dataResponse.userLength, 'Period': dataResponse.userPeriod, 'Styles':dataResponse.userStyles}), {path: '/'});
             setCookie('token', dataResponse.userToken, {path: '/'});
             setCookie('avatar', dataResponse.userAvatar, {path: '/'});
+            setCookie('library',JSON.stringify(dataResponse.userLibrary),{path: '/'});
+            setCookie('wishlist',JSON.stringify(dataResponse.userWishlist),{path: '/'});
 
             setIsLoggedIn(true);
         } else {

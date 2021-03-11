@@ -14,13 +14,22 @@ import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LogoutOutlin
 
 function NavigationBar(props) {
 
-  const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar']);
+  const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar', 'library', 'wishlist']);
 
   // Large menu
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const [countWL, setCountWL] = useState(0);
   const [countLB, setCountLB] = useState(0);
+
+  useEffect(()=>{
+
+    console.log('cookies wishlist', cookies.wishlist);
+    setCountWL(props.wishlist.length);
+    setCountLB(props.library.length);
+
+
+  },[props.wishlist, props.library])
 
   useEffect(() => {
     cookies.token&&props.onLoad({token: cookies.token, avatar: cookies.avatar})
@@ -34,6 +43,7 @@ function NavigationBar(props) {
             const body = await data.json();
             if (body.result===true && body.wishlist.length >0) {
                 props.setWishlist(body.wishlist);
+                setCookie('wishlist', JSON.stringify(body.wishlist), {path:"/"});
                 setCountWL(body.wishlist.length);
             } else if (body.result===true && body.wishlist.length === 0)
             {
@@ -50,6 +60,7 @@ function NavigationBar(props) {
           const body = await data.json();
           if (body.result===true && body.library.length >0) {
               props.setLibrary(body.library);
+              setCookie('library', JSON.stringify(body.library), {path:"/"});
               setCountLB(body.library.length);
           } else if (body.result===true && body.library.length === 0)
           {
@@ -63,6 +74,8 @@ function NavigationBar(props) {
     removeCookie('token');
     removeCookie('avatar');
     removeCookie('survey');
+    removeCookie('library');
+    removeCookie('wishlist');
     props.onLogoutClick(props.user);}
 
   return(

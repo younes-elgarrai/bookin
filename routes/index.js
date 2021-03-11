@@ -139,7 +139,7 @@ router.post('/recos', async (req,res)=>{
       try {
             const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`);
             const body = await response.data;
-            const books = await body.items.map((elem, index)=>{return elem});               
+            const books = await body.items;               
             return books ;
           }catch(error) {
               console.log(error)
@@ -203,6 +203,45 @@ router.post('/recos', async (req,res)=>{
 })
 
 
+router.post('/associated-reads', async (req,res)=>{
+
+
+  var handleSearch = async (bookid) => {
+      try {
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes/${bookid}/associated`);
+            const body = await response.data;
+            const books = await body.items;               
+            return books ;
+          }catch(error) {
+              console.log(error)
+        }};
+
+
+  var handleMultipleSearch = async (queries) => {
+    const pArray = queries.map(async (query) => {
+      const response = handleSearch(query);
+      return response;
+    })
+    const items = await Promise.all(pArray);
+
+    return items;
+
+  }
+
+  try {
+    const response = await handleMultipleSearch(req.body)
+    res.json({
+      result: response
+    });
+  } catch (error) {
+    res.json({
+      result: error
+    })
+  }
+})
+
+
+
 router.get('/library/:token', function (req, res) {
   //Accéder à une bibliothèque à partir de l'id du User (paramètre associé au composant livre)
   //Entrées : userId
@@ -218,7 +257,7 @@ router.post('/log-in', async function (req, res, next) {
       message: "Veuillez remplir tous les champs pour accéder à votre compte."
     })
   } else {
-  const user = await UsersModel.findOne({email: req.body.email});
+  const user = await UsersModel.findOne({email: req.body.email}).populate('library').populate('wishlist').exec();
   const password = req.body.password;
   if (user) {
     const userToken = user.token;
@@ -226,8 +265,10 @@ router.post('/log-in', async function (req, res, next) {
     const userLength = user.favoriteBookLength;
     const userPeriod = user.favoriteBookPeriod;
     const userStyles = user.favoriteBookStyles;
+    const userLibrary = user.library;
+    const userWishlist = user.wishlist;
     if (bcrypt.compareSync(password, user.password)) {
-      res.json({ login: true, userToken, userAvatar , userLength, userPeriod, userStyles});
+      res.json({ login: true, userToken, userAvatar , userLength, userPeriod, userStyles, userLibrary, userWishlist});
   }
   } else { 
     res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }

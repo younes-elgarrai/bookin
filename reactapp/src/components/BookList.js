@@ -11,7 +11,7 @@ import '../App.css'
 import Skeleton from '@material-ui/lab/Skeleton';
 import Unavailable from '../assets/cover_nondispo.jpg';
 import {Link} from 'react-router-dom';
-import { set } from 'mongoose';
+
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -31,8 +31,6 @@ const [epoch, setEpoch] = useState(0);
 const [animate, setAnimate] = useState(true);
 
 var size = props.data.length;
-
-
 
   const responsive = {
     0: { items: 1 },
@@ -59,14 +57,16 @@ var size = props.data.length;
     });
 
     var array = props.skeleton?skeletonArray:items;
-    var text = props.skeleton?<Skeleton variant="text" style={{width:"200px"}}/>:<h3 style={styles.h3}>{props.bookListTitle}</h3>;
+    var text = props.skeleton?<Skeleton variant="text" style={{width:"200px"}}/>:<h3 style={styles.h3}>{props.bookListTitle[epoch%size]}</h3>;
 
     var handleBookClick = ()=>{
         setAnimate(false); 
         setTimeout(() => {
             setEpoch(epoch => epoch + 1);
+          }, 600);
+        setTimeout(() => {
             setAnimate(true);
-          }, 800);
+          }, 800);    
     }
 
 return (

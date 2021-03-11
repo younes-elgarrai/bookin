@@ -110,13 +110,50 @@ function MainScreen(props) {
     };
 
     const [cookies, setCookie] = useCookies(['survey']);
+    const [countWL, setCountWL] = useState(0);
+    const [countLB, setCountLB] = useState(0);
 
     const [data, setData] = useState(undefined);
+    const [assocData, setAssocData] = useState([]);
+    const [wishData, setWishData] = useState([]);
 
     var query = cookies.survey!==undefined&&queryMaker(cookies.survey.Styles);
 
+    if(cookies.token){
+
+        var libIds = cookies.library.map((book)=> book.bookid);
+
+        var libTitles = cookies.library.map((book)=> `Parce que vous avez lu  « ${book.title} »...`);
+    
+        var wishIds = cookies.wishlist.map((book)=> book.bookid);
+    
+        var wishTitles = cookies.wishlist.map((book)=> `Parce que « ${book.title} » vous intéresse...`);
+
+    }
+
+ 
+
 
   useEffect(  ()=>{
+            async function associatedBooks(libraryIds, setState){
+
+                const rawResponse = await fetch('/associated-reads', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify(libraryIds)
+                    });
+    
+                var response = await rawResponse.json();
+    
+                console.log(response);
+             
+                setState(response.result);
+
+            }
+
+            cookies.token!==undefined&&associatedBooks(libIds, setAssocData);
+
+            cookies.token!==undefined&&associatedBooks(wishIds, setWishData);
 
 
             async function dataQuery(){
@@ -139,15 +176,22 @@ function MainScreen(props) {
    
   },[]);
 
+  useEffect(()=>{
+      setCountWL(props.wishlist.length);
+      setCountLB(props.library.length);
+  },[props.library, props.wishlist])
+
 
     const suggest = []
+
+    
 
     for (const cat in data) {
         var bloc = [];
         for (const subcat in data[cat]){
             bloc.push(
             <Grid item xs={12} style={{width:'100%' , display:'flex', justifyContent:'center'}}>
-                <BookList skeleton={false} bookListTitle={subcat} data={data[cat][subcat]} />
+                <BookList skeleton={false} bookListTitle={data[cat][subcat].map(e=>subcat)} data={data[cat][subcat]} />
             </Grid>
             )
         }
@@ -206,13 +250,13 @@ function MainScreen(props) {
                                 <h2 style={styles.note}>Livres à lire</h2>
                             </Grid>
                             <Grid item>
-                                <h2 style={styles.h2}>{props.wishlist.length}</h2>
+                                <h2 style={styles.h2}>{countWL}</h2>
                             </Grid>
                             <Grid item>
                                 <h2 style={styles.note}>Livres dans la biliothèque</h2>
                             </Grid>
                             <Grid item>
-                                <h2 style={styles.h2}>{props.library.length}</h2>
+                                <h2 style={styles.h2}>{countLB}</h2>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -236,7 +280,17 @@ function MainScreen(props) {
                 <TabPanel value={props.value} index={0}>
                         <div style={styles.libraryBloc}>
                             {data?suggest:<BookSkeleton />}
-                        </div> 
+                        </div>
+                        <div style={styles.libraryBloc}>
+                            <Grid item xs={12} style={{width:'100%' , display:'flex', justifyContent:'center'}}>
+                                {libTitles===undefined?null:<BookList skeleton={false} bookListTitle={(libTitles||[])} data={assocData} />}
+                            </Grid>
+                        </div>
+                        <div style={styles.libraryBloc}>
+                            <Grid item xs={12} style={{width:'100%' , display:'flex', justifyContent:'center'}}>
+                                {wishTitles===undefined?null:<BookList skeleton={false} bookListTitle={(wishTitles||0)} data={wishData} />}
+                            </Grid>
+                        </div>    
                 </TabPanel>
             </Grid>
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'100%', backgroundColor:"white"}}>
