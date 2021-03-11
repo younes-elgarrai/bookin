@@ -255,7 +255,7 @@ function MainScreen(props) {
                         >
                             <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Suggestions</span>} {...a11yProps(0)} />
                             <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Bibliothèque</span>}  {...a11yProps(1)} />
-                            <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Wishlist</span>} {...a11yProps(2)} />
+                            <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Liste d'envies</span>} {...a11yProps(2)} />
                         </Tabs>
                 </Paper>
             </Grid>

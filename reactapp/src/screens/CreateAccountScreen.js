@@ -86,7 +86,7 @@ function CreateAccountScreen(props) {
                     <Input.Password placeholder="Fantine123" prefix={<LockOutlined className="site-form-item-icon" />} onChange={(e)=> setUserPassword(e.target.value)} value={userPassword} iconRender={visible=>(visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} style={{width:'90%'}}/>
                 </Form.Item>
                 <Form.Item>
-                    <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer compte</Button>
+                    <Button style={styles.btn} onClick={()=> createUserAccount()} >Créer mon compte</Button>
                     <p style={styles.userMsg}>{userMessage}</p>
                 </Form.Item>
             </Form>

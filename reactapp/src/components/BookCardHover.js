@@ -144,7 +144,7 @@ function BookCardHover(props) {
     };
 
     const messageAddWL = () => {
-      message.success({ content: 'Ajouté à votre wishlist !', key, duration: 2 });
+      message.success({ content: "Ajouté à votre liste d'envies !", key, duration: 2 });
     };
 
     const messageDeleteLB = () => {
@@ -152,7 +152,7 @@ function BookCardHover(props) {
     };
 
     const messageDeleteWL = () => {
-      message.success({ content: 'Retiré de votre wishlist !', key, duration: 2 });
+      message.success({ content: "Retiré de votre liste d'envies !", key, duration: 2 });
     };
 
     const libraryIconAdd = (
@@ -173,7 +173,7 @@ function BookCardHover(props) {
 
     const wishlistIconAdd = (
       <div style={{display:'flex', justifyContent:'space-around', width:"65px"}}>
-        <Tooltip placement="bottom" title="Ajoutez à votre wishlist">
+        <Tooltip placement="bottom" title="Ajoutez à votre liste d'envies">
         <HeartOutlined style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickWLAdd(); messageAddWL()}}  />
         </Tooltip>
       </div>
@@ -181,7 +181,7 @@ function BookCardHover(props) {
 
     const wishlistIconDelete = (
       <div style={{display:'flex', justifyContent:'space-around', width:"65px"}}>
-          <Tooltip placement="bottom" title="Retirez de votre wishlist">
+          <Tooltip placement="bottom" title="Retirez de votre liste d'envies">
           <HeartFilled style={{ color: '#23396c', fontSize:"14px", cursor:"pointer" }} onClick={() => {handleClickWLDelete(); messageDeleteWL()}}  />
           </Tooltip>
       </div>
