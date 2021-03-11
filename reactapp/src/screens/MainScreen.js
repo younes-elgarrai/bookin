@@ -312,6 +312,7 @@ function MainScreen(props) {
 let styles = {
     container: {
         backgroundColor:'#f3f5f7',
+        paddingTop: '10px'
     },
 
     libraryBloc: {

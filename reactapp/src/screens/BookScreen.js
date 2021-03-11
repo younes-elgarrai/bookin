@@ -16,7 +16,6 @@ import Faces_06 from '../assets/faces_06.jpg';
 import Faces_07 from '../assets/faces_07.png';
 import Faces_08 from '../assets/faces_08.png';
 import Faces_09 from '../assets/faces_09.png';
-import Faces_10 from '../assets/faces_10.png';
 
 import {useParams} from "react-router-dom";
 
@@ -234,24 +233,16 @@ function BookScreen() {
 
   const generateProfileIcons = () => {
     const profileIconsArray = [];
-    let profileNumber = Math.floor(Math.random() * 10) + 1;
-    for (let i = 0 ; i < 7 ; i++) {
+    for (let i = 0 ; i < 6 ; i++) {
+      let profileNumber = Math.floor(Math.random() * 9) + 1;
+      console.log(profileNumber);
       let profileImage = "Faces_0"+profileNumber;
-      if (profileNumber < 7) {
-        profileImage = "Faces_0"+profileNumber+".jpg";
-      } else if (profileNumber > 6 && profileNumber < 10) {
-        profileImage = "Faces_0"+profileNumber+".png";
-      }
-      if (profileNumber = 10) {
-        profileImage = "Faces_"+profileNumber+".png";
-      }
-      profileIconsArray.push();
-      return(
-        <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_01} /></Col>
-      )
+      profileIconsArray.push(profileImage);
     }
+    return profileIconsArray;
   }      
-  generateProfileIcons();
+  const profiles = generateProfileIcons();
+  console.log('profiles', profiles);
 
   return (
 
@@ -273,13 +264,19 @@ function BookScreen() {
                 </Col>
                 </Row>
                 <Row>
-                {/* xs={24} sm={12} md={8} lg={6} xl={4} */}
+                {profiles && profiles.map((profile) => {
+                  return(
+                    <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={profile} /></Col>
+                  )
+                })
+                }
+
                 <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_01} /></Col>
                 <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_02} /></Col>
                 <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_03}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_04}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_05}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_06}/></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_07}/></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_08}/></Col>
+                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_09}/></Col>
                 </Row>
                 <Row>
                   {associated[0]===undefined?null:<BookList bookListTitle={["Ouvrages associés..."]} data={associated}/>}
