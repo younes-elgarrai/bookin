@@ -1,5 +1,5 @@
 import React , {useState, useEffect}  from 'react';
-import { Avatar, Layout, Row, Col} from 'antd';
+import { Avatar, Layout, Row, Col, Image} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 import '../components/BookHeader'
@@ -15,6 +15,7 @@ import Faces_05 from '../assets/faces_05.jpg';
 import Faces_06 from '../assets/faces_06.jpg';
 import Faces_07 from '../assets/faces_07.png';
 import Faces_08 from '../assets/faces_08.png';
+import Faces_09 from '../assets/faces_09.png';
 
 import {useParams} from "react-router-dom";
 
@@ -25,6 +26,7 @@ import Reviews from '../components/Reviews';
 import BookList from '../components/BookList';
 import Footer from '../components/Footer';
 import NewReview from '../components/NewReview';
+import { LensTwoTone } from '@material-ui/icons';
 
 const { Content } = Layout;
 
@@ -229,6 +231,16 @@ function BookScreen() {
         }
 
 
+  const generateProfileIcons = () => {
+    const availableIcons = [ Faces_01, Faces_02, Faces_03, Faces_04, Faces_05, Faces_06, Faces_07, Faces_08, Faces_09];
+    for (let i = 0 ; i < 3 ; i++) {
+      let index = Math.floor(Math.random() * 9);
+      availableIcons.splice(index, 1);
+      }
+    return availableIcons;
+  }      
+  const profiles = generateProfileIcons();
+
   return (
 
     <div className='font'>
@@ -249,15 +261,12 @@ function BookScreen() {
                 </Col>
                 </Row>
                 <Row>
-                {/* xs={24} sm={12} md={8} lg={6} xl={4} */}
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_01} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_02} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_03}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_04}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_05}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_06}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_07}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_08}/></Col>
+                {profiles && profiles.map((profile) => {
+                  return(
+                    <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={profile} /></Col>
+                  )
+                })
+                }
                 </Row>
                 <Row>
                   {associated[0]===undefined?null:<BookList bookListTitle={["Ouvrages associés..."]} data={associated}/>}

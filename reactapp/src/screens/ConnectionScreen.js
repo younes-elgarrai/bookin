@@ -67,7 +67,7 @@ function ConnectionScreen(props) {
         <Nav/>
         <div style={styles.container}>
               <h3 style={styles.title}>Connexion</h3>
-              <p style={styles.label}>Connectez-vous pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
+              <p style={styles.label}>En étant membre de la communauté Bookin, vous pouvez : Connectez-vous pour ajouter des livres à votre bibliothèque et à votre liste d'envies.</p>
               <div>
                   <p style={styles.labelInline}>Vous n'avez pas encore de compte ?  </p> 
                   <Button type='link' style={styles.smallBtn}><Link to='/create-account'>Créez un compte</Link></Button>

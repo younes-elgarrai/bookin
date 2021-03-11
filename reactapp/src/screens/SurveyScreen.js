@@ -3,6 +3,8 @@ import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
 import { Progress, Button, Row, Col, Modal} from 'antd';
 import '../App.css';
+import Nav from '../components/Navbar';
+import Footer from '../components/Footer';
 
 import {connect} from 'react-redux';
 
@@ -109,10 +111,11 @@ const surveyStyle = {
 }
 
   return (
-        <div style={containerStyle}>
+        <div style={containerStyle} className='font'>
+          <Nav />
           <Row justify='center'>
             <Col span={8} >
-              <Progress percent={(step-1)*50} status="active" trailColor="#eeeeee"/>
+              <Progress percent={(step-1)*50} status="active" trailColor="#eeeeee" strokeColor='#fca311'/>
             </Col>
           </Row>
           <Row justify='center'>
@@ -132,18 +135,28 @@ const surveyStyle = {
           </Modal>
           <Row justify='center'>
             <Col span={10} flex={1}>
-            {step!==1?<Button onClick={()=>handleBackClick()} type="primary">Précédent</Button>:null}
-            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary">Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" danger>Terminer</Button>)
-                                                          :<Button onClick={()=>handleConfirmClick()} type="primary">Confirmer</Button>}
+            {step!==1?<Button onClick={()=>handleBackClick()} type="primary" style={styles.btn}>Précédent</Button>:null}
+            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btn}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btn}>Terminer</Button>)
+                                                          :<Button onClick={()=>handleConfirmClick()} type="primary" style={styles.btn}>Confirmer</Button>}
             </Col>
             {finished&&<Redirect to="/main" />}
-          </Row>                 
+          </Row>   
+          <Footer />              
         </div> 
 );
 }
+const styles = {
+  btn: {
+    marginRight:'10px',
+    backgroundColor:'#fca311', 
+    fontWeight:'500', 
+    color:'#23396c', 
+    borderColor:'#fca311', 
+    borderRadius:'5px',
+},
+}
 
 function mapDispatchToProps(dispatch) {
-
   return {
       setCategory: function(e) {
           dispatch({type: 'setCategory', element: e})
@@ -151,12 +164,9 @@ function mapDispatchToProps(dispatch) {
 
   }
 }
-
 function mapStateToProps(state) {
-
     return {survey: state.survey, category: state.category, user: state.user};
   }
-
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyScreen);
 
 

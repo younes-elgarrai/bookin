@@ -10,6 +10,7 @@ import BookCard from '../components/BookCard';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { connect } from 'react-redux';
+import review from '../assets/review.png';
 
 
 // insérer module dernières nouveautés lorsque pas de recherche encore faite
@@ -19,6 +20,7 @@ const { Search } = Input;
 // const { Meta } = Card;
 
 function SearchScreen(props) {
+    console.log("search props user", props.user);
 
     const history = useHistory();
     const [result, setResult] = useState([]);
@@ -275,6 +277,11 @@ return (
 
         <div style={{ width:"80%", margin:"auto", border:1}}>
         {isFetching ? spin : null }
+        {count === 0 && 
+            <div style={{display:'flex', justifyContent:'center', paddingTop:'50px',paddingBottom:'50px'}}>
+                <img src={review} alt='Illustration by Olha Khomich from Icons8' style={{height:'300px'}}/>
+            </div>
+        }
 
             {count !== 0  && 
                 <div>
