@@ -282,7 +282,7 @@ return (
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-          <img style={styles.images} width={150} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
+          <img style={styles.images} width={128} height={210} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
 
             {props.bookPage === 'nc' ? null :
             <a href={props.bookPage} target="_blank">

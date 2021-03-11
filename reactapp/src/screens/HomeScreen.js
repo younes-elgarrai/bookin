@@ -32,7 +32,6 @@ function HomeScreen(props) {
             <Button style={styles.btn}><Link to={'/main'}>Voir mes recommandations</Link></Button> :
             <Button style={styles.btn}><Link to={'/survey'}>Commencer</Link></Button>
             }
-            {/* <Button style={styles.btn}><Link to={cookies.survey ? '/main' : '/survey'}>Voir mes recommandations</Link></Button> */}
             <div>
             <p style={styles.labelInline}>Vous avez déjà un compte ? </p> 
             <Button type='link' style={styles.smallBtn}><Link to='/connection/'>Connectez-vous</Link></Button>
