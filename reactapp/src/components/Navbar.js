@@ -78,6 +78,7 @@ function NavigationBar(props) {
     props.onLogoutClick(props.user);
     props.setLibrary([]);
     props.setWishlist([]);
+    props.beforeLogin(null)
   }
 
   return(
@@ -102,8 +103,8 @@ function NavigationBar(props) {
                 <Avatar size="large" className="menu-nav-avatar" icon={<UserOutlined/>}/>}
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem><Link to='/update-account' className="menu-nav-item-dropdown">Modifier compte</Link></DropdownItem>
-                <DropdownItem><Link to='/' className="menu-nav-item-dropdown" onClick={()=>onLogOut()}>Déconnexion</Link></DropdownItem>
+                <Link to='/update-account' className="menu-nav-item-dropdown"><DropdownItem>Modifier compte</DropdownItem></Link>
+                <Link to='/' className="menu-nav-item-dropdown" onClick={()=>onLogOut()}><DropdownItem>Déconnexion</DropdownItem></Link>
               </DropdownMenu>
             </UncontrolledDropdown>
             :
@@ -159,7 +160,10 @@ function mapDispatchToProps(dispatch) {
     },
     setWishlist: function(wishlist) {
       dispatch( {type: 'setWishlist', wishlist:wishlist} )
-   }
+    },
+   beforeLogin: function(previousLocation) {
+    dispatch( {type: 'beforeLogin', previousLocation:previousLocation} )
+    },
   }
 }
 function mapStateToProps(state) {

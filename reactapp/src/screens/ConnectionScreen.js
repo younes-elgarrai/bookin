@@ -49,8 +49,18 @@ function ConnectionScreen(props) {
     }       
 }
 
+
+
+
     if (isLoggedIn) {
-        return(<Redirect to='/main'/>)
+        return (
+            <div>
+                {!props.previousLocation
+                    ? <Redirect to='/main'/> 
+                    : <Redirect to={props.previousLocation.slice(0,props.previousLocation.length - 5)}/>
+                }
+            </div>
+            )
     } else {
     return (
         <div className='font'>
@@ -154,6 +164,7 @@ function mapDispatchToProps(dispatch) {
     }
   }
   function mapStateToProps(state) {
-    return { user: state.user }
+    console.log("state", state)
+    return { user: state.user, previousLocation: state.previousLocation }
   }
   export default connect(mapStateToProps, mapDispatchToProps)(ConnectionScreen);
