@@ -36,7 +36,7 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
   try {
 
     var bookToCheck = await BooksModel.findOne({bookid: bookid});
-    console.log("bookToCheck",bookToCheck);
+    console.log("bookToCheck", bookToCheck);
 
     if (bookToCheck === null) { 
       const newBookInLibrary =  new BooksModel({
@@ -50,7 +50,7 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
       var userCheck = await UsersModel.findOne({token: token});
       var userCheckTab = [];
       for (let i = 0; i < userCheck.library.length; i++) {
-        console.log("userCheck.library[i]",userCheck.library[i])
+        console.log("userCheck.library"+i,userCheck.library[i])
         if (JSON.stringify(userCheck.library[i]) === JSON.stringify(savedBookInLibrary._id)) {
           userCheckTab.push(userCheck)
         }
@@ -82,11 +82,12 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
 
     }
     var result = true;
+    res.json({result})
   }
   catch (error) {
     var result = false
+    res.json({result})
   }
-  res.json({result})
  }});
 
 
@@ -97,7 +98,7 @@ router.post('/library', async (req, res) => {
     res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
   } else {
   const user = await UsersModel.findOne({token: req.body.token}).populate('library').exec()
-  var userLibrary = user.library
+  var userLibrary = (user.library || null)
   res.json({result: true, library: userLibrary})
 }
 });
@@ -138,7 +139,7 @@ router.post('/recos', async (req,res)=>{
       try {
             const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`);
             const body = await response.data;
-            const books = await body.items.map((elem, index)=>{return elem});               
+            const books = await body.items;               
             return books ;
           }catch(error) {
               console.log(error)
@@ -146,14 +147,11 @@ router.post('/recos', async (req,res)=>{
 
 
   var handleSubcatQueriesSearch = async (queries) => {
-
     const pArray = queries.map(async (query) => {
       const response = handleSearch(query);
       return response;
     })
-
     const items = await Promise.all(pArray);
-
     var merged = [].concat.apply([], items);
 
     // return merged;
@@ -164,17 +162,12 @@ router.post('/recos', async (req,res)=>{
 
 
   var handleSubCatSearchv2 = async (q) => {
-
     var qArray = Object.values(q);
-
     var subcats = Object.keys(q);
-
     const pArray = qArray.map(async (queries) => {
       return handleSubcatQueriesSearch(queries);
     });
-
     const resultArray = await Promise.all(pArray);
-
     var result = {};
 
     subcats.forEach((key, i) => result[key] = resultArray[i]);
@@ -184,44 +177,69 @@ router.post('/recos', async (req,res)=>{
   }
 
   var handleSurveySearch = async (q) => {
-
     var results = {};
-
     var cats = Object.keys(q);
 
     for (var i = 0; i < cats.length; i++) {
-
       const cat = cats[i];
-
       results[cat] = [];
-
       var catItems = await handleSubCatSearchv2(q[cat]);
-
       results[cat] = catItems
-
     };
 
     return results;
   }
 
-
   try {
-
     const response = await handleSurveySearch(req.body)
-
     res.json({
       result: response
     });
-
   } catch (error) {
-
     res.json({
       result: error
     })
+  }
+})
+
+
+router.post('/associated-reads', async (req,res)=>{
+
+
+  var handleSearch = async (bookid) => {
+      try {
+            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes/${bookid}/associated`);
+            const body = await response.data;
+            const books = await body.items;               
+            return books ;
+          }catch(error) {
+              console.log(error)
+        }};
+
+
+  var handleMultipleSearch = async (queries) => {
+    const pArray = queries.map(async (query) => {
+      const response = handleSearch(query);
+      return response;
+    })
+    const items = await Promise.all(pArray);
+
+    return items;
 
   }
 
+  try {
+    const response = await handleMultipleSearch(req.body)
+    res.json({
+      result: response
+    });
+  } catch (error) {
+    res.json({
+      result: error
+    })
+  }
 })
+
 
 
 router.get('/library/:token', function (req, res) {
@@ -239,13 +257,18 @@ router.post('/log-in', async function (req, res, next) {
       message: "Veuillez remplir tous les champs pour accéder à votre compte."
     })
   } else {
-  const user = await UsersModel.findOne({email: req.body.email});
+  const user = await UsersModel.findOne({email: req.body.email}).populate('library').populate('wishlist').exec();
   const password = req.body.password;
   if (user) {
     const userToken = user.token;
     const userAvatar = user.avatar;
+    const userLength = user.favoriteBookLength;
+    const userPeriod = user.favoriteBookPeriod;
+    const userStyles = user.favoriteBookStyles;
+    const userLibrary = user.library;
+    const userWishlist = user.wishlist;
     if (bcrypt.compareSync(password, user.password)) {
-      res.json({ login: true, userToken, userAvatar });
+      res.json({ login: true, userToken, userAvatar , userLength, userPeriod, userStyles, userLibrary, userWishlist});
   }
   } else { 
     res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }
@@ -285,7 +308,10 @@ router.post('/sign-up', async function (req, res, next) {
     console.log('usersave', userSave);
     const userToken = userSave.token;
     const userAvatar = userSave.avatar;
-    res.json({result:true, userToken, userAvatar});
+    const userLength = userSave.favoriteBookLength;
+    const userPeriod = userSave.favoriteBookPeriod;
+    const userStyles = userSave.favoriteBookStyles;
+    res.json({result:true, userToken, userAvatar, userLength, userPeriod, userStyles});
   }
 });
 async function saveNewUser(req) {
@@ -328,6 +354,24 @@ router.post('/update', async (req, res) => {
     result: true,
     userSave
   });
+});
+
+router.post('/update-survey', async (req, res) => {
+  let token = req.body.token;
+  if (!token) {
+    res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
+  } else {
+  const userCheck = await UsersModel.findOne({token: req.body.token});
+  if (userCheck !== null) {
+    var user = await UsersModel.findOneAndUpdate({token: token},{ favoriteBookPeriod : [req.body.period],
+                                                                  favoriteBookLength : [req.body.length],
+                                                                  favoriteBookStyles : JSON.parse(req.body.styles)},{new:true});
+    console.log(user);
+    res.json({ result: true, newuser: user});
+  } else {
+      res.json({ result: false, message: "la mise à jour a échoué" });
+    }
+}
 });
 
 
@@ -393,7 +437,7 @@ router.post('/wishlist', async (req, res) => {
     const user = await UsersModel.findOne({
       token: req.body.token
     }).populate('wishlist').exec()
-    var userWishlist = user.wishlist
+    var userWishlist = (user.wishlist || null)
     res.json({
       result: true,
       wishlist: userWishlist
@@ -467,7 +511,7 @@ router.post('/wishlist/add/:token/:bookid', async (req, res) => {
         });
         var userCheckTab = [];
         for (let i = 0; i < userCheck.wishlist.length; i++) {
-          console.log("userCheck.wishlist[i]", userCheck.wishlist[i])
+          console.log("userCheck.wishlist["+i+"]", userCheck.wishlist[i])
           if (JSON.stringify(userCheck.wishlist[i]) === JSON.stringify(savedBookInWishlist._id)) {
             userCheckTab.push(userCheck)
           }

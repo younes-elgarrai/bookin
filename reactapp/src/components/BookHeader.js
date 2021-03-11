@@ -93,8 +93,6 @@ var translateCat = {
  
   // Création de l'url pour l'achat vers Amazon
   var urlAmazon = `https://www.amazon.fr/gp/search?ie=UTF8&tag=bookin0c-21&linkCode=ur2&linkId=ed069e44484efe7e5139cd6a95321518&camp=1642&creative=6746&index=books&keywords=${props.bookIsbn}`
-  
-console.log('RL', props.readerLink);
 
   // Const pour la modal du bouton ajout à ma wishlit
   const [isModalLB, setIsModalLB] = useState(false);
@@ -129,7 +127,7 @@ console.log('RL', props.readerLink);
         });
         const body = await data.json();
 
-        console.log('body', body);
+        console.log('bodyAddWL', body);
   
         if (body.result===true) {
           setBoutonWLStyle(!boutonWLStyle);
@@ -151,6 +149,7 @@ console.log('RL', props.readerLink);
       method: 'DELETE'
       });
       const bodyDelete = await dataDelete.json();
+      console.log('bodyDeleteWL', bodyDelete);
 
       if (bodyDelete.result===true) {
         setBoutonWLStyle(false);
@@ -176,6 +175,7 @@ console.log('RL', props.readerLink);
           body: JSON.stringify({"cover":props.bookCover, "title":props.bookTitle})
         });
         const body = await data.json();
+        console.log('bodyAddLB', body)
         if (body.result===true) {
           setIsModalLB(true);
           setBoutonLBStyle(!boutonLBStyle);
@@ -197,6 +197,7 @@ console.log('RL', props.readerLink);
       method: 'DELETE'
       });
       const bodyDelete = await dataDelete.json();
+      console.log('bodyDeleteLB', bodyDelete)
 
       if (bodyDelete.result===true) {
         var index;
@@ -418,6 +419,15 @@ let styles = {
     images: {
       borderRadius:5,
       boxShadow: "1px 1px 1px #e1e1e1",
+    },
+
+    bouton: {
+      marginRight:'10px',  
+      backgroundColor:'#fca311', 
+      fontWeight:'500', 
+      color:'#23396c', 
+      borderColor:'#fca311', 
+      borderRadius:'5px'
     }
   }
 

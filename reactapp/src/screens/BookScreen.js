@@ -225,7 +225,9 @@ function BookScreen() {
             var coverImg = Cover
         } else {
             coverImg=dataBook.imageLinks.thumbnail
+
         }
+
 
   return (
 
@@ -258,10 +260,10 @@ function BookScreen() {
                 <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_08}/></Col>
                 </Row>
                 <Row>
-                  <BookList bookListTitle="Ouvrages associés..." data={associated}/>
+                  {associated[0]===undefined?null:<BookList bookListTitle={["Ouvrages associés..."]} data={associated}/>}
                 </Row>
                 <Row>
-                  <BookList bookListTitle="Du même auteur..." data={authorBooks}/>
+                  {authorBooks[0]===undefined?null:<BookList bookListTitle={["Du même auteur..."]} data={authorBooks}/>}
                 </Row>
             </div>
 

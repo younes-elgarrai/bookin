@@ -12,7 +12,7 @@ import subjects from '../assets/subjects'
 
 function SurveyScreen(props) {
 
-const [cookies, setCookie] = useCookies(['survey']);
+const [cookies, setCookie , removeCookie] = useCookies(['survey','token']);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -27,6 +27,26 @@ const [cookies, setCookie] = useCookies(['survey']);
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  const updateSurvey = async (surv) => {
+      const style = encodeURIComponent(JSON.stringify(surv.Styles));
+      const length = encodeURIComponent(surv.Length);
+      const period = encodeURIComponent(surv.Period);
+      const response = await fetch('/update-survey', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: `token=${cookies.token}&styles=${style}&period=&${period}&length=${length}`
+      });
+      const dataResponse = await response.json();
+      
+      if (dataResponse.result) {
+          console.log('dataResponse',dataResponse); 
+      }else {
+          console.log('erreur'); 
+    
+    }
+  }
+
 
 const [step, setStep] = useState(1);
 
@@ -65,8 +85,9 @@ var handleConfirmClick = ()=>{
 }
 
 var handleFinishClick = ()=>{
-  setCookie('survey', JSON.stringify(props.survey), {path: '/'})
-  console.log(cookies.survey);
+  setCookie('survey', JSON.stringify(props.survey), {path: '/'});
+  console.log("survey avant sauvegarde",props.survey);
+  cookies.token&&updateSurvey(props.survey);
   setFinished(true);
 }
 
@@ -133,7 +154,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
 
-    return {survey: state.survey, category: state.category};
+    return {survey: state.survey, category: state.category, user: state.user};
   }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyScreen);
