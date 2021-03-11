@@ -5,11 +5,15 @@ import {connect} from 'react-redux';
 
 function AvatarUpload(props) {
 
+  // Avatar par defaut si l'utilisateur n'en ajoute pas. Ne fonctionne pas encore.
+    const defaultAvatarUrl = "https://res.cloudinary.com/deyw4czpf/image/upload/v1615394254/rucgfsq6bosxa68edolo.png";
+    
     const [ avatarData, setAvatarData ] = useState();
-    const [loading, setLoading] = useState(false);
+    const [ loading, setLoading ] = useState(false);
     const [imageUrl, setImageUrl] = useState();
-      
+    
         function beforeUpload(file) {
+          console.log('file',file)
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
           message.error('You can only upload JPG/PNG file.');
@@ -35,10 +39,12 @@ function AvatarUpload(props) {
         body: data
        })
       const dataResponse = await response.json();
-      console.log('upload data response', dataResponse);
-      setImageUrl(dataResponse.url);
-      props.onUploadAvatarClick(dataResponse.url);
-      setLoading(false);
+      console.log("upload url response", dataResponse);
+      if (dataResponse.url) {
+        setImageUrl(dataResponse.url);
+        props.onUploadAvatarClick(dataResponse.url);
+        setLoading(false);
+      } 
     }
   };
 
@@ -71,5 +77,4 @@ function mapDispatchToProps(dispatch) {
     } 
   }
 }
-
 export default connect(null, mapDispatchToProps)(AvatarUpload);
