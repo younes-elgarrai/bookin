@@ -32,10 +32,6 @@ const [animate, setAnimate] = useState(true);
 
 var size = (props.data.filter(e=>{return e}).length || 1)
 
-// console.log('size', size);
-// console.log('props.data',props.data)
-// console.log('titres', props.bookListTitle.filter((e,i)=>{return props.data[i]!=null}));
-// console.log('props.data[epoch/size]',props.data[epoch%size])
 
   const responsive = {
     0: { items: 1 },
