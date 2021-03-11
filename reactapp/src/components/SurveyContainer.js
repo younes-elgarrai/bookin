@@ -56,7 +56,7 @@ function SurveyContainer(props){
 
     return(
         <div className='survey'>
-            <Card  title={props.question} style={cardStyle} >
+            <Card  title={<span className='font' style={{display:'flex', justifyContent:'center', color:'#fca311'}}>{props.question}</span>} style={cardStyle} >
                 {props.array.map((elem, index)=>{
                     return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd({category: props.category, subcategory: elem},props.type)}
                                                             handleClickRemoveParent={()=>handleClickRemove({category: props.category, subcategory: elem},props.type)}                

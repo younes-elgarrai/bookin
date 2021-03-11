@@ -279,12 +279,12 @@ function MainScreen(props) {
                         </div>    
                 </TabPanel>
             </Grid>
-            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'100%', backgroundColor:"white"}}>
+            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
                 <TabPanel value={props.value} index={1}>
                     <MyLibrary />
                 </TabPanel>
             </Grid>
-            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'100%', backgroundColor:"white"}}>
+            <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
                 <TabPanel value={props.value} index={2}>
                     <MyWishlist />
                 </TabPanel>
@@ -300,7 +300,8 @@ function MainScreen(props) {
 let styles = {
     container: {
         backgroundColor:'#f3f5f7',
-        paddingTop: '10px'
+        paddingTop: '10px',
+        paddingBottom: '50px',
     },
 
     libraryBloc: {

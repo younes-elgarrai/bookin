@@ -8,6 +8,7 @@ import Background from '../assets/picto.png'
 import Cover from '../assets/cover.jpg'
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
+import FittedImg from 'react-fitted-img';
 
 
 function BookHeader(props) {
@@ -282,7 +283,7 @@ return (
     <div style={styles.container} className='font'>
       <Row style={styles.bookBloc}  >
         <Col xs={24} md={8} xl={5} style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-          <img style={styles.images} width={128} height={210} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
+          <FittedImg fit="fill" style={styles.images} width={128} height={210} src={!props.bookCover ? `${Cover}`:props.bookCover} alt={props.bookTitle}/>  
 
             {props.bookPage === 'nc' ? null :
             <a href={props.bookPage} target="_blank">
