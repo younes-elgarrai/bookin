@@ -86,7 +86,7 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
   }
   catch (error) {
     var result = false
-    res.json({result})
+    res.json({result, error})
   }
  }});
 

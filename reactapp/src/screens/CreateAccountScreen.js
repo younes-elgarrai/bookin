@@ -49,11 +49,17 @@ function CreateAccountScreen(props) {
       }
     }
 
+
     
     if (isSignedUp) {
-      return(
-        <Redirect to='/search'/>
-      )
+      return (
+        <div>
+            {!props.previousLocation
+                ? <Redirect to='/main'/> 
+                : <Redirect to={props.previousLocation.slice(0,props.previousLocation.length - 5)}/>
+            }
+        </div>
+        )
     } else {
     return (
         <div className='font'>
@@ -92,6 +98,7 @@ function CreateAccountScreen(props) {
         </div>
         </div>
         <Footer/>
+        {cookies.survey===undefined&&<Redirect to="/survey" />}
         </div>
       );
     }    
@@ -171,6 +178,6 @@ const styles = {
     }
   }
   function mapStateToProps(state) {
-    return { user: state.user, avatar: state.avatar}
+    return { user: state.user, avatar: state.avatar, previousLocation: state.previousLocation}
   }
   export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountScreen);

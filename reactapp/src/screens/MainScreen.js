@@ -26,7 +26,6 @@ import BookList from '../components/BookList';
 
 import subjects from '../assets/subjects';
 
-
 var catQueryMaker = (cat, styles)=>{
   
             var r = {};
@@ -217,7 +216,7 @@ function MainScreen(props) {
     <div>
         <Nav />
         <Grid container spacing={0}   direction="column" justify="center" alignItems="center" style={styles.container} className='font'>
-            <Grid container xs={12} style={{width:'80%', 
+        {cookies.token?<Grid container xs={12} style={{width:'80%', 
                                             backgroundColor:'#23396C', 
                                             borderTopRightRadius:"10px",
                                             borderTopLeftRadius:"10px", 
@@ -244,9 +243,7 @@ function MainScreen(props) {
                             </Grid>
                         </Grid>
                     </Grid>
-            </Grid>
-
-
+            </Grid>:null}
             <Grid item xs={12} style={{width:'80%'}}>
                 <Paper elevation={0} className={classes.root}>
                         <Tabs
@@ -256,9 +253,9 @@ function MainScreen(props) {
                             textColor="primary"
                             centered
                         >
-                            <Tab label="Recos" {...a11yProps(0)} />
-                            <Tab label="Bibliothèque" {...a11yProps(1)} />
-                            <Tab label="Wishlist" {...a11yProps(2)} />
+                            <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Suggestions</span>} {...a11yProps(0)} />
+                            <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Bibliothèque</span>}  {...a11yProps(1)} />
+                            <Tab label={<span className='font' style={{textTransform:'capitalize', fontSize:"18px"}}>Wishlist</span>} {...a11yProps(2)} />
                         </Tabs>
                 </Paper>
             </Grid>
@@ -282,11 +279,13 @@ function MainScreen(props) {
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
                 <TabPanel value={props.value} index={1}>
                     <MyLibrary />
+                    {cookies.token?null:<Redirect to="/create-account" />}
                 </TabPanel>
             </Grid>
             <Grid item xs={12} direction="column" justify="center" alignItems="center" style={{width:'80%', backgroundColor:"white"}}>
                 <TabPanel value={props.value} index={2}>
                     <MyWishlist />
+                    {cookies.token?null:<Redirect to="/create-account" />}
                 </TabPanel>
             </Grid>
         </Grid>
