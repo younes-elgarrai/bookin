@@ -1,5 +1,5 @@
 import React , {useState, useEffect}  from 'react';
-import { Avatar, Layout, Row, Col} from 'antd';
+import { Avatar, Layout, Row, Col, Image} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 import '../components/BookHeader'
@@ -232,17 +232,14 @@ function BookScreen() {
 
 
   const generateProfileIcons = () => {
-    const profileIconsArray = [];
-    for (let i = 0 ; i < 6 ; i++) {
-      let profileNumber = Math.floor(Math.random() * 9) + 1;
-      console.log(profileNumber);
-      let profileImage = "Faces_0"+profileNumber;
-      profileIconsArray.push(profileImage);
-    }
-    return profileIconsArray;
+    const availableIcons = [ Faces_01, Faces_02, Faces_03, Faces_04, Faces_05, Faces_06, Faces_07, Faces_08, Faces_09];
+    for (let i = 0 ; i < 3 ; i++) {
+      let index = Math.floor(Math.random() * 9);
+      availableIcons.splice(index, 1);
+      }
+    return availableIcons;
   }      
   const profiles = generateProfileIcons();
-  console.log('profiles', profiles);
 
   return (
 
@@ -270,13 +267,6 @@ function BookScreen() {
                   )
                 })
                 }
-
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_01} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_02} /></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_03}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_07}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_08}/></Col>
-                <Col style={{marginBottom:'5px'}}xs={12} md={3}><Avatar size={100} src={Faces_09}/></Col>
                 </Row>
                 <Row>
                   {associated[0]===undefined?null:<BookList bookListTitle={["Ouvrages associés..."]} data={associated}/>}
