@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import '../App.css'
 import BookCardHover from './BookCardHover'
 import { connect } from 'react-redux';
+import reading from '../assets/reading.png';
 
 function MyWishlist(props) {
 
@@ -51,8 +52,9 @@ return (
         <Grid container xs={10} direction="row" justify="center" alignItems="center">
             {!displayWishlist 
                 ?
-                <Grid item xs={12} >
+                <Grid item xs={12} style={{display:'flex', flexDirection:'column', alignItems:'center'}} >
                     <p style={{textAlign:"center"}}>Aucun livre dans votre wishlist</p>  
+                    <img src={reading} alt='Illustration by Olha Khomich from Icons8' style={{height:'200px'}}/> 
                 </Grid> 
                 :wishlist
             }
