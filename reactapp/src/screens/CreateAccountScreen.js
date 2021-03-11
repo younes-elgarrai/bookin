@@ -92,6 +92,7 @@ function CreateAccountScreen(props) {
         </div>
         </div>
         <Footer/>
+        {cookies.survey===undefined&&<Redirect to="/survey" />}
         </div>
       );
     }    

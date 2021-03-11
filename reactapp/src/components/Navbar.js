@@ -90,7 +90,7 @@ function NavigationBar(props) {
         <Collapse isOpen={isOpen} navbar className="right-menu">
           <Nav navbar>
             <NavItem><Link to="/search" className="menu-nav-item"><SearchOutlined className="menu-nav-icon" /> Rechercher</Link></NavItem> 
-            <NavItem onClick={()=>props.onTabClick(0)} ><Link to={props.user ? "/main" : "/survey"}  className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
+            <NavItem onClick={()=>props.onTabClick(0)} ><Link to={cookies.survey ? "/main" : "/survey"}  className="menu-nav-item"><BulbOutlined className="menu-nav-icon"/> Suggestions</Link></NavItem> 
             <NavItem onClick={()=>props.onTabClick(1)}><Link to={props.user ? "/main" : "/connection"} className="menu-nav-item"><Badge className="menu-nav-badge" style={{marginRight:"-5px", backgroundColor:"#23396c"}} size="small" count={countLB}><BookOutlined className="menu-nav-icon"/></Badge> Bibliothèque</Link></NavItem> 
             <NavItem onClick={()=>props.onTabClick(2)}><Link to={props.user ? "/main" : "/connection"} className="menu-nav-item"><Badge className="menu-nav-badge" style={{marginRight:"5px", backgroundColor:"#23396c"}} size="small" count={countWL}><HeartOutlined style={{marginRight:"10px", marginLeft:"10px"}} className="menu-nav-icon"/></Badge> A lire</Link></NavItem> 
             {props.user ? 
