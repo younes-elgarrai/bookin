@@ -24,7 +24,6 @@ function NavigationBar(props) {
 
   useEffect(()=>{
 
-    console.log('cookies wishlist', cookies.wishlist);
     setCountWL(props.wishlist.length);
     setCountLB(props.library.length);
 
@@ -76,7 +75,10 @@ function NavigationBar(props) {
     removeCookie('survey');
     removeCookie('library');
     removeCookie('wishlist');
-    props.onLogoutClick(props.user);}
+    props.onLogoutClick(props.user);
+    props.setLibrary([]);
+    props.setWishlist([]);
+  }
 
   return(
     <div>

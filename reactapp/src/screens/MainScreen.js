@@ -131,8 +131,6 @@ function MainScreen(props) {
 
     }
 
- 
-
 
   useEffect(  ()=>{
             async function associatedBooks(libraryIds, setState){
@@ -145,7 +143,7 @@ function MainScreen(props) {
     
                 var response = await rawResponse.json();
     
-                console.log(response);
+                console.log('response fetch', response);
              
                 setState(response.result);
 

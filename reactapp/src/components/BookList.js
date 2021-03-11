@@ -30,15 +30,22 @@ const [epoch, setEpoch] = useState(0);
 
 const [animate, setAnimate] = useState(true);
 
-var size = props.data.length;
+var size = (props.data.filter(e=>{return e}).length || 1)
+
+// console.log('size', size);
+// console.log('props.data',props.data)
+// console.log('titres', props.bookListTitle.filter((e,i)=>{return props.data[i]!=null}));
+// console.log('props.data[epoch/size]',props.data[epoch%size])
 
   const responsive = {
     0: { items: 1 },
     568: { items: 2 },
     1024: { items: 6 },
     };
+
+
   
-    const items =  props.data[epoch%size]&&props.data[epoch%size].map((book, index)=>{
+    const items =  (props.data.filter(e=>{return e})[epoch%size]!==null&&props.data.filter(e=>{return e})[epoch%size]!==undefined)?props.data.filter(e=>{return e})[epoch%size].map((book, index)=>{
         return (
             <div style={styles.bookcard}>
                 <Grow in={animate}>
@@ -47,7 +54,7 @@ var size = props.data.length;
                 {/* <p style={{color:"#333", width:"80%", textAlign:'center', fontSize:"12px", fontWeight:"400", paddingRight:"10px", marginBottom:'10px'}}> {titleCut(book.volumeInfo.title)} </p>  */}
             </div>
             );
-    });
+    }):[];
 
     const skeletonArray = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].map((num, index)=>{
         return ( 
@@ -57,7 +64,7 @@ var size = props.data.length;
     });
 
     var array = props.skeleton?skeletonArray:items;
-    var text = props.skeleton?<Skeleton variant="text" style={{width:"200px"}}/>:<h3 style={styles.h3}>{props.bookListTitle[epoch%size]}</h3>;
+    var text = props.skeleton?<Skeleton variant="text" style={{width:"200px"}}/>:<h3 style={styles.h3}>{props.bookListTitle.filter((e,i)=>{return props.data[i]!=null})[epoch%size]}</h3>;
 
     var handleBookClick = ()=>{
         setAnimate(false); 
