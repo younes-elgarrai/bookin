@@ -19,6 +19,7 @@ const { Search } = Input;
 // const { Meta } = Card;
 
 function SearchScreen(props) {
+    console.log("search props user", props.user);
 
     const history = useHistory();
     const [result, setResult] = useState([]);

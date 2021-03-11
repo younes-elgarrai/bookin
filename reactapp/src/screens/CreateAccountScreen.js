@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Redirect, Link} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import '../App.css';
-import { Input, Button, Form } from 'antd';
+import { Input, Button, Form, Avatar } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -27,8 +27,7 @@ function CreateAccountScreen(props) {
     }
 
     const createUserAccount = async () => {
-
-      if (!checkEmailFormat(userEmail)) {
+    if (!checkEmailFormat(userEmail)) {
         setUserMessage('veuillez saisir un email valide.');
     } else {
       const style = encodeURIComponent(JSON.stringify(cookies.survey.Styles));
@@ -40,7 +39,6 @@ function CreateAccountScreen(props) {
         body: `avatar=${props.avatar}&name=${userLibraryName}&email=${userEmail}&password=${userPassword}&styles=${style}&length=${length}&period=${period}`
       });
       const dataResponse = await response.json();
-      console.log('dataResponse',dataResponse); 
       if (dataResponse.userToken) {
         props.onCreateAccountClick({token: dataResponse.userToken, avatar: dataResponse.userAvatar});
         setIsSignedUp(true);
