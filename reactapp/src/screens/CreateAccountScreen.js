@@ -55,8 +55,8 @@ function CreateAccountScreen(props) {
       return (
         <div>
             {!props.previousLocation
-                ? <Redirect to='/main'/> 
-                : <Redirect to={props.previousLocation.slice(0,props.previousLocation.length - 5)}/>
+                ? <Redirect to={{pathname:'/main'}}/>
+                : <Redirect to={{pathname:props.previousLocation.slice(0,props.previousLocation.length - 5), state:{ referrer: "account" } }}/>
             }
         </div>
         )

@@ -20,7 +20,7 @@ const { Search } = Input;
 // const { Meta } = Card;
 
 function SearchScreen(props) {
-    console.log("search props user", props.user);
+
 
     const history = useHistory();
     const [result, setResult] = useState([]);
@@ -38,6 +38,47 @@ function SearchScreen(props) {
     const [value, setValue] = useState(null);
     const [suggestData, setSuggestData] = useState([]);
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        if (props.location !== undefined && props.location.state !== undefined) {
+            if (props.location.state.author !== undefined) {
+                var bookSearchAuthor = async() => {
+                    setIsFetching(true);
+                try {
+                    const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${props.location.state.author}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                    const body = await data.json();
+                    setIsFetching(false);
+                    console.log(body);
+                    console.log("data",data);
+                    
+                    if (body.totalItems !== 0) {
+                        setResult(body.items);
+                        setTotalItems(body.totalItems);
+                        if (props.location.state.author !== undefined) {
+                        setCount(count+1);
+                        setQuery(props.location.state.author);
+                        setValue(props.location.state.author)
+                        console.log(props.location.state.author);
+                        };
+                        setTotalItems(body.totalItems);
+                        console.log(body);
+                        var limitControl = body.totalItems;
+                        if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
+                        setTotalElementsCount(limitControl);
+                        setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
+                        } else {
+                        setResult([])
+                        };
+                }
+                catch(error) {
+                    setError(true);
+                    };
+                };
+                bookSearchAuthor();
+            };
+        };   
+    }, [])
+
 
 
     useEffect(() => {

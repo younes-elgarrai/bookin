@@ -74,14 +74,30 @@ var translateCat = {
 }
 
   // Récupération du tableau d'auteurs et les séparer par une virgule
-  var authors;
-  if (props.bookAuthor){
-    if (props.bookAuthor.length>1){
-      authors=props.bookAuthor.join(', ');
-    } else {
-      authors=props.bookAuthor;
-    }
-  }
+  // var authors;
+  // if (props.bookAuthor){
+  //   if (props.bookAuthor.length>1){
+  //     authors=props.bookAuthor.join(', ');
+  //   } else {
+  //     authors=props.bookAuthor;
+  //   }
+  // }
+
+  var authorsLink = (
+    <div>
+      {
+        !props.bookAuthor ? null 
+        : props.bookAuthor.length === 1 ? <Link style={{color:"white"}} to={{pathname: "/search",state: {author: props.bookAuthor}}}>{props.bookAuthor}</Link>
+        : props.bookAuthor.length > 1  ? props.bookAuthor.map((book, index)=>{
+            return(
+              <Link style={{color:"white"}} to={{pathname: "/search",state: {author: book}}}>{book} </Link>
+            )
+        })
+        : null
+      }
+    </div>
+    );
+
 
   // Récupération de la 1ère catégorie du livre
   var styleBook=null;
@@ -165,9 +181,11 @@ var translateCat = {
     }
   };
 
+ console.log(props)
   // Interroger la route pour ajouter à la biblitohèque et à la wishlist en cas de retour depuis login
   useEffect(() => {
     if (props.user && props.previousLocation) {
+        
         if (props.previousLocation.slice(props.previousLocation.length - 5) === "AddLB") {
             var addLibrary= async () => {
               const data = await fetch(`/library/add/${props.user.token}/${props.bookId}`, {
@@ -183,6 +201,7 @@ var translateCat = {
               };
             };
           addLibrary();
+          
             
         } else if (props.previousLocation.slice(props.previousLocation.length - 5) === "AddWL") {
           var addWishList = async () => {
@@ -200,6 +219,7 @@ var translateCat = {
             }
           };
           addWishList();
+          
       }; 
     } else {
     }
@@ -330,8 +350,8 @@ return (
 
         <Col xs={24} md={12} xl={12} >
           <h1 style={styles.h1}>{props.bookTitle}</h1>
-          <h2 style={styles.h2}>{authors}</h2>
-        
+          {/* <h2 style={styles.h2}>{authors}</h2> */}
+          <h2 style={styles.h2}>{authorsLink}</h2>
           <div>
 
           <StarFilled style={{fontSize: '20px', color:"#fca311", marginRight:'2px'}}/>
