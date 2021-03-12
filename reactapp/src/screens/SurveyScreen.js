@@ -17,19 +17,6 @@ function SurveyScreen(props) {
 
 const [cookies, setCookie , removeCookie] = useCookies(['survey','token']);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
 
   const updateSurvey = async (surv) => {
       const style = encodeURIComponent(JSON.stringify(surv.Styles));
@@ -56,6 +43,13 @@ const [step, setStep] = useState(1);
 const [finished, setFinished] = useState(false);
 
 
+const [expanded, setExpanded] = useState('');
+
+const handleChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+};
+
+
 var mainSubjects = Object.keys(subjects);
 
 var size = ["J'aime les lectures courtes et rapides",
@@ -67,8 +61,7 @@ var period = ["Classiques", "Nouveautés", "Les deux"]
 
 var questions = ['Quel style de lecture recherchez vous ?', 'Quelle serait votre longueur de livre idéale ?','Etes-vous plutôt ?']
 
-var data = step===1?props.category==='main'?mainSubjects:Object.keys(subjects[props.category])
-                   :step===2?size:period
+var data = step===1?mainSubjects:step===2?size:period
 
 var type = step===1?'Styles':step===2?'Length':'Period'
 
@@ -123,11 +116,6 @@ var handleFinishClick = ()=>{
               <SurveyContainer style={styles.surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
             </Col>
           </Row>
-          <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-            <Col span={10}>
-              <SurveyContainer style={styles.surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
-            </Col>
-          </Modal>
           <Row justify='center'>
             <Col span={10} flex={1} style={styles.blocButton}>
             {step!==1?<Button onClick={()=>handleBackClick()} type="primary" style={styles.btnBack}>Précédent</Button>:null}

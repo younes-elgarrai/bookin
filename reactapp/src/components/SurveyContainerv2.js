@@ -1,12 +1,22 @@
-import React from 'react';
-import {Card} from 'antd';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
+import Collapse from '@material-ui/core/Collapse';
+import { withStyles } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
+import MuiAccordion from '@material-ui/core/Accordion';
+import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
+import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+
+import CardContent from '@material-ui/core/CardContent';
+
+import subjects from '../assets/subjects'
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,120 +26,175 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
   },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
 }));
 
 
-
-var width = '';
-
-function Response(props){
-
-    const classes = useStyles();
-
-    var background = props.isSelected?'#23396C':null;
-    var color = props.isSelected?'#E1E1E1':null;
-    var weight = props.isSelected?'bold':null;
-
-
-    const dynamicStyle = {
-        width: width,
-        textAlign: 'center',
-        backgroundColor: background,
-        color: color,
-        fontWeight: weight
-      };
-
-
-    var handleClick = ()=>{
-
-    !props.isSelected&&props.handleClickAddParent();
-     props.isSelected&&props.handleClickRemoveParent();
-
-    }
-    return (<Accordion style={dynamicStyle} onClick={()=>handleClick()}>
-        <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-        >
-        <Typography className={classes.heading}>{props.txt}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-        <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
-        </Typography>
-        </AccordionDetails>
-    </Accordion>);
-
-}
-
-function SubResponse(props){
-
-    var background = props.isSelected?'#23396C':null;
-    var color = props.isSelected?'#E1E1E1':null;
-    var weight = props.isSelected?'bold':null;
+const Accordion = withStyles({
+    root: {
+      border: '1px solid rgba(0, 0, 0, .125)',
+      boxShadow: 'none',
+      '&:not(:last-child)': {
+        borderBottom: 0,
+      },
+      '&:before': {
+        display: 'none',
+      },
+      '&$expanded': {
+        margin: 'auto',
+      },
+    },
+    expanded: {},
+  })(MuiAccordion);
+  
+  const AccordionSummary = withStyles({
+    root: {
+      backgroundColor: 'rgba(0, 0, 0, .03)',
+      borderBottom: '1px solid rgba(0, 0, 0, .125)',
+      marginBottom: -1,
+      minHeight: 56,
+      '&$expanded': {
+        minHeight: 56,
+      },
+    },
+    content: {
+      '&$expanded': {
+        margin: '12px 0',
+      },
+    },
+    expanded: {},
+  })(MuiAccordionSummary);
+  
+  const AccordionDetails = withStyles((theme) => ({
+    root: {
+      padding: theme.spacing(2),
+    },
+  }))(MuiAccordionDetails);
 
 
-    const dynamicStyle = {
-        width: width,
-        textAlign: 'center',
-        backgroundColor: background,
-        color: color,
-        fontWeight: weight
-      };
-
-
-    var handleClick = ()=>{
-
-    !props.isSelected&&props.handleClickAddParent();
-     props.isSelected&&props.handleClickRemoveParent();
-
-    }
-
-    return <Card.Grid style={dynamicStyle} onClick={()=>handleClick()} >{props.txt}</Card.Grid>;
-
-}
 
 function SurveyContainer(props){
 
 
-    // width = props.type!=='Length'?'33%':'100%';
+    const [expanded, setExpanded] = useState('panel10');
 
-    width="100%";
+    const handleChange = (panel) => (event, newExpanded) => {
+      setExpanded(newExpanded ? panel : false);
+    };
 
-    var handleClickAdd = (e,typ)=>{
-        
-        props.add(e,typ)
-        props.category==='main'&&props.setCategory(e.subcategory);
-    }
 
-    var handleClickRemove = (e,typ)=>{
 
-        props.remove(e,typ)
-    }
 
-    const cardStyle = {
-        justifyContent: 'center',
-    }
+    function Response(properties){
 
     const classes = useStyles();
 
-    return(
-        
-        <div className='survey'>
-            <Card  title={<span className="font">{props.question}</span>} style={cardStyle} >
-                {props.array.map((elem, index)=>{
-                    return <Response key={index} txt={elem} handleClickAddParent={()=>handleClickAdd({category: props.category, subcategory: elem},props.type)}
-                                                            handleClickRemoveParent={()=>handleClickRemove({category: props.category, subcategory: elem},props.type)}                
-                                                            isSelected={props.category==='main'?Object.keys(props.survey[props.type]).some(e => e === elem)
-                                                                                             :props.category==='array'?props.survey[props.type].some(e => e === elem)
-                                                                                             :props.survey[props.type][props.category].some(e => e === elem)} />
-                    })}
-            </Card>
-        </div>
-        
+    var handleClickAdd = (e,typ)=>{
+        props.add(e,typ)
+    }
 
+    var handleClickRemove = (e,typ)=>{
+        props.remove(e,typ)
+    }
+
+
+
+    var responses = props.type!=='Styles'?<Grid container xs={12} direction="row" justify="center" alignItems="start">
+                                            {properties.data.map((elem,index)=>{
+                                                return (
+                                                    <Grid item xs={12}>
+                                                        <SubResponse txt={elem} key={index} handleClickAddParent={()=>handleClickAdd({category: 'array', subcategory: elem},properties.type)}
+                                                                                handleClickRemoveParent={()=>handleClickRemove({category: 'array', subcategory: elem},properties.type)} 
+                                                                                isSelected={props.survey[properties.type]?props.survey[properties.type].some(e => e === elem):false} />
+                                                    </Grid>
+                                                );
+                                            })}
+                                        </Grid>:
+                                        <Accordion square expanded={expanded === `panel${properties.index}`} onChange={handleChange(`panel${properties.index}`)}>
+                                        <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls={`panel${properties.index}d-content`}
+                                        id={`panel${properties.index}d-header`}
+                                        >
+                                        <Typography className={classes.heading}>{properties.txt}</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <Grid container xs={12} direction="row" justify="center" alignItems="start">
+                                                {properties.data.map((elem,index)=>{
+                                                    return (
+                                                        <Grid item xs={6}>
+                                                            <SubResponse txt={elem} key={index} handleClickAddParent={()=>handleClickAdd({category: properties.txt, subcategory: elem},properties.type)}
+                                                                                    handleClickRemoveParent={()=>handleClickRemove({category: properties.txt, subcategory: elem},properties.type)} 
+                                                                                    isSelected={props.survey[properties.type][properties.txt]?props.survey[properties.type][properties.txt].some(e => e === elem):false} />
+                                                        </Grid>
+                                                    );
+                                                })}
+                                            </Grid>
+                                        </AccordionDetails>
+                                    </Accordion>;
+
+
+
+
+
+  
+    return ( responses );
+
+}
+
+function SubResponse(properties){
+
+
+    var handleClick = ()=>{
+
+        !properties.isSelected&&properties.handleClickAddParent();
+         properties.isSelected&&properties.handleClickRemoveParent();
+    
+        }
+
+
+    const classes = useStyles();
+
+    var background = properties.isSelected?'#23396C':null;
+    var color = properties.isSelected?'#E1E1E1':null;
+    var weight = properties.isSelected?'bold':null;
+
+
+    const dynamicStyle = {
+        display: 'flex',
+        width: '100%',
+        alignItems: 'center',
+        backgroundColor: background,
+        color: color,
+        fontWeight: weight
+      };
+
+
+    return(
+    <Card variant="outlined" style={dynamicStyle} onClick={()=>handleClick()}>
+      <CardContent>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+                <span style={dynamicStyle} >{properties.txt}</span>
+            </Typography>
+      </CardContent>
+    </Card>);
+
+}
+
+    return(
+            <Paper elevation={3} >    
+                <Typography><span className='font' style={{display:'flex', justifyContent:'center', color:'#fca311'}}>{props.question}</span></Typography>
+                {props.type==='Styles'?props.array.map((elem, index)=>{
+                    return <Response key={index} index={index} txt={elem} type={props.type} data={Object.keys(subjects[elem])} />
+                    }):
+                    <Response type={props.type} data={props.array} />}
+
+            </Paper>
 
     );
 }
