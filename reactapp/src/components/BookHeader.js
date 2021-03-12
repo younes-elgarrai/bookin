@@ -139,7 +139,7 @@ var translateCat = {
       
     } else {
       setIsLoggedIn(true);
-          props.beforeLogin("/book/"+props.bookId+"AddLB");
+          props.beforeLogin("/book/"+props.bookId+"AddWL");
     }
   };
 
@@ -167,7 +167,8 @@ var translateCat = {
 
   // Interroger la route pour ajouter à la biblitohèque et à la wishlist en cas de retour depuis login
   useEffect(() => {
-    if (props.user && props.previousLocation) {
+    console.log("PROPS", props.previousLocation);
+    if (props.user && props.previousLocation.includes(props.bookId)) {
         if (props.previousLocation.slice(props.previousLocation.length - 5) === "AddLB") {
             var addLibrary= async () => {
               const data = await fetch(`/library/add/${props.user.token}/${props.bookId}`, {

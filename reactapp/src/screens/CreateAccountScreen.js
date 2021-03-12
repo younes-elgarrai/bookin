@@ -42,14 +42,11 @@ function CreateAccountScreen(props) {
       const dataResponse = await response.json();
       if (dataResponse.userToken) {
         props.onCreateAccountClick({token: dataResponse.userToken, avatar: dataResponse.userAvatar});
-
         // setCookie('survey', JSON.stringify({'Length':dataResponse.userLength, 'Period': dataResponse.userPeriod, 'Styles':dataResponse.userStyles}), {path: '/'});
         setCookie('token', dataResponse.userToken, {path: '/'});
         setCookie('avatar', dataResponse.userAvatar, {path: '/'});
         setCookie('library',JSON.stringify(await dataResponse.userLibrary),{path: '/'});
         setCookie('wishlist',JSON.stringify(dataResponse.userWishlist),{path: '/'});
-
-
         setIsSignedUp(true);
       }
       if (dataResponse.result === false) {
