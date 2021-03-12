@@ -181,11 +181,10 @@ var translateCat = {
     }
   };
 
- console.log(props)
+ console.log(props.location)
   // Interroger la route pour ajouter à la biblitohèque et à la wishlist en cas de retour depuis login
   useEffect(() => {
     if (props.user && props.previousLocation) {
-        
         if (props.previousLocation.slice(props.previousLocation.length - 5) === "AddLB") {
             var addLibrary= async () => {
               const data = await fetch(`/library/add/${props.user.token}/${props.bookId}`, {
