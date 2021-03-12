@@ -311,7 +311,9 @@ router.post('/sign-up', async function (req, res, next) {
     const userLength = userSave.favoriteBookLength;
     const userPeriod = userSave.favoriteBookPeriod;
     const userStyles = userSave.favoriteBookStyles;
-    res.json({result:true, userToken, userAvatar, userLength, userPeriod, userStyles});
+    const userLibrary = userSave.library;
+    const userWishlist = userSave.wishlist;
+    res.json({result:true, userToken, userAvatar, userLength, userPeriod, userStyles, userLibrary, userWishlist});
   }
 });
 async function saveNewUser(req) {

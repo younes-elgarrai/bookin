@@ -13,6 +13,7 @@ import { Avatar, Badge } from 'antd';
 import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined, HomeOutlined } from '@ant-design/icons';
 
 function NavigationBar(props) {
+  console.log('NavBar > props.user', props.user);
 
   const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar', 'library', 'wishlist']);
 
