@@ -105,7 +105,10 @@ function MainScreen(props) {
     var query = cookies.survey!==undefined&&queryMaker(cookies.survey.Styles);
 
     if(cookies.token){
-
+        console.log("main> cookies token", cookies.token);
+        console.log("main> cookies library", cookies.library);
+        console.log("main> cookies wishlist", cookies.wishlist);
+       
         var libIds = cookies.library.map((book)=> book.bookid);
 
         var libTitles = cookies.library.map((book)=> `Parce que vous avez lu  « ${book.title} »...`);
