@@ -122,7 +122,7 @@ var translateCat = {
   // Interroger la route pour ajouter wishList
     // Bouton pour ajout à la WishList
     var boutonWishListSelected = (
-      <Button onClick={() => handleClickWLDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>❤ WISHLIST</Button>
+      <Button onClick={() => handleClickWLDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>❤ LISTE D'ENVIES</Button>
     );
   
     var boutonWishListDefault = (
@@ -333,7 +333,7 @@ useEffect(() => {
 
 
 if (isLoggedIn) {
-  return(<Redirect to='/connection'/>);
+  return(<Redirect to='/create-account'/>);
 } else {
 return (
     <div style={styles.container} className='font'>
@@ -390,8 +390,8 @@ return (
 
             <div style={{textAlign: "center"}}>
               <CheckCircleFilled style={{ color:'#37a000', fontSize:'16px', textAlign:'right'}}/>
-              <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre wishlist<br /><br /></p>
-              <Link to='/main'><Button onClick={()=>props.onTabClick(2)} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma wishlist</Button></Link>   
+              <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre liste d'envies<br /><br /></p>
+              <Link to='/main'><Button onClick={()=>props.onTabClick(2)} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma liste d'envies</Button></Link>   
             </div>
           </Modal>
 
