@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
-import { Progress, Button, Row, Col, Modal} from 'antd';
+import { Progress, Button, Row, Col} from 'antd';
 
 import '../App.css';
 import Nav from '../components/Navbar';
@@ -12,6 +12,7 @@ import {connect} from 'react-redux';
 import SurveyContainer from '../components/SurveyContainerv2';
 
 import subjects from '../assets/subjects'
+
 
 function SurveyScreen(props) {
 
@@ -43,12 +44,6 @@ const [step, setStep] = useState(1);
 const [finished, setFinished] = useState(false);
 
 
-const [expanded, setExpanded] = useState('');
-
-const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
-};
-
 
 var mainSubjects = Object.keys(subjects);
 
@@ -76,10 +71,6 @@ var handleBackClick = ()=>{
     step-1===1&&props.setCategory('main');
 }   
 
-var handleConfirmClick = ()=>{
-  props.setCategory('main');
-}
-
 var handleFinishClick = ()=>{
   setCookie('survey', JSON.stringify(props.survey), {path: '/'});
   console.log("survey avant sauvegarde",props.survey);
@@ -105,8 +96,8 @@ var handleFinishClick = ()=>{
           <Row justify='center'>
             <Col span={10} flex={1} style={styles.blocButtonTop}>
             {step!==1?<Button onClick={()=>handleBackClick()} type="primary" style={styles.btnBack}>Précédent</Button>:null}
-            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>)
-                                                          :<Button onClick={()=>handleConfirmClick()} type="primary" style={styles.btnOK}>Confirmer</Button>}
+            {step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>}
+                                                        
             </Col>
             {finished&&<Redirect to="/main" />}
           </Row>   
@@ -119,8 +110,7 @@ var handleFinishClick = ()=>{
           <Row justify='center'>
             <Col span={10} flex={1} style={styles.blocButton}>
             {step!==1?<Button onClick={()=>handleBackClick()} type="primary" style={styles.btnBack}>Précédent</Button>:null}
-            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>)
-                                                          :<Button onClick={()=>handleConfirmClick()} type="primary" style={styles.btnOK}>Confirmer</Button>}
+            {step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>}
             </Col>
             {finished&&<Redirect to="/main" />}
           </Row>   

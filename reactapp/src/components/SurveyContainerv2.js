@@ -121,7 +121,7 @@ function SurveyContainer(props){
                                         aria-controls={`panel${properties.index}d-content`}
                                         id={`panel${properties.index}d-header`}
                                         >
-                                        <Typography className={classes.heading}>{properties.txt}</Typography>
+                                        <Typography className={classes.heading}><span className='font'>{properties.txt}</span></Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <Grid container xs={12} direction="row" justify="center" alignItems="start">
@@ -168,18 +168,27 @@ function SubResponse(properties){
     const dynamicStyle = {
         display: 'flex',
         width: '100%',
-        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: background,
         color: color,
         fontWeight: weight
       };
 
+      const cardStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: '16px'
+      };
+
 
     return(
-    <Card variant="outlined" style={dynamicStyle} onClick={()=>handleClick()}>
-      <CardContent>
+    <Card  variant="outlined" style={dynamicStyle} onClick={()=>handleClick()}>
+      <CardContent style={cardStyle}>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
-                <span style={dynamicStyle} >{properties.txt}</span>
+                <span style={dynamicStyle} className='font' >{properties.txt}</span>
             </Typography>
       </CardContent>
     </Card>);
@@ -188,7 +197,7 @@ function SubResponse(properties){
 
     return(
             <Paper elevation={3} >    
-                <Typography><span className='font' style={{display:'flex', justifyContent:'center', color:'#fca311'}}>{props.question}</span></Typography>
+                <Typography><span className='font' style={{display:'flex', justifyContent:'center', color:'#fca311', padding:'20px'}}>{props.question}</span></Typography>
                 {props.type==='Styles'?props.array.map((elem, index)=>{
                     return <Response key={index} index={index} txt={elem} type={props.type} data={Object.keys(subjects[elem])} />
                     }):
