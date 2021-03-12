@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Redirect } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
-import { Progress, Button, Row, Col, Modal} from 'antd';
+import { Progress, Button, Row, Col} from 'antd';
 
 import '../App.css';
 import Nav from '../components/Navbar';
@@ -13,23 +13,11 @@ import SurveyContainer from '../components/SurveyContainerv2';
 
 import subjects from '../assets/subjects'
 
+
 function SurveyScreen(props) {
 
 const [cookies, setCookie , removeCookie] = useCookies(['survey','token']);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
 
   const updateSurvey = async (surv) => {
       const style = encodeURIComponent(JSON.stringify(surv.Styles));
@@ -56,6 +44,7 @@ const [step, setStep] = useState(1);
 const [finished, setFinished] = useState(false);
 
 
+
 var mainSubjects = Object.keys(subjects);
 
 var size = ["J'aime les lectures courtes et rapides",
@@ -67,8 +56,7 @@ var period = ["Classiques", "Nouveautés", "Les deux"]
 
 var questions = ['Quel style de lecture recherchez vous ?', 'Quelle serait votre longueur de livre idéale ?','Etes-vous plutôt ?']
 
-var data = step===1?props.category==='main'?mainSubjects:Object.keys(subjects[props.category])
-                   :step===2?size:period
+var data = step===1?mainSubjects:step===2?size:period
 
 var type = step===1?'Styles':step===2?'Length':'Period'
 
@@ -82,10 +70,6 @@ var handleBackClick = ()=>{
     setStep(step-1);
     step-1===1&&props.setCategory('main');
 }   
-
-var handleConfirmClick = ()=>{
-  props.setCategory('main');
-}
 
 var handleFinishClick = ()=>{
   setCookie('survey', JSON.stringify(props.survey), {path: '/'});
@@ -112,8 +96,8 @@ var handleFinishClick = ()=>{
           <Row justify='center'>
             <Col span={10} flex={1} style={styles.blocButtonTop}>
             {step!==1?<Button onClick={()=>handleBackClick()} type="primary" style={styles.btnBack}>Précédent</Button>:null}
-            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>)
-                                                          :<Button onClick={()=>handleConfirmClick()} type="primary" style={styles.btnOK}>Confirmer</Button>}
+            {step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>}
+                                                        
             </Col>
             {finished&&<Redirect to="/main" />}
           </Row>   
@@ -123,16 +107,10 @@ var handleFinishClick = ()=>{
               <SurveyContainer style={styles.surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
             </Col>
           </Row>
-          <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-            <Col span={10}>
-              <SurveyContainer style={styles.surveyStyle} type={type} category={props.category} question={questions[step-1]} array={data} />
-            </Col>
-          </Modal>
           <Row justify='center'>
             <Col span={10} flex={1} style={styles.blocButton}>
             {step!==1?<Button onClick={()=>handleBackClick()} type="primary" style={styles.btnBack}>Précédent</Button>:null}
-            {['main','array'].indexOf(props.category)!==-1?(step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>)
-                                                          :<Button onClick={()=>handleConfirmClick()} type="primary" style={styles.btnOK}>Confirmer</Button>}
+            {step!==3?<Button onClick={()=>handleNextClick()} type="primary" style={styles.btnNext}>Suivant</Button>:<Button onClick={()=>handleFinishClick()} type="primary" style={styles.btnOK}>Terminer</Button>}
             </Col>
             {finished&&<Redirect to="/main" />}
           </Row>   

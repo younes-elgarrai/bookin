@@ -6,15 +6,8 @@ export default  function surveyReducer(survey = {Styles:{void:[]}, Period:[], Le
 
       var surveyStylesCopy = {...survey.Styles}
 
-      if(action.element.category==='main'){
+      if(surveyStylesCopy[action.element.category]){
 
-        surveyStylesCopy[action.element.subcategory] = [];
-  
-        surveyCopy.Styles = surveyStylesCopy;
-  
-        return surveyCopy;
-
-      }else{
         var arrayCopy = surveyStylesCopy[action.element.category];
 
         surveyStylesCopy[action.element.category] = [...arrayCopy, action.element.subcategory]
@@ -22,6 +15,20 @@ export default  function surveyReducer(survey = {Styles:{void:[]}, Period:[], Le
         surveyCopy.Styles = surveyStylesCopy;
   
         return surveyCopy;
+
+
+      }else{
+
+        surveyStylesCopy[action.element.category] = [];
+
+        var arrayCopy2 = surveyStylesCopy[action.element.category];
+
+        surveyStylesCopy[action.element.category] = [...arrayCopy2, action.element.subcategory]
+  
+        surveyCopy.Styles = surveyStylesCopy;
+  
+        return surveyCopy;
+
       }
 
   
@@ -32,25 +39,21 @@ export default  function surveyReducer(survey = {Styles:{void:[]}, Period:[], Le
 
       var surveyStyles2 = {...survey.Styles};
 
-      if(action.element.category==='main'){
-
-        delete surveyStyles2[action.element.subcategory];
-
-        surveyCopy2.Styles = surveyStyles2;
-
-        return surveyCopy2;
-
-      }else{
-
         surveyStyles2[action.element.category] = surveyStyles2[action.element.category].filter( e => e!==action.element.subcategory);
 
+
+        if(surveyStyles2[action.element.category]==[]){
+
+          delete surveyStyles2[action.element.category];
+  
+  
+        }
+
         surveyCopy2.Styles = surveyStyles2;
 
+
         return surveyCopy2;
-      }
-      
-
-
+  
     }else if(action.type === 'addLength') {
 
       var surveyCopy3 = {...survey}
