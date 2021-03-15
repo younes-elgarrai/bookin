@@ -39,9 +39,10 @@ function ConnectionScreen(props) {
             setCookie('survey', JSON.stringify({'Length':dataResponse.userLength, 'Period': dataResponse.userPeriod, 'Styles':dataResponse.userStyles}), {path: '/'});
             setCookie('token', dataResponse.userToken, {path: '/'});
             setCookie('avatar', dataResponse.userAvatar, {path: '/'});
-            setCookie('library',JSON.stringify(await dataResponse.userLibrary),{path: '/'});
+            console.log("dataResponse.userLibrary",dataResponse.userLibrary)
+            console.log("dataResponse.userWishlist",dataResponse.userWishlist)
             setCookie('wishlist',JSON.stringify(dataResponse.userWishlist),{path: '/'});
-
+            setCookie('library',JSON.stringify(dataResponse.userLibrary),{path: '/'});
             setIsLoggedIn(true);
         } else {
             setUserMessage(dataResponse.message);

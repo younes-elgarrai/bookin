@@ -107,7 +107,7 @@ function MainScreen(props) {
     if(cookies.token){
         console.log("main> cookies token", cookies.token);
         console.log("main> cookies library", cookies.library);
-        console.log("main> cookies wishlist", cookies.wishlist);
+        console.log("main> cookies", cookies);
        
         var libIds = cookies.library.map((book)=> book.bookid);
 
