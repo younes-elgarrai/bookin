@@ -12,7 +12,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HomeScreen from './screens/HomeScreen';
 import LibraryScreen from './screens/LibraryScreen';
 import BookScreen from './screens/BookScreen';
-import ResultScreen from './screens/ResultScreen';
 import SearchScreen from './screens/SearchScreen';
 import SurveyScreen from './screens/SurveyScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
@@ -52,7 +51,6 @@ function App() {
           <Route path="/main" component={MainScreen} />
           <Route path="/book/:bookid" component={BookScreen} />
           <Route exact path="/book/" component={BookScreen} />
-          <Route path="/result" component={ResultScreen} />
           <Route path="/search" component={SearchScreen} />
           <Route path="/survey" component={SurveyScreen} />
           <Route path="/create-account" component={CreateAccountScreen} />

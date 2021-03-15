@@ -13,15 +13,9 @@ import { connect } from 'react-redux';
 import review from '../assets/review.png';
 
 
-// insérer module dernières nouveautés lorsque pas de recherche encore faite
-
-
-const { Search } = Input;
-// const { Meta } = Card;
-
 function SearchScreen(props) {
 
-
+    const { Search } = Input;
     const history = useHistory();
     const [result, setResult] = useState([]);
     const [query, setQuery] = useState("");
@@ -39,6 +33,8 @@ function SearchScreen(props) {
     const [suggestData, setSuggestData] = useState([]);
     const [open, setOpen] = useState(false);
 
+
+    // Recherche d'un auteur sur google Books Api en récupérant info depuis la page livre
     useEffect(() => {
         if (props.location !== undefined && props.location.state !== undefined) {
             if (props.location.state.author !== undefined) {
@@ -80,7 +76,7 @@ function SearchScreen(props) {
     }, [])
 
 
-
+// Recherche sur Google Books API de la recherche précédente en cas de back navigateur
     useEffect(() => {
           if (history.action === "POP") {
             var bookSearchApi5 = async() => {
@@ -119,6 +115,8 @@ function SearchScreen(props) {
           };
       }, [])
 
+
+// Spinner en attendant chargement API Google Books
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     
     const spin = (
@@ -127,55 +125,14 @@ function SearchScreen(props) {
     </div>
     );
 
+
+// Gestion du tri ouveautés et pertinence
     const menu = (
         <Menu onClick={handleMenuClick} selectedKeys={selectedMenu} defaultSelectedKeys="1" >
           <Menu.Item key="1">Pertinence</Menu.Item>
           <Menu.Item key="2" >Date de publication</Menu.Item>
         </Menu>
       );
-
-    var handleSearch = (q) => {
-        var bookSearchApi = async() => {
-            setIsFetching(true);
-            setError(false);
-        try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
-            const body = await data.json();
-            setIsFetching(false);
-            setQuery(q);
-            console.log(q);
-            setCookie('searchQuery', q, {path: '/'});
-            setCount(count+1);
-            if (body.totalItems !== 0) {
-            var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
-            var filtered2 = [];
-            for (let i = 0; i < filtered.length; i++) {
-                for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
-                  var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
-                    if (sorted[j].type === "ISBN_13") {
-                        filtered2.push(filtered[i])
-                    }
-                }
-            };
-            setResult(body.items);
-            } else {
-            setResult([])
-            };
-            setTotalItems(body.totalItems);
-            console.log(body);
-            var limitControl = body.totalItems;
-            if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
-            setTotalElementsCount(limitControl);
-            setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
-        }
-        catch(error) {
-            setIsFetching(false);
-            setError(true);
-            console.log(error)
-          }};
-        bookSearchApi();
-    };
-
 
     function handleMenuClick(e) {
         if (e.key === "2") {
@@ -244,6 +201,51 @@ function SearchScreen(props) {
     };
 
 
+// recherche de base 
+    var handleSearch = (q) => {
+        var bookSearchApi = async() => {
+            setIsFetching(true);
+            setError(false);
+        try {
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const body = await data.json();
+            setIsFetching(false);
+            setQuery(q);
+            console.log(q);
+            setCookie('searchQuery', q, {path: '/'});
+            setCount(count+1);
+            if (body.totalItems !== 0) {
+            var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
+            var filtered2 = [];
+            for (let i = 0; i < filtered.length; i++) {
+                for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
+                  var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
+                    if (sorted[j].type === "ISBN_13") {
+                        filtered2.push(filtered[i])
+                    }
+                }
+            };
+            setResult(body.items);
+            } else {
+            setResult([])
+            };
+            setTotalItems(body.totalItems);
+            console.log(body);
+            var limitControl = body.totalItems;
+            if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
+            setTotalElementsCount(limitControl);
+            setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
+        }
+        catch(error) {
+            setIsFetching(false);
+            setError(true);
+            console.log(error)
+          }};
+        bookSearchApi();
+    };
+
+
+// Gestion de la pagination
     var handlePageClick = (pageNumber) => {
         const currentPage = pageNumber - 1;
         offset = currentPage * elementsPerPage;
@@ -279,6 +281,8 @@ function SearchScreen(props) {
         bookSearchApi4();
     }
 
+
+// Gestion de l'autocomplete
     var handleInputChange = (value) => {
         setValue(value);
         if (value && value.length > 2) {
@@ -305,8 +309,7 @@ function SearchScreen(props) {
 return (
 <div className="font">
     <Nav/>
-    
-    <div style={styles.container} >
+        <div style={styles.container} >
         <Row style={styles.bookBloc} >
             <Col xs={24} md={12} >
                 <h1 style={styles.h1}>Rechercher votre prochain livre</h1>
@@ -345,32 +348,6 @@ return (
                                         result.map((book,i) => (
 
                                             <BookCard bookId={book.id} bookTitle={book.volumeInfo.title} bookCover={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail}/>
-
-                                            // <div key={i} style={{display:'flex',justifyContent:'center'}}>
-                                            //         <Card 
-                                            //             style={{ 
-                                            //                 width: 150,
-                                            //                 margin:'10px', 
-                                            //                 display:'flex',
-                                            //                 flexDirection: 'column',
-                                            //                 justifyContent:'space-between'    
-                                            //             }} 
-                                            //             bodyStyle={{ padding: 0 }}
-                                            //             cover={
-                                            //                 <img
-                                            //                     alt={book.volumeInfo.title}
-                                            //                     src={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail} 
-                                            //                 />
-                                            //                 }
-                                            //             // actions={}
-                                                    
-                                            //         >
-                                            //             <Meta
-                                            //                 title={book.volumeInfo.title}
-                                            //                 style={{fontSize:12}}
-                                            //             />
-                                            //         </Card>                                     
-                                            // </div>
                                         ))
                                     }
                                 </div>

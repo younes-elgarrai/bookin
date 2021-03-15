@@ -15,12 +15,6 @@ cloudinary.config({
  api_key: '652491259593498',
  api_secret: 'tz5mXMcSbUPLjiBo4oikcnuXnzw' });
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', {
-    title: 'Express'
-  });
-});
 
 /* Ajout d'un livre dans la bibliothèque d'un user dans la BDD  */
 router.post('/library/add/:token/:bookid', async (req, res) => {
@@ -408,29 +402,9 @@ router.get('/reviews/:bookid', async (req, res) => {
     res.json({ result: true, reviews});
 });
 
-/* Recherche sur Google Books API de livres
-API_key: "AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE"
-*/
 
-//  router.get('/search', (req, res) => {
-//   let q = req.query.q;
 
-//   if (!q) {
-//     res.json({ result: false });
-//   } else {
-//     // Appel à la google books API
-//     // limiter le nb de résultats
-//     res.json({ result: true, books: [{
-//       title: 'Tintin au Congo',
-//       cover: 'http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-//       publishedDate: "1970",
-//       ISBN13: "9782203192157",
-//     },] });
-//   }
-// });
-
-/* Recherche de wishlist à la BDD  */
-
+/* Recherche de wishlist dans la BDD  */
 router.post('/wishlist', async (req, res) => {
   let token = req.body.token;
   if (!token) {
@@ -449,7 +423,6 @@ router.post('/wishlist', async (req, res) => {
 
 
 /* Suppression d'un livre dans la wishlist d'un user dans la BDD */
-
 router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
   let token = req.params.token;
   let bookid = req.params.bookid;
