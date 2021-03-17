@@ -7,21 +7,21 @@ function AvatarUpload(props) {
     
     const [ avatarData, setAvatarData ] = useState();
     const [ loading, setLoading ] = useState(false);
-    const [imageUrl, setImageUrl] = useState();
+    const [ imageUrl, setImageUrl ] = useState();
     
-        function beforeUpload(file) {
-          console.log('file',file)
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJpgOrPng) {
-          message.error('You can only upload JPG/PNG file.');
-        }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-          message.error('Image must smaller than 2MB!');
-        }
-        setAvatarData(file);
+  function beforeUpload(file) {
+    console.log('file',file)
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      if (!isJpgOrPng) {
+        message.error('You can only upload JPG/PNG file.');
+      };
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        message.error('Image must smaller than 2MB!');
+      };
+      setAvatarData(file);
         return isJpgOrPng && isLt2M;
-      }
+      };
 
   const handleChange = async (info) => {
     if (info.file.status === 'uploading') {
@@ -45,14 +45,15 @@ function AvatarUpload(props) {
     }
   };
 
-    const uploadButton = (
-      <div>
-        {loading ? <LoadingOutlined /> : <PlusOutlined />}
-        <div style={{ marginTop: 8}}>Sélectionnez</div>
-      </div>
-    );
-    return (
-        <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+  const uploadButton = (
+    <div>
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8}}>Sélectionnez</div>
+    </div>
+  );
+
+  return (
+    <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
       <Upload
         name="avatar"
         listType="picture-card"
@@ -64,14 +65,15 @@ function AvatarUpload(props) {
       >
         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>
-      </div>
-    );
-}
+    </div>
+  );
+};
+
 function mapDispatchToProps(dispatch) {
   return {
     onUploadAvatarClick: function(avatar) {
         dispatch( {type: 'saveAvatar', avatar} )
     } 
   }
-}
+};
 export default connect(null, mapDispatchToProps)(AvatarUpload);

@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+// work in progress, non utilisé encore dans l'application
+
+import React from 'react';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
 import LibraryHeader from '../components/LibraryHeader';
 import MyWishlist from '../components/MyWishlist';
-import MyLibrary from '../components/MyLibrary';
-import ReviewCard from '../components/ReviewCard';
+// import MyLibrary from '../components/MyLibrary';
+// import ReviewCard from '../components/ReviewCard';
 
 function LibraryScreen(props) {
     return(

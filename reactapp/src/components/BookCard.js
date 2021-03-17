@@ -1,12 +1,11 @@
 import React from 'react';
-import {Col, Card} from 'antd';
+import {Col} from 'antd';
 import '../App.css'
 import {Link} from 'react-router-dom';
 import Unavailable from '../assets/cover_nondispo.jpg'
 
 
 function BookCard(props) {
-    const { Meta } = Card;
 
     function titleCut (desc) {
         if (desc.length > 25){
@@ -16,7 +15,7 @@ function BookCard(props) {
           };
     };
 
-return (
+    return (
  
         <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{display:'flex', flexDirection:'column', justifyContent: "flex-end", alignItems:'center', padding:'5px'}} >
             <Link to={{pathname:"/book/"+props.bookId}}><img width={130} height={210} src={!props.bookCover ? Unavailable : props.bookCover} alt={props.bookTitle} /></Link>
@@ -25,7 +24,7 @@ return (
 
 
 
-);
+    );
 }
 
 export default BookCard;

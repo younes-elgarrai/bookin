@@ -13,13 +13,14 @@ function BookCardHover(props) {
     const [WLCardVisible, setWLCardVisible] = useState(false);
 
 
-    var titleCutDone = function titleCut () {
-      if (props.bookTitle > 21){
-          return props.bookTitle.substring(0,21)+"..."
-        } else {
-            return props.bookTitle
-        };
-  };
+  //   var titleCutDone = function titleCut () {
+  //     if (props.bookTitle > 21){
+  //         return props.bookTitle.substring(0,21)+"..."
+  //       } else {
+  //           return props.bookTitle
+  //       };
+  // };
+
 
     const handleClickWLDelete = async () => {
         if (props.user!==null) {
@@ -136,6 +137,7 @@ function BookCardHover(props) {
             CheckWishList();
         };
     }, [props.library, props.wishlist]);
+    
 
     const key = 'libraryIconAdd';
 

@@ -7,7 +7,6 @@ import { StarFilled } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
-
 function NewReview(props) {
   
   const [ rating, setRating ] = useState(0);

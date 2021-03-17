@@ -33,8 +33,60 @@ function SearchScreen(props) {
     const [suggestData, setSuggestData] = useState([]);
     const [open, setOpen] = useState(false);
 
+    // Spinner en attendant chargement API Google Books
+    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+    
+    const spin = (
+    <div style={{ position: "fixed", top: "9%", left:"0", zIndex:"998", backgroundColor:"#F3F5F3", opacity:"0.8", width:"100%", height:"100%" }}>
+    <Spin style={{ position: "fixed", top: "50%", zIndex:"999", width:"100%", height:"100%" }} indicator={antIcon} tip="Recherche en cours" size="large" />
+    </div>
+    );
 
-    // Recherche d'un auteur sur google Books Api en récupérant info depuis la page livre
+    // recherche de base 
+    var handleSearch = (q) => {
+        var bookSearchApi = async() => {
+            setIsFetching(true);
+            setError(false);
+        try {
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const body = await data.json();
+            setIsFetching(false);
+            setQuery(q);
+            console.log(q);
+            setCookie('searchQuery', q, {path: '/'});
+            setCount(count+1);
+            if (body.totalItems !== 0) {
+            var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
+            var filtered2 = [];
+            for (let i = 0; i < filtered.length; i++) {
+                for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
+                var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
+                    if (sorted[j].type === "ISBN_13") {
+                        filtered2.push(filtered[i])
+                    }
+                }
+            };
+            setResult(body.items);
+            } else {
+            setResult([])
+            };
+            setTotalItems(body.totalItems);
+            console.log(body);
+            var limitControl = body.totalItems;
+            if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
+            setTotalElementsCount(limitControl);
+            setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
+        }
+        catch(error) {
+            setIsFetching(false);
+            setError(true);
+            console.log(error)
+        }};
+        bookSearchApi();
+    };
+
+
+    // Recherche d'un auteur sur google Books Api en récupérant info depuis la page livre dans props.location.state
     useEffect(() => {
         if (props.location !== undefined && props.location.state !== undefined) {
             if (props.location.state.author !== undefined) {
@@ -116,17 +168,7 @@ function SearchScreen(props) {
       }, [])
 
 
-// Spinner en attendant chargement API Google Books
-    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-    
-    const spin = (
-    <div style={{ position: "fixed", top: "9%", left:"0", zIndex:"998", backgroundColor:"#F3F5F3", opacity:"0.8", width:"100%", height:"100%" }}>
-    <Spin style={{ position: "fixed", top: "50%", zIndex:"999", width:"100%", height:"100%" }} indicator={antIcon} tip="Recherche en cours" size="large" />
-    </div>
-    );
-
-
-// Gestion du tri ouveautés et pertinence
+// Gestion du tri nouveautés et pertinence
     const menu = (
         <Menu onClick={handleMenuClick} selectedKeys={selectedMenu} defaultSelectedKeys="1" >
           <Menu.Item key="1">Pertinence</Menu.Item>
@@ -200,49 +242,6 @@ function SearchScreen(props) {
         }
     };
 
-
-// recherche de base 
-    var handleSearch = (q) => {
-        var bookSearchApi = async() => {
-            setIsFetching(true);
-            setError(false);
-        try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
-            const body = await data.json();
-            setIsFetching(false);
-            setQuery(q);
-            console.log(q);
-            setCookie('searchQuery', q, {path: '/'});
-            setCount(count+1);
-            if (body.totalItems !== 0) {
-            var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
-            var filtered2 = [];
-            for (let i = 0; i < filtered.length; i++) {
-                for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
-                  var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
-                    if (sorted[j].type === "ISBN_13") {
-                        filtered2.push(filtered[i])
-                    }
-                }
-            };
-            setResult(body.items);
-            } else {
-            setResult([])
-            };
-            setTotalItems(body.totalItems);
-            console.log(body);
-            var limitControl = body.totalItems;
-            if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
-            setTotalElementsCount(limitControl);
-            setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
-        }
-        catch(error) {
-            setIsFetching(false);
-            setError(true);
-            console.log(error)
-          }};
-        bookSearchApi();
-    };
 
 
 // Gestion de la pagination

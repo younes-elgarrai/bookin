@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Redirect, Link} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import '../App.css';
-import { Input, Button, Form, Avatar } from 'antd';
+import { Input, Button, Form } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';

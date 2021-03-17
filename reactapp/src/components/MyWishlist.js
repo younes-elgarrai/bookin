@@ -10,6 +10,8 @@ function MyWishlist(props) {
     const [displayWishlist, setDisplayWishlist] = useState(true);
     const [result, setResult] = useState([]);
 
+
+    // récupération de la wishlist de l'utilisateur
     useEffect(() => {
         if (props.user!==null) {
             var CheckWishList = async () => {
@@ -36,7 +38,7 @@ function MyWishlist(props) {
     },[]);
 
 
-
+// map de la wishlist sur bookcardhover
 var wishlist = props.wishlist.map((book)=>{
                     return(
                     <Grid container xs={2} direction="row" justify="center" alignItems="center">

@@ -1,10 +1,8 @@
 import React , {useState, useEffect}  from 'react';
 import { Avatar, Layout, Row, Col, Image} from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 
 import '../components/BookHeader'
 import '../App.css';
-
 
 import Cover from '../assets/cover.jpg';
 import Faces_01 from '../assets/faces_01.jpg';
@@ -26,7 +24,6 @@ import Reviews from '../components/Reviews';
 import BookList from '../components/BookList';
 import Footer from '../components/Footer';
 import NewReview from '../components/NewReview';
-import { LensTwoTone } from '@material-ui/icons';
 
 const { Content } = Layout;
 

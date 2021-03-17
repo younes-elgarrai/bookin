@@ -1,4 +1,4 @@
-export default function(library = [], action) {
+export default function libraryReducer(library = [], action) {
     if(action.type === 'addToLibrary'){
     var libraryCopy = [...library];        
     var findBook = false;          
@@ -13,9 +13,9 @@ export default function(library = [], action) {
         return libraryCopy
     } 
     else if (action.type === 'DeleteToLibrary') {
-        var libraryCopy = [...library];
+        var libraryCopy2 = [...library];
             libraryCopy.splice(action.index,1)     
-        return libraryCopy
+        return libraryCopy2
     } else if (action.type === 'setLibrary') {
         return action.library
     }

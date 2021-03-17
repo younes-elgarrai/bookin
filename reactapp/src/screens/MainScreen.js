@@ -20,9 +20,7 @@ import '../components/BookHeader'
 import '../App.css';
 
 import Nav from '../components/Navbar';
-import Review from '../components/Reviews';
 import BookList from '../components/BookList';
-
 
 import subjects from '../assets/subjects';
 
@@ -86,7 +84,6 @@ var queryMaker = (styles) => {
               
                                     
 function MainScreen(props) {
-
 
     const classes = useStyles();
 

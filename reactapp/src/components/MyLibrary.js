@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Row, Col} from 'antd';
+// import {Row, Col} from 'antd';
 
 import Grid from '@material-ui/core/Grid';
 import '../App.css'
@@ -13,6 +13,7 @@ function MyLibrary(props) {
     const [result, setResult] = useState([]);
 
 
+// Récupérer la bibliothèque d'un utilisateur
     useEffect(() => {
         if (props.user!==null) {
             var CheckLibrary = async () => {
@@ -38,6 +39,7 @@ function MyLibrary(props) {
         };
     },[]);
 
+// Mapper les livres de la bibliothèque d'un utilisateur sur les vignettes BookCardhover
 
 var library = props.library.map((book)=>{
                     return(

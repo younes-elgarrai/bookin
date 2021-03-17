@@ -1,8 +1,10 @@
 import React from 'react';
 import { Row, Col} from 'antd';
 import '../App.css'
-var striptags = require('striptags');
+var striptags = require('striptags'); // pour supprimer les tags html de la description prise sur Google Books API
 
+
+// pour formatter la date de publication prise dans Google Books API
 function BookInfo(props) {
     var date = new Date (props.publishedDate);
     date = date.toLocaleDateString('fr-FR');

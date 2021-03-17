@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -23,21 +23,20 @@ const useStyles = makeStyles((theme) => ({
 
 function BookList(props) {
 
+    const classes = useStyles();
 
-const classes = useStyles();
+    const [epoch, setEpoch] = useState(0);
 
-const [epoch, setEpoch] = useState(0);
+    const [animate, setAnimate] = useState(true);
 
-const [animate, setAnimate] = useState(true);
-
-var size = (props.data.filter(e=>{return e}).length || 1)
+    var size = (props.data.filter(e=>{return e}).length || 1);
 
 
-  const responsive = {
-    0: { items: 1 },
-    568: { items: 2 },
-    1024: { items: 6 },
-    };
+    const responsive = {
+        0: { items: 1 },
+        568: { items: 2 },
+        1024: { items: 6 },
+        };
 
 
   
@@ -47,7 +46,6 @@ var size = (props.data.filter(e=>{return e}).length || 1)
                 <Grow in={animate}>
                     <Link to={{pathname:"/book/"+book.id}}><img width="100%" height="100%" src={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title}/></Link>
                 </Grow>
-                {/* <p style={{color:"#333", width:"80%", textAlign:'center', fontSize:"12px", fontWeight:"400", paddingRight:"10px", marginBottom:'10px'}}> {titleCut(book.volumeInfo.title)} </p>  */}
             </div>
             );
     }):[];
@@ -72,7 +70,7 @@ var size = (props.data.filter(e=>{return e}).length || 1)
           }, 800);    
     }
 
-return (
+    return (
         <Grid container style={styles.libraryBloc}  className='font'>
                     <Grid container xs={12} direction="row" justify="start" alignItems="center">
                         <Grid item xs={0}>
@@ -94,8 +92,8 @@ return (
                                 />
                 </Grid>
         </Grid>
-);
-}
+    );
+};
 
 let styles = {
     libraryBloc: {

@@ -11,13 +11,11 @@ import {connect} from 'react-redux';
 
 function ConnectionScreen(props) {
 
-
     const [ email, setEmail ] = useState();
     const [ password, setPassword ] = useState();
     const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar', 'library', 'wishlist']);
     const [ userMessage, setUserMessage ] = useState('');
     const [ isLoggedIn, setIsLoggedIn ] = useState(false);
-
 
     const checkEmailFormat = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
