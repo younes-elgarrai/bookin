@@ -23,70 +23,43 @@ import Nav from '../components/Navbar';
 import Review from '../components/Reviews';
 import BookList from '../components/BookList';
 
+function TabPanel(props) {
 
-import subjects from '../assets/subjects';
+    const { children, value, index, ...other } = props;
+              
+    return (
+        <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+        >
+        {value === index && (
+            <Box p={3}>
+            {children}
+            </Box>
+        )}
+        </div>
+    );
+    }
+    
+    TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+    };
 
-var catQueryMaker = (cat, styles)=>{
-  
-            var r = {};
-            styles[cat].forEach( (subcat)=>{
-                r[subcat] = subjects[cat][subcat];
-                 });
-            return r;
 
+function a11yProps(index) {
+return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
 };
-
-var queryMaker = (styles) => {
-
-            var cats = Object.keys(styles).filter(e=>e!=='void').filter(e=>e!=='_id').filter(e=>styles[e][0]);
-            
-            var queries = cats.map( cat => {
-                return catQueryMaker(cat, styles);
-            })
-
-            var r = {}
-            for (var i = 0; i < cats.length; i++) {
-                r[cats[i]] = queries[i];}
-            
-            return r; };
-
-            function TabPanel(props) {
-                const { children, value, index, ...other } = props;
-              
-                return (
-                  <div
-                    role="tabpanel"
-                    hidden={value !== index}
-                    id={`simple-tabpanel-${index}`}
-                    aria-labelledby={`simple-tab-${index}`}
-                    {...other}
-                  >
-                    {value === index && (
-                      <Box p={3}>
-                        {children}
-                      </Box>
-                    )}
-                  </div>
-                );
-              }
-              
-              TabPanel.propTypes = {
-                children: PropTypes.node,
-                index: PropTypes.any.isRequired,
-                value: PropTypes.any.isRequired,
-              };
-
-
-              function a11yProps(index) {
-                return {
-                  id: `simple-tab-${index}`,
-                  'aria-controls': `simple-tabpanel-${index}`,
-                };
-              }
+}
               
                                     
 function MainScreen(props) {
-
 
     const classes = useStyles();
 
@@ -102,9 +75,19 @@ function MainScreen(props) {
     const [assocData, setAssocData] = useState([]);
     const [wishData, setWishData] = useState([]);
 
-    var query = cookies.survey!==undefined&&queryMaker(cookies.survey.Styles);
+    //Définition de la variable query, qui stocke le sous-objet {Styles} s'il existe, qui résume les résultats de Styles du Survey
+    //exemple de query : 
+    //{"void": [],
+    //"BD & Jeunesse": ["BD, Comics","Manga","Livre jeunesse"],
+    //"Littérature & Fiction": ["Fantasy, Science Fiction"],
+    //"Savoirs": ["Entreprise, Management"]}
+
+    var query = cookies.survey!==undefined&&cookies.survey.Styles;
+
+    console.log('query?', query);
 
     if(cookies.token){
+
         console.log("main> cookies token", cookies.token);
         console.log("main> cookies library", cookies.library);
         console.log("main> cookies wishlist", cookies.wishlist);
@@ -119,8 +102,53 @@ function MainScreen(props) {
 
     }
 
-
   useEffect(  ()=>{
+
+    //-------------------------------------------------------------------------------------------------------------------------------
+
+    // Objectif : récupérer les résultats de suggestions en back end, à partir des réponses au survey, stocké dans la variable query.
+    // Entrée : variable query
+    // Sortie: Objet contenant les résultats structurés dans un objet de la façon suivante:
+    // //{"BD & Jeunesse": {
+    //    "BD, Comics" : Array(5),
+    //    "Manga": Array(5),
+    //    "Livre jeunesse" : Array(5)
+    //},
+    //"Littérature & Fiction": {
+    //    "Fantasy, Science Fiction" : Array(5)
+    //}}
+    //Les résultats de la requêtes google books par sous catégories sont stockées dans un Array
+    // ---> La sortie est stockées dans l'état data
+
+
+
+            async function dataQuery(){
+
+                const rawResponse = await fetch('/recos', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify(query)
+                    });
+
+                var response = await rawResponse.json();
+
+                console.log('response?', response);
+            
+                setData(response.result);
+
+            }
+
+    // ---> La fonction dataQuery n'est lancée que si et seulement si l'utilisateur possède un survey dans ses cookies, il n'est donc pas obligé d'être connecté (et donc avoir un token)
+
+            cookies.survey!==undefined&&dataQuery();
+
+    //-------------------------------------------------------------------------------------------------------------------------------
+
+    // Objectif : récupérer les livres associés (requête /associated de goole books) d'une liste de livre, pour faire des suggestions de type : "Parce que vous avez lu..."
+    // Entrée : un Array de livres (wishlist ou library) ---> ["jNJ-BgAAQBAJ","rSVTDwAAQBAJ","w55f46q8cFcC","0othDwAAQBAJ","bsJYDwAAQBAJ","VgmiDwAAQBAJ","USunCgAAQBAJ"]
+    // Sortie: un Array d'Array --->[Array(5),Array(10),Array(2),null,Array(1),Array(3),null]
+    // ---> La sortie est stockées dans l'état AssocData ou WishData, selon le seteur en entrée
+
             async function associatedBooks(libraryIds, setState){
 
                 const rawResponse = await fetch('/associated-reads', {
@@ -130,6 +158,8 @@ function MainScreen(props) {
                     });
     
                 var response = await rawResponse.json();
+
+                console.log('input fetch', libraryIds);
     
                 console.log('response fetch', response);
              
@@ -137,29 +167,15 @@ function MainScreen(props) {
 
             }
 
+    // ---> La fonction associatedBooks n'est lancée que si et seulement si l'utilisateur est connecté et donc possède un token)
+
+
             cookies.token!==undefined&&associatedBooks(libIds, setAssocData);
 
             cookies.token!==undefined&&associatedBooks(wishIds, setWishData);
 
+    //-------------------------------------------------------------------------------------------------------------------------------
 
-            async function dataQuery(){
-
-            const rawResponse = await fetch('/recos', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify(query)
-                });
-
-            var response = await rawResponse.json();
-
-            console.log(response);
-         
-            setData(response.result);
-
-        }
-
-        cookies.survey!==undefined&&dataQuery();
-   
   },[]);
 
   useEffect(()=>{

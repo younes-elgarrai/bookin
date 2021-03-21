@@ -103,8 +103,8 @@ let styles = {
         width:'90%',
         backgroundColor: 'white',
         paddingTop:'30px',
-        paddingLeft:'30px',
-        paddingRight:'30px',
+        // paddingLeft:'30px',
+        // paddingRight:'30px',
     },
     bookcard:{
         display:'flex', 

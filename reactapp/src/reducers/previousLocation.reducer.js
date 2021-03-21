@@ -1,4 +1,4 @@
-export default  function previousLocationReducer(previousLocation = null, action) {
+export default  function previousLocationReducer(previousLocation = "/main", action) {
     
     if(action.type==='beforeLogin'){
 

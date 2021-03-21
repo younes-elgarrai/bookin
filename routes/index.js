@@ -10,6 +10,8 @@ const uniqid = require('uniqid');
 var fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 
+const qs = require('../modules/query-search')
+
 cloudinary.config({
  cloud_name: 'deyw4czpf',
  api_key: '652491259593498',
@@ -126,76 +128,22 @@ router.delete('/library/delete/:token/:bookid', async (req, res) => {
 
 
 router.post('/recos', async (req,res)=>{
+
   //Recupérer les résultats du questionnaire stockés dans un cookie, et renvoyer des suggestions.
-  //Entrées : cookie questionnaire ou token
+  //Entrées : cookie questionnaire
   //recherche par category (subjects) puis tri sur longueur et sur nouveautés
   //Sorties : objet suggestions , erreur ==> refaites le questionnarire
 
   // AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE
-
   // AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k
 
-  var handleSearch = async (q) => {
-      try {
-            const response = await axios.get(`https://books.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`);
-            const body = await response.data;
-            const books = await body.items;               
-            return books ;
-          }catch(error) {
-              console.log(error)
-        }};
-
-
-  var handleSubcatQueriesSearch = async (queries) => {
-    const pArray = queries.map(async (query) => {
-      const response = handleSearch(query);
-      return response;
-    })
-    const items = await Promise.all(pArray);
-    var merged = [].concat.apply([], items);
-
-    // return merged;
-
-    return items;
-
-  }
-
-
-  var handleSubCatSearchv2 = async (q) => {
-    var qArray = Object.values(q);
-    var subcats = Object.keys(q);
-    const pArray = qArray.map(async (queries) => {
-      return handleSubcatQueriesSearch(queries);
-    });
-    const resultArray = await Promise.all(pArray);
-    var result = {};
-
-    subcats.forEach((key, i) => result[key] = resultArray[i]);
-
-    return result;
-
-  }
-
-  var handleSurveySearch = async (q) => {
-    var results = {};
-    var cats = Object.keys(q);
-
-    for (var i = 0; i < cats.length; i++) {
-      const cat = cats[i];
-      results[cat] = [];
-      var catItems = await handleSubCatSearchv2(q[cat]);
-      results[cat] = catItems
-    };
-
-    return results;
-  }
-
   try {
-    const response = await handleSurveySearch(req.body)
+    const response = await qs.surveySearch(req.body)
     res.json({
       result: response
     });
   } catch (error) {
+    console.log('error :',error)
     res.json({
       result: error
     })
@@ -268,6 +216,7 @@ router.post('/log-in', async function (req, res, next) {
     const userLibrary = user.library;
     const userWishlist = user.wishlist;
     if (bcrypt.compareSync(password, user.password)) {
+      console.log('library', userLibrary);
       res.json({ login: true, userToken, userAvatar , userLength, userPeriod, userStyles, userLibrary, userWishlist});
   }
   } else { 

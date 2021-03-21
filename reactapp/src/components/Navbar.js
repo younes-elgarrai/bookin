@@ -79,7 +79,8 @@ function NavigationBar(props) {
     props.onLogoutClick(props.user);
     props.setLibrary([]);
     props.setWishlist([]);
-    props.beforeLogin(null)
+    props.beforeLogin(null);
+    props.resetSurvey({Styles:{void:[]}, Period:[], Length:[]});
   }
 
   return(
@@ -165,6 +166,9 @@ function mapDispatchToProps(dispatch) {
    beforeLogin: function(previousLocation) {
     dispatch( {type: 'beforeLogin', previousLocation:previousLocation} )
     },
+    resetSurvey: function(survey) {
+      dispatch( {type: 'resetSurvey',survey: survey} )
+      },
   }
 }
 function mapStateToProps(state) {

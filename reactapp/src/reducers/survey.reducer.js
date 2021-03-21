@@ -95,6 +95,10 @@ export default  function surveyReducer(survey = {Styles:{void:[]}, Period:[], Le
 
         return surveyCopy6;
 
+    }else if(action.type === 'resetSurvey'){
+
+      return survey;
+
     }else{
 
       return survey;
