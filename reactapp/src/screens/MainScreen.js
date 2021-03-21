@@ -22,7 +22,6 @@ import '../App.css';
 import Nav from '../components/Navbar';
 import BookList from '../components/BookList';
 
-<<<<<<< HEAD
 function TabPanel(props) {
 
     const { children, value, index, ...other } = props;
@@ -49,9 +48,6 @@ function TabPanel(props) {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
     };
-=======
-import subjects from '../assets/subjects';
->>>>>>> 7a8a52ae1b44560ccd0e2afdbb2ada4ff725ef0d
 
 
 function a11yProps(index) {

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
-import Collapse from '@material-ui/core/Collapse';
 import { withStyles } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAccordion from '@material-ui/core/Accordion';
@@ -13,7 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
 import CardContent from '@material-ui/core/CardContent';
-
+  
 import subjects from '../assets/subjects'
 
 
@@ -76,79 +75,7 @@ const Accordion = withStyles({
     },
   }))(MuiAccordionDetails);
 
-
-
-function SurveyContainer(props){
-
-
-    const [expanded, setExpanded] = useState('panel10');
-
-    const handleChange = (panel) => (event, newExpanded) => {
-      setExpanded(newExpanded ? panel : false);
-    };
-
-
-
-
-    function Response(properties){
-
-    const classes = useStyles();
-
-    var handleClickAdd = (e,typ)=>{
-        props.add(e,typ)
-    }
-
-    var handleClickRemove = (e,typ)=>{
-        props.remove(e,typ)
-    }
-
-
-
-    var responses = props.type!=='Styles'?<Grid container xs={12} direction="row" justify="center" alignItems="start">
-                                            {properties.data.map((elem,index)=>{
-                                                return (
-                                                    <Grid item xs={12}>
-                                                        <SubResponse txt={elem} key={index} handleClickAddParent={()=>handleClickAdd({category: 'array', subcategory: elem},properties.type)}
-                                                                                handleClickRemoveParent={()=>handleClickRemove({category: 'array', subcategory: elem},properties.type)} 
-                                                                                isSelected={props.survey[properties.type]?props.survey[properties.type].some(e => e === elem):false} />
-                                                    </Grid>
-                                                );
-                                            })}
-                                        </Grid>:
-                                        <Accordion square expanded={expanded === `panel${properties.index}`} onChange={handleChange(`panel${properties.index}`)}>
-                                        <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls={`panel${properties.index}d-content`}
-                                        id={`panel${properties.index}d-header`}
-                                        >
-                                        <Typography className={classes.heading}><span className='font'>{properties.txt}</span></Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            <Grid container xs={12} direction="row" justify="center" alignItems="start">
-                                                {properties.data.map((elem,index)=>{
-                                                    return (
-                                                        <Grid item xs={6}>
-                                                            <SubResponse txt={elem} key={index} handleClickAddParent={()=>handleClickAdd({category: properties.txt, subcategory: elem},properties.type)}
-                                                                                    handleClickRemoveParent={()=>handleClickRemove({category: properties.txt, subcategory: elem},properties.type)} 
-                                                                                    isSelected={props.survey[properties.type][properties.txt]?props.survey[properties.type][properties.txt].some(e => e === elem):false} />
-                                                        </Grid>
-                                                    );
-                                                })}
-                                            </Grid>
-                                        </AccordionDetails>
-                                    </Accordion>;
-
-
-
-
-
-  
-    return ( responses );
-
-}
-
-function SubResponse(properties){
-
+  function SubResponse(properties){
 
     var handleClick = ()=>{
 
@@ -156,7 +83,6 @@ function SubResponse(properties){
          properties.isSelected&&properties.handleClickRemoveParent();
     
         }
-
 
     const classes = useStyles();
 
@@ -185,23 +111,86 @@ function SubResponse(properties){
 
 
     return(
-    <Card  variant="outlined" style={dynamicStyle} onClick={()=>handleClick()}>
-      <CardContent style={cardStyle}>
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
-                <span style={dynamicStyle} className='font' >{properties.txt}</span>
-            </Typography>
-      </CardContent>
-    </Card>);
+      <Card  variant="outlined" style={dynamicStyle} onClick={()=>handleClick()}>
+        <CardContent style={cardStyle}>
+              <Typography className={classes.title} color="textSecondary" gutterBottom>
+                  <span style={dynamicStyle} className='font' >{properties.txt}</span>
+              </Typography>
+        </CardContent>
+      </Card>);
 
 }
+
+function Response(properties){
+
+  const classes = useStyles();
+
+  console.log('response survey >>>',properties.survey);
+
+  console.log('type >>>',properties.type);
+
+  var responses = properties.type!=='Styles'?<Grid container xs={12} direction="row" justify="center" alignItems="start">
+                                          {properties.data.map((elem,index)=>{
+                                              return (
+                                                  <Grid item xs={12}>
+                                                      <SubResponse txt={elem} key={index} handleClickAddParent={()=>properties.handleParentClickAdd({category: 'array', subcategory: elem},properties.type)}
+                                                                              handleClickRemoveParent={()=>properties.handleParentClickRemove({category: 'array', subcategory: elem},properties.type)} 
+                                                                              isSelected={properties.survey[properties.type]?properties.survey[properties.type].some(e => e === elem):false} />
+                                                  </Grid>
+                                              );
+                                          })}
+                                      </Grid>:
+                                      <Accordion square expanded={properties.expanded === `panel${properties.index}`} onChange={properties.handleParentChange(`panel${properties.index}`)}>
+                                      <AccordionSummary
+                                      expandIcon={<ExpandMoreIcon />}
+                                      aria-controls={`panel${properties.index}d-content`}
+                                      id={`panel${properties.index}d-header`}
+                                      >
+                                      <Typography className={classes.heading}><span className='font'>{properties.txt}</span></Typography>
+                                      </AccordionSummary>
+                                      <AccordionDetails>
+                                          <Grid container xs={12} direction="row" justify="center" alignItems="start">
+                                              {properties.data.map((elem,index)=>{
+                                                  return (
+                                                      <Grid item xs={6}>
+                                                          <SubResponse txt={elem} key={index} handleClickAddParent={()=>properties.handleParentClickAdd({category: properties.txt, subcategory: elem},properties.type)}
+                                                                                  handleClickRemoveParent={()=>properties.handleClickParentRemove({category: properties.txt, subcategory: elem},properties.type)} 
+                                                                                  isSelected={properties.survey[properties.type][properties.txt]?properties.survey[properties.type][properties.txt].some(e => e === elem):false} />
+                                                      </Grid>
+                                                  );
+                                              })}
+                                          </Grid>
+                                      </AccordionDetails>
+                                  </Accordion>;
+
+return ( responses );
+
+}
+
+
+function SurveyContainer(props){
+
+    const [expanded, setExpanded] = useState('panel10');
+
+    const handleChange = (panel) => (event, newExpanded) => {
+      setExpanded(newExpanded ? panel : false);
+    };
+
+    var handleClickAdd = (e,typ)=>{
+      props.add(e,typ)
+  }
+
+  var handleClickRemove = (e,typ)=>{
+      props.remove(e,typ)
+  }
 
     return(
             <Paper elevation={3} >    
                 <Typography><span className='font' style={{display:'flex', justifyContent:'center', color:'#fca311', padding:'20px'}}>{props.question}</span></Typography>
                 {props.type==='Styles'?props.array.map((elem, index)=>{
-                    return <Response key={index} index={index} txt={elem} type={props.type} data={Object.keys(subjects[elem])} />
+                    return <Response key={index} index={index} handleParentClickAdd={handleClickAdd} handleParentClickRemove={handleClickRemove} handleParentChange={handleChange} txt={elem} type={props.type} survey={props.survey} expanded={expanded} data={Object.keys(subjects[elem])} />
                     }):
-                    <Response type={props.type} data={props.array} />}
+                    <Response type={props.type} handleParentClickAdd={handleClickAdd} handleParentClickRemove={handleClickRemove} handleParentChange={handleChange} data={props.array} survey={props.survey} />}
 
             </Paper>
 

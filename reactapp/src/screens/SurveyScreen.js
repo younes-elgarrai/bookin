@@ -16,7 +16,7 @@ import subjects from '../assets/subjects'
 
 function SurveyScreen(props) {
 
-const [cookies, setCookie , removeCookie] = useCookies(['survey','token']);
+  const [cookies, setCookie , removeCookie] = useCookies(['survey','token']);
 
 
   const updateSurvey = async (surv) => {
@@ -39,44 +39,46 @@ const [cookies, setCookie , removeCookie] = useCookies(['survey','token']);
   }
 
 
-const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1);
 
-const [finished, setFinished] = useState(false);
-
-
-
-var mainSubjects = Object.keys(subjects);
-
-var size = ["J'aime les lectures courtes et rapides",
-            "Je préfère les livres ni trop long, ni trop courts",
-            "Je n'ai pas peur des pavés!",
-            "Je n'ai pas de préférence, tant que le livre est bon"]
-
-var period = ["Classiques", "Nouveautés", "Les deux"]
-
-var questions = ['Quel style de lecture recherchez vous ?', 'Quelle serait votre longueur de livre idéale ?','Etes-vous plutôt ?']
-
-var data = step===1?mainSubjects:step===2?size:period
-
-var type = step===1?'Styles':step===2?'Length':'Period'
+  const [finished, setFinished] = useState(false);
 
 
-var handleNextClick = ()=>{
-    setStep(step+1);
-    props.setCategory('array');
-}
 
-var handleBackClick = ()=>{
-    setStep(step-1);
-    step-1===1&&props.setCategory('main');
-}   
+  var mainSubjects = Object.keys(subjects);
 
-var handleFinishClick = ()=>{
-  setCookie('survey', JSON.stringify(props.survey), {path: '/'});
-  console.log("survey avant sauvegarde",props.survey);
-  cookies.token&&updateSurvey(props.survey);
-  setFinished(true);
-}
+  var size = ["J'aime les lectures courtes et rapides",
+              "Je préfère les livres ni trop long, ni trop courts",
+              "Je n'ai pas peur des pavés!",
+              "Je n'ai pas de préférence, tant que le livre est bon"]
+
+  var period = ["Classiques", "Nouveautés", "Les deux"]
+
+  var questions = ['Quel style de lecture recherchez vous ?', 'Quelle serait votre longueur de livre idéale ?','Etes-vous plutôt ?']
+
+  var data = step===1?mainSubjects:step===2?size:period
+
+  var type = step===1?'Styles':step===2?'Length':'Period'
+
+  console.log('STEP >>>>', step)
+
+
+  var handleNextClick = ()=>{
+      setStep(step+1);
+      props.setCategory('array');
+  }
+
+  var handleBackClick = ()=>{
+      setStep(step-1);
+      step-1===1&&props.setCategory('main');
+  }   
+
+  var handleFinishClick = ()=>{
+    setCookie('survey', JSON.stringify(props.survey), {path: '/'});
+    console.log("survey avant sauvegarde",props.survey);
+    cookies.token&&updateSurvey(props.survey);
+    setFinished(true);
+  }
 
 
   return (

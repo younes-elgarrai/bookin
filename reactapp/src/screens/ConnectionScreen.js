@@ -37,6 +37,7 @@ function ConnectionScreen(props) {
             props.onCheckAccountClick({token : dataResponse.userToken, avatar: dataResponse.userAvatar});
             setCookie('survey', JSON.stringify({'Length':dataResponse.userLength, 'Period': dataResponse.userPeriod, 'Styles':dataResponse.userStyles}), {path: '/'});
             setCookie('token', dataResponse.userToken, {path: '/'});
+
             setCookie('avatar', dataResponse.userAvatar, {path: '/'});
             setCookie('wishlist',JSON.stringify(dataResponse.userWishlist),{path: '/'});
             setCookie('library',JSON.stringify(dataResponse.userLibrary),{path: '/'});
@@ -46,6 +47,9 @@ function ConnectionScreen(props) {
         }
     }       
 }
+
+
+
 
     if (isLoggedIn) {
         return (

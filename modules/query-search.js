@@ -245,6 +245,7 @@ var handleSubCatSearchv2 = async (q) => {
 //                                   "Littérature & Fiction" :  {"Fantasy, Science Fiction": ['subject%3A"FICTION+%2F+Science+Fiction+%2F+General"'...]}}
 // en objet 'results' qu'on alimente itérativement à l'aide des résultats de requêtes : 
 var handleSurveySearch = async (q) => {
+  
   var results = {};
   var cats = Object.keys(q);
 
