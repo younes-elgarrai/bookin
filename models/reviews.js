@@ -1,3 +1,5 @@
+// collection reviews - avis sur les livres - dans la base Bookin sur MongoDB
+
 var mongoose = require('mongoose');
 
 var reviewsSchema = mongoose.Schema({

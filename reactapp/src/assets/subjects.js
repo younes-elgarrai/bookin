@@ -1,3 +1,5 @@
+// liste des catégories de livres, servant pour requêter l'API Google Books
+
 var subjects = {'BD & Jeunesse': {
                     'BD, Comics' : ['subject:"Comics+%26+Graphic+Novels+/+General"', 
                                             'subject:"Comics+%26+Graphic+Novels+/+Literary"',

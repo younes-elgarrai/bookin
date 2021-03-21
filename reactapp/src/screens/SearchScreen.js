@@ -13,15 +13,9 @@ import { connect } from 'react-redux';
 import review from '../assets/review.png';
 
 
-// insérer module dernières nouveautés lorsque pas de recherche encore faite
-
-
-const { Search } = Input;
-// const { Meta } = Card;
-
 function SearchScreen(props) {
-    console.log("search props user", props.user);
 
+    const { Search } = Input;
     const history = useHistory();
     const [result, setResult] = useState([]);
     const [query, setQuery] = useState("");
@@ -39,7 +33,102 @@ function SearchScreen(props) {
     const [suggestData, setSuggestData] = useState([]);
     const [open, setOpen] = useState(false);
 
+    // Spinner en attendant chargement API Google Books
+    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+    
+    const spin = (
+    <div style={{ position: "fixed", top: "9%", left:"0", zIndex:"998", backgroundColor:"#F3F5F3", opacity:"0.8", width:"100%", height:"100%" }}>
+    <Spin style={{ position: "fixed", top: "50%", zIndex:"999", width:"100%", height:"100%" }} indicator={antIcon} tip="Recherche en cours" size="large" />
+    </div>
+    );
 
+    // recherche de base 
+    var handleSearch = (q) => {
+        var bookSearchApi = async() => {
+            setIsFetching(true);
+            setError(false);
+        try {
+            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+            const body = await data.json();
+            setIsFetching(false);
+            setQuery(q);
+            console.log(q);
+            setCookie('searchQuery', q, {path: '/'});
+            setCount(count+1);
+            if (body.totalItems !== 0) {
+            var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
+            var filtered2 = [];
+            for (let i = 0; i < filtered.length; i++) {
+                for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
+                var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
+                    if (sorted[j].type === "ISBN_13") {
+                        filtered2.push(filtered[i])
+                    }
+                }
+            };
+            setResult(body.items);
+            } else {
+            setResult([])
+            };
+            setTotalItems(body.totalItems);
+            console.log(body);
+            var limitControl = body.totalItems;
+            if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
+            setTotalElementsCount(limitControl);
+            setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
+        }
+        catch(error) {
+            setIsFetching(false);
+            setError(true);
+            console.log(error)
+        }};
+        bookSearchApi();
+    };
+
+
+    // Recherche d'un auteur sur google Books Api en récupérant info depuis la page livre dans props.location.state
+    useEffect(() => {
+        if (props.location !== undefined && props.location.state !== undefined) {
+            if (props.location.state.author !== undefined) {
+                var bookSearchAuthor = async() => {
+                    setIsFetching(true);
+                try {
+                    const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${props.location.state.author}&maxResults=40&langRestrict=fr&orderBy=relevance&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
+                    const body = await data.json();
+                    setIsFetching(false);
+                    console.log(body);
+                    console.log("data",data);
+                    
+                    if (body.totalItems !== 0) {
+                        setResult(body.items);
+                        setTotalItems(body.totalItems);
+                        if (props.location.state.author !== undefined) {
+                        setCount(count+1);
+                        setQuery(props.location.state.author);
+                        setValue(props.location.state.author)
+                        console.log(props.location.state.author);
+                        };
+                        setTotalItems(body.totalItems);
+                        console.log(body);
+                        var limitControl = body.totalItems;
+                        if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
+                        setTotalElementsCount(limitControl);
+                        setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
+                        } else {
+                        setResult([])
+                        };
+                }
+                catch(error) {
+                    setError(true);
+                    };
+                };
+                bookSearchAuthor();
+            };
+        };   
+    }, [])
+
+
+// Recherche sur Google Books API de la recherche précédente en cas de back navigateur
     useEffect(() => {
           if (history.action === "POP") {
             var bookSearchApi5 = async() => {
@@ -78,63 +167,14 @@ function SearchScreen(props) {
           };
       }, [])
 
-    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-    
-    const spin = (
-    <div style={{ position: "fixed", top: "9%", left:"0", zIndex:"998", backgroundColor:"#F3F5F3", opacity:"0.8", width:"100%", height:"100%" }}>
-    <Spin style={{ position: "fixed", top: "50%", zIndex:"999", width:"100%", height:"100%" }} indicator={antIcon} tip="Recherche en cours" size="large" />
-    </div>
-    );
 
+// Gestion du tri nouveautés et pertinence
     const menu = (
         <Menu onClick={handleMenuClick} selectedKeys={selectedMenu} defaultSelectedKeys="1" >
           <Menu.Item key="1">Pertinence</Menu.Item>
           <Menu.Item key="2" >Date de publication</Menu.Item>
         </Menu>
       );
-
-    var handleSearch = (q) => {
-        var bookSearchApi = async() => {
-            setIsFetching(true);
-            setError(false);
-        try {
-            const data = await fetch(`https://books.googleapis.com/books/v1/volumes?q=${q}&fields=items(id,volumeInfo/title,volumeInfo/imageLinks),totalItems&maxResults=40&langRestrict=fr&orderBy=relevance&apiKey=AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE`)
-            const body = await data.json();
-            setIsFetching(false);
-            setQuery(q);
-            console.log(q);
-            setCookie('searchQuery', q, {path: '/'});
-            setCount(count+1);
-            if (body.totalItems !== 0) {
-            var filtered = body.items.filter(book => book.volumeInfo.industryIdentifiers !== undefined);
-            var filtered2 = [];
-            for (let i = 0; i < filtered.length; i++) {
-                for (let j = 0; j < filtered[i].volumeInfo.industryIdentifiers.length; j++) {
-                  var sorted =  filtered[i].volumeInfo.industryIdentifiers.sort((a,b) => (a.type < b.type) ? 1 : ((b.type < a.type) ? -1 : 0));
-                    if (sorted[j].type === "ISBN_13") {
-                        filtered2.push(filtered[i])
-                    }
-                }
-            };
-            setResult(body.items);
-            } else {
-            setResult([])
-            };
-            setTotalItems(body.totalItems);
-            console.log(body);
-            var limitControl = body.totalItems;
-            if (body.totalItems > 200) {limitControl = Math.floor(body.totalItems/4)}
-            setTotalElementsCount(limitControl);
-            setPagesCount(Math.ceil(body.totalItems / elementsPerPage));
-        }
-        catch(error) {
-            setIsFetching(false);
-            setError(true);
-            console.log(error)
-          }};
-        bookSearchApi();
-    };
-
 
     function handleMenuClick(e) {
         if (e.key === "2") {
@@ -203,6 +243,8 @@ function SearchScreen(props) {
     };
 
 
+
+// Gestion de la pagination
     var handlePageClick = (pageNumber) => {
         const currentPage = pageNumber - 1;
         offset = currentPage * elementsPerPage;
@@ -238,6 +280,8 @@ function SearchScreen(props) {
         bookSearchApi4();
     }
 
+
+// Gestion de l'autocomplete
     var handleInputChange = (value) => {
         setValue(value);
         if (value && value.length > 2) {
@@ -264,8 +308,7 @@ function SearchScreen(props) {
 return (
 <div className="font">
     <Nav/>
-    
-    <div style={styles.container} >
+        <div style={styles.container} >
         <Row style={styles.bookBloc} >
             <Col xs={24} md={12} >
                 <h1 style={styles.h1}>Rechercher votre prochain livre</h1>
@@ -304,32 +347,6 @@ return (
                                         result.map((book,i) => (
 
                                             <BookCard bookId={book.id} bookTitle={book.volumeInfo.title} bookCover={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail}/>
-
-                                            // <div key={i} style={{display:'flex',justifyContent:'center'}}>
-                                            //         <Card 
-                                            //             style={{ 
-                                            //                 width: 150,
-                                            //                 margin:'10px', 
-                                            //                 display:'flex',
-                                            //                 flexDirection: 'column',
-                                            //                 justifyContent:'space-between'    
-                                            //             }} 
-                                            //             bodyStyle={{ padding: 0 }}
-                                            //             cover={
-                                            //                 <img
-                                            //                     alt={book.volumeInfo.title}
-                                            //                     src={!book.volumeInfo.imageLinks ? Unavailable : book.volumeInfo.imageLinks.thumbnail} 
-                                            //                 />
-                                            //                 }
-                                            //             // actions={}
-                                                    
-                                            //         >
-                                            //             <Meta
-                                            //                 title={book.volumeInfo.title}
-                                            //                 style={{fontSize:12}}
-                                            //             />
-                                            //         </Card>                                     
-                                            // </div>
                                         ))
                                     }
                                 </div>

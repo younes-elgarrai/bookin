@@ -1,10 +1,8 @@
 import React , {useState, useEffect}  from 'react';
 import { Avatar, Layout, Row, Col, Image} from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 
 import '../components/BookHeader'
 import '../App.css';
-
 
 import Cover from '../assets/cover.jpg';
 import Faces_01 from '../assets/faces_01.jpg';
@@ -26,7 +24,6 @@ import Reviews from '../components/Reviews';
 import BookList from '../components/BookList';
 import Footer from '../components/Footer';
 import NewReview from '../components/NewReview';
-import { LensTwoTone } from '@material-ui/icons';
 
 const { Content } = Layout;
 
@@ -151,13 +148,15 @@ function BookScreen() {
     
     useEffect(() => {
         if (bookid) {
+            console.log(bookid)
             const findBook = async() => {
                 const data = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}`)
                 const datajson = await data.json();
                 const assoc = await fetch(`https://books.googleapis.com/books/v1/volumes/${bookid}/associated`);
                 const assocjson = await assoc.json();
+                console.log("datajson",datajson);
+                console.log("data",data);
                 const author = (await datajson.volumeInfo.authors?datajson.volumeInfo.authors[0]:"")
-                console.log("author",author);
                 const inauthor = await fetch(`https://books.googleapis.com/books/v1/volumes?q=inauthor:"${author}"&maxResults=20&langRestrict=fr&orderBy=newest&fields=items,totalItems&apiKey=AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k`);
                 const inauthorjson = await inauthor.json()
          
@@ -166,7 +165,6 @@ function BookScreen() {
                     if (datajson.totalItems!==0){
                         setDataBook(datajson.volumeInfo);
                         setReaderLink(datajson.accessInfo.webReaderLink);
-                        console.log('URL', readerLink);
 
                         if (datajson.volumeInfo.industryIdentifiers) {
                           var isbnArray = datajson.volumeInfo.industryIdentifiers;
@@ -214,7 +212,6 @@ function BookScreen() {
       const loadReviewsData = async () => {
         var rawResponse = await fetch(`/reviews/${bookid}`);
         var response = await rawResponse.json();
-        console.log('response load reviews', response.reviews);
         setReviewsList(response.reviews);
       }
       useEffect(() => {

@@ -8,7 +8,8 @@ import { useCookies } from 'react-cookie';
 // ReactStrap
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem,
    UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
-  // Ant Design
+
+// Ant Design
 import { Avatar, Badge } from 'antd';
 import { BulbOutlined, HeartOutlined, SearchOutlined, BookOutlined, LogoutOutlined, SettingOutlined, UserOutlined, MenuOutlined, HomeOutlined } from '@ant-design/icons';
 

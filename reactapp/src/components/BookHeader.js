@@ -69,24 +69,29 @@ var translateCat = {
 "True Crime":"Criminalité",
 "Young Adult Fiction":"Adolescent-Fiction",
 "Young Adult Nonfiction":"Adolescent-NonFiction",
-
-
 }
 
-  // Récupération du tableau d'auteurs et les séparer par une virgule
-  var authors;
-  if (props.bookAuthor){
-    if (props.bookAuthor.length>1){
-      authors=props.bookAuthor.join(', ');
-    } else {
-      authors=props.bookAuthor;
-    }
-  }
+// lien cliquable des auteurs vers la recherche
+  var authorsLink = (
+    <div>
+      {
+        !props.bookAuthor ? null 
+        : props.bookAuthor.length === 1 ? <Link style={{color:"white"}} to={{pathname: "/search",state: {author: props.bookAuthor}}}>{props.bookAuthor}</Link>
+        : props.bookAuthor.length > 1  ? props.bookAuthor.map((book, index)=>{
+            return(
+              <Link style={{color:"white"}} to={{pathname: "/search",state: {author: book}}}>{book} </Link>
+            )
+        })
+        : null
+      }
+    </div>
+    );
+
 
   // Récupération de la 1ère catégorie du livre
   var styleBook=null;
   if (props.bookCat) {
-    if (props.bookCat.length!=0) {
+    if (props.bookCat.length!==0) {
       styleBook=props.bookCat[0].split('/')[0].trim();
       styleBook=translateCat[styleBook];
     } 
@@ -106,18 +111,19 @@ var translateCat = {
   // Interroger la route pour ajouter wishList
     // Bouton pour ajout à la WishList
     var boutonWishListSelected = (
-      <Button onClick={() => handleClickWLDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>❤ WISHLIST</Button>
+      <Button onClick={() => handleClickWLDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>❤ LISTE D'ENVIES</Button>
     );
   
     var boutonWishListDefault = (
     <Button onClick={() => handleClickWLAdd()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>JE VEUX LIRE</Button>
     );
 
-      // Cancel WishLit
+      // Cancel WishList pour fermer la modal
   const handleCancelWL = () => {
     setIsModalWL(false);
   };
 
+  // ajout à la wishlist
   const handleClickWLAdd = async () => {
     if (props.user!==null) {
       var addWishList = async () => {
@@ -143,6 +149,8 @@ var translateCat = {
     }
   };
 
+
+  // suppression de la wishlist
   const handleClickWLDelete = async () => {
     if (props.user!==null) {
       const dataDelete = await fetch(`/wishlist/delete/${props.user.token}/${props.bookId}`, {
@@ -165,10 +173,12 @@ var translateCat = {
     }
   };
 
+ console.log(props.location)
+
   // Interroger la route pour ajouter à la biblitohèque et à la wishlist en cas de retour depuis login
   useEffect(() => {
     console.log("PROPS", props.previousLocation);
-    if (props.user && props.previousLocation.includes(props.bookId)) {
+    if (props.user && props.previousLocation && props.previousLocation.includes(props.bookId)) {
         if (props.previousLocation.slice(props.previousLocation.length - 5) === "AddLB") {
             var addLibrary= async () => {
               const data = await fetch(`/library/add/${props.user.token}/${props.bookId}`, {
@@ -184,6 +194,7 @@ var translateCat = {
               };
             };
           addLibrary();
+          
             
         } else if (props.previousLocation.slice(props.previousLocation.length - 5) === "AddWL") {
           var addWishList = async () => {
@@ -201,6 +212,7 @@ var translateCat = {
             }
           };
           addWishList();
+          
       }; 
     } else {
     }
@@ -251,13 +263,13 @@ var translateCat = {
     }
   };
 
-  // Cancel Library
+  // bouton Cancel Library pour fermer la modal
   const handleCancelLB = () => {
     setIsModalLB(false);
   };
 
 
- // Bouton pour ajout à la Bibliothèque
+ // Bouton pour ajout à la Bibliothèque selon que le livre est dans la bibliothèque
  var boutonLibrarySelected = (
   <Button onClick={() => handleClickLBDelete()}  style={{marginRight:'10px',  backgroundColor:'#445d96', fontWeight:'500', color:'white', borderColor:'#445d96', borderRadius:'5px'}}>✔ DEJA LU</Button>
 );
@@ -266,7 +278,7 @@ var boutonLibraryDefault = (
   <Button onClick={() => handleClicLBAdd()}  style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>J'AI LU</Button>
 );
 
-
+// récupération de la wishlist et de la bibliothèque
 useEffect(() => {
   if (props.user!==null) {
     var CheckWishList = async () => {
@@ -313,8 +325,9 @@ useEffect(() => {
 },[props.bookId])
 
 
+
 if (isLoggedIn) {
-  return(<Redirect to='/connection'/>);
+  return(<Redirect to='/create-account'/>);
 } else {
 return (
     <div style={styles.container} className='font'>
@@ -331,8 +344,7 @@ return (
 
         <Col xs={24} md={12} xl={12} >
           <h1 style={styles.h1}>{props.bookTitle}</h1>
-          <h2 style={styles.h2}>{authors}</h2>
-        
+          <h2 style={styles.h2}>{authorsLink}</h2>
           <div>
 
           <StarFilled style={{fontSize: '20px', color:"#fca311", marginRight:'2px'}}/>
@@ -371,13 +383,13 @@ return (
 
             <div style={{textAlign: "center"}}>
               <CheckCircleFilled style={{ color:'#37a000', fontSize:'16px', textAlign:'right'}}/>
-              <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre wishlist<br /><br /></p>
-              <Link to='/main'><Button onClick={()=>props.onTabClick(2)} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma wishlist</Button></Link>   
+              <p style={{fontSize: '16px', fontWeight:'bold', color:"#23396c"}}>Le livre "{props.bookTitle}" <br />a bien été ajouté à votre liste d'envies<br /><br /></p>
+              <Link to='/main'><Button onClick={()=>props.onTabClick(2)} style={{marginRight:'10px',  backgroundColor:'#fca311', fontWeight:'500', color:'#23396c', borderColor:'#fca311', borderRadius:'5px'}}>Voir ma liste d'envies</Button></Link>   
             </div>
           </Modal>
 
         {props.bookIsbn === 'nc' ? null : 
-        <a href={urlAmazon} target="_blank">
+        <a href={urlAmazon} target="_blank" rel="noreferrer">
         <Button style={{marginRight:'10px',  backgroundColor:'#e5e5e5', fontWeight:'500', color:'#23396c', borderColor:'#23396c', borderRadius:'5px'}}>J'ACHETE</Button>
         </a>}
 

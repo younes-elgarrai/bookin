@@ -20,9 +20,9 @@ import '../components/BookHeader'
 import '../App.css';
 
 import Nav from '../components/Navbar';
-import Review from '../components/Reviews';
 import BookList from '../components/BookList';
 
+<<<<<<< HEAD
 function TabPanel(props) {
 
     const { children, value, index, ...other } = props;
@@ -49,6 +49,9 @@ function TabPanel(props) {
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
     };
+=======
+import subjects from '../assets/subjects';
+>>>>>>> 7a8a52ae1b44560ccd0e2afdbb2ada4ff725ef0d
 
 
 function a11yProps(index) {
@@ -90,7 +93,7 @@ function MainScreen(props) {
 
         console.log("main> cookies token", cookies.token);
         console.log("main> cookies library", cookies.library);
-        console.log("main> cookies wishlist", cookies.wishlist);
+        console.log("main> cookies", cookies);
        
         var libIds = cookies.library.map((book)=> book.bookid);
 

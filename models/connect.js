@@ -1,3 +1,5 @@
+// fichier de connexion à la base bookin sur MongoDB via Mongoose
+
 var mongoose = require('mongoose');
 
 var options = {

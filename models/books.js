@@ -1,3 +1,5 @@
+// collection books dans la base Bookin sur MongoDB
+
 var mongoose = require('mongoose');
 
 

@@ -42,7 +42,7 @@ export default  function surveyReducer(survey = {Styles:{void:[]}, Period:[], Le
         surveyStyles2[action.element.category] = surveyStyles2[action.element.category].filter( e => e!==action.element.subcategory);
 
 
-        if(surveyStyles2[action.element.category]==[]){
+        if(surveyStyles2[action.element.category]===[]){
 
           delete surveyStyles2[action.element.category];
   

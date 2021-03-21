@@ -11,13 +11,11 @@ import {connect} from 'react-redux';
 
 function ConnectionScreen(props) {
 
-
     const [ email, setEmail ] = useState();
     const [ password, setPassword ] = useState();
     const [ cookies, setCookie, removeCookie ] = useCookies(['survey','token','avatar', 'library', 'wishlist']);
     const [ userMessage, setUserMessage ] = useState('');
     const [ isLoggedIn, setIsLoggedIn ] = useState(false);
-
 
     const checkEmailFormat = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -39,25 +37,22 @@ function ConnectionScreen(props) {
             props.onCheckAccountClick({token : dataResponse.userToken, avatar: dataResponse.userAvatar});
             setCookie('survey', JSON.stringify({'Length':dataResponse.userLength, 'Period': dataResponse.userPeriod, 'Styles':dataResponse.userStyles}), {path: '/'});
             setCookie('token', dataResponse.userToken, {path: '/'});
-            setCookie('library',JSON.stringify(dataResponse.userLibrary),{path: '/'});
             setCookie('avatar', dataResponse.userAvatar, {path: '/'});
             setCookie('wishlist',JSON.stringify(dataResponse.userWishlist),{path: '/'});
-            
+            setCookie('library',JSON.stringify(dataResponse.userLibrary),{path: '/'});
+            setIsLoggedIn(true);
         } else {
             setUserMessage(dataResponse.message);
         }
     }       
 }
 
-
-
-
     if (isLoggedIn) {
         return (
             <div>
                 {!props.previousLocation
-                    ? <Redirect to='/main'/> 
-                    : <Redirect to={props.previousLocation.slice(0,props.previousLocation.length - 5)}/>
+                    ? <Redirect to={{pathname:'/main'}}/>
+                    : <Redirect to={{pathname:props.previousLocation.slice(0,props.previousLocation.length - 5), state: { referrer: "account" }}}/>
                 }
             </div>
             )

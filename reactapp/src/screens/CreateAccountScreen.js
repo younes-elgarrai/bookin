@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Redirect, Link} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import '../App.css';
-import { Input, Button, Form, Avatar } from 'antd';
+import { Input, Button, Form } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, BookOutlined} from '@ant-design/icons';
 import Nav from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -61,8 +61,8 @@ function CreateAccountScreen(props) {
       return (
         <div>
             {!props.previousLocation
-                ? <Redirect to='/main'/> 
-                : <Redirect to={props.previousLocation.slice(0,props.previousLocation.length - 5)}/>
+                ? <Redirect to={{pathname:'/main'}}/>
+                : <Redirect to={{pathname:props.previousLocation.slice(0,props.previousLocation.length - 5), state:{ referrer: "account" } }}/>
             }
         </div>
         )

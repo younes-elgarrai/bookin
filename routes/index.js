@@ -17,12 +17,6 @@ cloudinary.config({
  api_key: '652491259593498',
  api_secret: 'tz5mXMcSbUPLjiBo4oikcnuXnzw' });
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', {
-    title: 'Express'
-  });
-});
 
 /* Ajout d'un livre dans la bibliothèque d'un user dans la BDD  */
 router.post('/library/add/:token/:bookid', async (req, res) => {
@@ -93,7 +87,7 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
  }});
 
 
-/* Recherche de library à la BDD  */
+/* Recherche de library dans la BDD  */
 router.post('/library', async (req, res) => {
   let token = req.body.token;
   if (!token) {
@@ -126,7 +120,7 @@ router.delete('/library/delete/:token/:bookid', async (req, res) => {
 });
 
 
-
+// Obtenir des recos sur la page Mainscreensur la base du questionnaire via Google Books API
 router.post('/recos', async (req,res)=>{
 
   //Recupérer les résultats du questionnaire stockés dans un cookie, et renvoyer des suggestions.
@@ -151,6 +145,7 @@ router.post('/recos', async (req,res)=>{
 })
 
 
+// Obtenir une liste de livres suggérés à partir d'un livre via Google Books API
 router.post('/associated-reads', async (req,res)=>{
 
 
@@ -189,13 +184,6 @@ router.post('/associated-reads', async (req,res)=>{
 })
 
 
-
-router.get('/library/:token', function (req, res) {
-  //Accéder à une bibliothèque à partir de l'id du User (paramètre associé au composant livre)
-  //Entrées : userId
-  //mécanique de récupération d'une bibliothèque
-  //Sorties : success, failure, [ISBN13]
-})
 
 // POST : Login
 router.post('/log-in', async function (req, res, next) {
@@ -239,7 +227,7 @@ router.post('/upload', async function (req, res, next) {
     res.json({result: false, message: resultCopy} ); } 
 });
 
-// POST : Signup
+// POST : création de compte
 router.post('/sign-up', async function (req, res, next) {
   const checkExistingUserFromEmail = await UsersModel.findOne({
     email: req.body.email
@@ -282,49 +270,6 @@ async function saveNewUser(req) {
   return userSave;
 }
 
-// GET & POST : Update profile
-// Step 1 : GET to find user email
-router.get('/users/:token', async (req, res) => {
-  const user = await UsersModel.findOne({token: req.params.token});
-  const userEmail = user.email;
-  const userLibraryName = user.userLibraryName;
-  res.json({result:true, userEmail, userLibraryName })
- })
-// Step 2 : POST to update profile // In progress....
-router.post('/update', async (req, res) => {
-  console.log('update req',req);
-  const user = await UsersModel.find({token: req.body.token});
-  // mettre à jour les champs souhaités : tout sauf l'email, le token, library, wishlist. 
-  // par ex : 
-  if (req.body.name) {
-    user.userLibraryName = req.body.name;
-  }
- 
-  const userSave = await user.save();
-  res.json({
-    result: true,
-    userSave
-  });
-});
-
-router.post('/update-survey', async (req, res) => {
-  let token = req.body.token;
-  if (!token) {
-    res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
-  } else {
-  const userCheck = await UsersModel.findOne({token: req.body.token});
-  if (userCheck !== null) {
-    var user = await UsersModel.findOneAndUpdate({token: token},{ favoriteBookPeriod : [req.body.period],
-                                                                  favoriteBookLength : [req.body.length],
-                                                                  favoriteBookStyles : JSON.parse(req.body.styles)},{new:true});
-    console.log(user);
-    res.json({ result: true, newuser: user});
-  } else {
-      res.json({ result: false, message: "la mise à jour a échoué" });
-    }
-}
-});
-
 
 // POST : write a new book review
 router.post('/new-review', async (req, res) => {
@@ -357,29 +302,9 @@ router.get('/reviews/:bookid', async (req, res) => {
     res.json({ result: true, reviews});
 });
 
-/* Recherche sur Google Books API de livres
-API_key: "AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE"
-*/
 
-//  router.get('/search', (req, res) => {
-//   let q = req.query.q;
 
-//   if (!q) {
-//     res.json({ result: false });
-//   } else {
-//     // Appel à la google books API
-//     // limiter le nb de résultats
-//     res.json({ result: true, books: [{
-//       title: 'Tintin au Congo',
-//       cover: 'http://books.google.com/books/content?id=eFxNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-//       publishedDate: "1970",
-//       ISBN13: "9782203192157",
-//     },] });
-//   }
-// });
-
-/* Recherche de wishlist à la BDD  */
-
+/* Recherche de wishlist dans la BDD  */
 router.post('/wishlist', async (req, res) => {
   let token = req.body.token;
   if (!token) {
@@ -398,7 +323,6 @@ router.post('/wishlist', async (req, res) => {
 
 
 /* Suppression d'un livre dans la wishlist d'un user dans la BDD */
-
 router.delete('/wishlist/delete/:token/:bookid', async (req, res) => {
   let token = req.params.token;
   let bookid = req.params.bookid;
@@ -504,5 +428,50 @@ router.post('/wishlist/add/:token/:bookid', async (req, res) => {
     })
   }
 })
+
+// GET & POST : Update profile // work in progress
+// Step 1 : GET to find user email
+router.get('/users/:token', async (req, res) => {
+  const user = await UsersModel.findOne({token: req.params.token});
+  const userEmail = user.email;
+  const userLibraryName = user.userLibraryName;
+  res.json({result:true, userEmail, userLibraryName })
+ })
+// Step 2 : POST to update profile // In progress....
+router.post('/update', async (req, res) => {
+  console.log('update req',req);
+  const user = await UsersModel.find({token: req.body.token});
+  // mettre à jour les champs souhaités : tout sauf l'email, le token, library, wishlist. 
+  // par ex : 
+  if (req.body.name) {
+    user.userLibraryName = req.body.name;
+  }
+ 
+  const userSave = await user.save();
+  res.json({
+    result: true,
+    userSave
+  });
+});
+
+
+// mise à jour des infos du questionnaire non terminé
+router.post('/update-survey', async (req, res) => {
+  let token = req.body.token;
+  if (!token) {
+    res.json({ result: false, message: "Nous n'avons pas vu vous identifier" });
+  } else {
+  const userCheck = await UsersModel.findOne({token: req.body.token});
+  if (userCheck !== null) {
+    var user = await UsersModel.findOneAndUpdate({token: token},{ favoriteBookPeriod : [req.body.period],
+                                                                  favoriteBookLength : [req.body.length],
+                                                                  favoriteBookStyles : JSON.parse(req.body.styles)},{new:true});
+    console.log(user);
+    res.json({ result: true, newuser: user});
+  } else {
+      res.json({ result: false, message: "la mise à jour a échoué" });
+    }
+}
+});
 
 module.exports = router;
