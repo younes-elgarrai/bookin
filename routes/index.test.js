@@ -233,7 +233,7 @@ test('recommandations', async(done)=>{
         .send({"BD & Jeunesse": ["BD, Comics","Livre jeunesse"]})
         .expect(200)
     let response = await rawResponse.body;
-    expect(response.result).toBeDefined();
+    expect(response.result["BD & Jeunesse"]["BD, Comics"][0]).toBeDefined();
     done()
 });
 
