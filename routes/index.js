@@ -74,11 +74,10 @@ router.post('/library/add/:token/:bookid', async (req, res) => {
       if (userCheckTab2.length === 0) {
         var user2 = await UsersModel.findOneAndUpdate({token: token},{ $push: {library: bookToCheck._id}});
         console.log("user2",user2)
+        res.json({ result: true, message: "Livre n'est pas dans la bibliothèque" });
       } else {res.json({ result: false, message: "Livre déjà dans votre bibliothèque" });}
 
     }
-    var result = true;
-    res.json({result})
   }
   catch (error) {
     var result = false
@@ -120,13 +119,13 @@ router.delete('/library/delete/:token/:bookid', async (req, res) => {
 });
 
 
-// Obtenir des recos sur la page Mainscreensur la base du questionnaire via Google Books API
+// Obtenir des recos sur la page Mainscreen sur la base du questionnaire via Google Books API
 router.post('/recos', async (req,res)=>{
 
   //Recupérer les résultats du questionnaire stockés dans un cookie, et renvoyer des suggestions.
   //Entrées : cookie questionnaire
   //recherche par category (subjects) puis tri sur longueur et sur nouveautés
-  //Sorties : objet suggestions , erreur ==> refaites le questionnarire
+  //Sorties : objet suggestions
 
   // AIzaSyAIdljyRBhHojVGur6_xhEi1fdSKyb-rUE
   // AIzaSyCf_Mpql10SDNH98u0oNNYZuS7RzPqJ62k
@@ -204,10 +203,10 @@ router.post('/log-in', async function (req, res, next) {
     const userLibrary = user.library;
     const userWishlist = user.wishlist;
     if (bcrypt.compareSync(password, user.password)) {
-      console.log('library', userLibrary);
       res.json({ login: true, userToken, userAvatar , userLength, userPeriod, userStyles, userLibrary, userWishlist});
-  }
-  } else { 
+  }else {
+      res.json({login: false, message: "Le mot de passe est erroné, veuillez réessayer..." }); }
+  } else {
     res.json({login: false, message: "Nous ne trouvons pas de compte associé à cet email et ce mot de passe, veuillez réessayer ou créer un compte." }); }
 }});
 
@@ -235,7 +234,7 @@ router.post('/sign-up', async function (req, res, next) {
   if (checkExistingUserFromEmail) {
     res.json({result: false, message: "Il existe déjà un compte associé à cet email. Vous pouvez y accéder en vous connectant."})
   }
-  if (!req.body.name || !req.body.email || !req.body.password) {
+  else if (!req.body.name || !req.body.email || !req.body.password) {
     res.json({
       result: false,
       message: "Veuillez remplir tous les champs pour créer un compte."
@@ -415,17 +414,14 @@ router.post('/wishlist/add/:token/:bookid', async (req, res) => {
       if (userCheckTab2.length === 0) {
         var user2 = await UsersModel.findOneAndUpdate({token: token},{ $push: {wishlist: bookToCheck._id}});
         console.log("user2",user2)
+        res.json({ result: true, message: "Livre n'est pas dans la wishlist" });
       } else {res.json({ result: false, message: "Livre déjà dans votre wishlist" });}
-
-      var result = true;
     }
     } catch (error) {
       var result = false
+      res.json(result);
     }
 
-    res.json({
-      result
-    })
   }
 })
 

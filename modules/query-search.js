@@ -150,7 +150,7 @@ var queryMaker = (styles) => {
 // Les catégories qui n'ont pas été selectionnées présentent un Array vide.
 // Pour que les requêtes ne concernent que les catégories choisies, il faut filter les catégories, pour ne garder que celles qui stockent de l'information, 
 // donc telles que categorie[sousCatégorie][0] existe.
-// Il faut également éventuellement supprimer la céatégorie void, ainsi que l'id mongoDB
+// Il faut également éventuellement supprimer la catégorie void, ainsi que l'id mongoDB
 // ----->
             var cats = Object.keys(styles).filter(e=>e!=='void').filter(e=>e!=='_id').filter(e=>styles[e][0]);
 

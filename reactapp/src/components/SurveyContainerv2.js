@@ -15,8 +15,6 @@ import CardContent from '@material-ui/core/CardContent';
   
 import subjects from '../assets/subjects'
 
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -75,17 +73,22 @@ const Accordion = withStyles({
     },
   }))(MuiAccordionDetails);
 
+  // Le composant SurveyContainer est appelé dans le screen SurveyScreen, et permet d'afficher les différentes étapes du questionnaire de suggestions
+  // Selon le type de la question : 'Styles', 'Length' ou 'Period' la structure est différente.
+  // Le type 'Styles' structure les réponses par catégorie et sous catégorie, sous la forme d'un Accordion. Seules les sous-catégories sont cliquables.
+
+  // 2 sous composants sont donc nécessaires : SubResponse et Response
+
   function SubResponse(properties){
 
     var handleClick = ()=>{
-
         !properties.isSelected&&properties.handleClickAddParent();
          properties.isSelected&&properties.handleClickRemoveParent();
-    
+         // Au clic sur la SubResponse ("BD&Comics, ou Manga par exemple") la sous catégories est ajoutées ou supprimée de l'état survey du store
         }
 
     const classes = useStyles();
-
+    // le background, la couleur et l'épaisseur sont dynamiques et dépendent du booléen isSelected. (cf composant Response)
     var background = properties.isSelected?'#23396C':null;
     var color = properties.isSelected?'#E1E1E1':null;
     var weight = properties.isSelected?'bold':null;
@@ -118,18 +121,19 @@ const Accordion = withStyles({
               </Typography>
         </CardContent>
       </Card>);
-
+//  Le texte à afficher est donné via la propriété txt lors de l'appel du sous composant.
 }
 
 function Response(properties){
 
   const classes = useStyles();
 
-  console.log('response survey >>>',properties.survey);
-
-  console.log('type >>>',properties.type);
-
-  var responses = properties.type!=='Styles'?<Grid container xs={12} direction="row" justify="center" alignItems="start">
+  var responses = properties.type!=='Styles'?
+                              // Si le type de question est Length ou Period, l'écran consiste en une suite de SubResponse cliquables.
+                              // Il reçoit en propriétés du parent les fonctions permettant d'ajouter et supprimer l'élément de l'état survey du store. (cf le dispatch en fin de code)
+                              // Il reçoit également la propriété booléenne isSelected, qui vérifie si l'élément cliqué est présent ou non dans l'état survey du store --> le style est dynamiquement dépendant de isSelected
+                              // le texte à afficher  dans les Subresponse est fourni par l'Array data
+                              <Grid container xs={12} direction="row" justify="center" alignItems="start">
                                           {properties.data.map((elem,index)=>{
                                               return (
                                                   <Grid item xs={12}>
@@ -139,8 +143,14 @@ function Response(properties){
                                                   </Grid>
                                               );
                                           })}
-                                      </Grid>:
-                                      <Accordion square expanded={properties.expanded === `panel${properties.index}`} onChange={properties.handleParentChange(`panel${properties.index}`)}>
+                                      </Grid> 
+                                      :
+                              // Si le type de question est Styles, l'écran consiste en une suite d'Accoridion material-ui contenant des SubResponse cliquables.
+                              // Il reçoit en propriétés du parent les fonctions permettant d'ajouter et supprimer l'élément de l'état survey du store. (cf le dispatch en fin de code)
+                              // Il reçoit également la propriété booléenne isSelected, qui vérifie si l'élément cliqué est présent ou non dans l'état survey du store --> le style est dynamiquement dépendant de isSelected
+                              // Le panel est visble ou non selon la valeur de la propriété expanded. Celle si est modifiée par la fonction handleParentChange au clique sur l'Accordion.
+                              // le texte à afficher dans les SubResponse est fourni par l'Array data
+                              <Accordion square expanded={properties.expanded === `panel${properties.index}`} onChange={properties.handleParentChange(`panel${properties.index}`)}>
                                       <AccordionSummary
                                       expandIcon={<ExpandMoreIcon />}
                                       aria-controls={`panel${properties.index}d-content`}
@@ -191,7 +201,6 @@ function SurveyContainer(props){
                     return <Response key={index} index={index} handleParentClickAdd={handleClickAdd} handleParentClickRemove={handleClickRemove} handleParentChange={handleChange} txt={elem} type={props.type} survey={props.survey} expanded={expanded} data={Object.keys(subjects[elem])} />
                     }):
                     <Response type={props.type} handleParentClickAdd={handleClickAdd} handleParentClickRemove={handleClickRemove} handleParentChange={handleChange} data={props.array} survey={props.survey} />}
-
             </Paper>
 
     );
